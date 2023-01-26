@@ -1,0 +1,43 @@
+---
+title: "Lab 1"
+author: "Naomi Liftman"
+date: "2023-01-26"
+output: pdf_document
+---
+
+```{r}
+library(ggplot2)
+library(devtools)
+library(tidyverse)
+library(rio)
+library(sna)
+library(igraph)
+library(statnet)
+library(UserNetR)
+```
+
+Part 3- Load Sample Network Data for Visualizations
+We first need to load the Moreno data, which is data on friendship ties between students. Copy the code below into a chunk in your project and run it to load the Moreno data and save it as an object named friendship. Note that the object is saved as a list in R. Typically, to work with network data we need to convert the data to be ready for network analysis, but the UserNetR package has already done the work here. We will cover this topic in future labs.
+
+```{r}
+friendship <- UserNetR::Moreno
+```
+The code below tells R to color code our nodes (vertices) by gender, and plot the friendship network. Vertex.cex tells R how large to make the nodes (vertices).
+
+gender <- friendship %v% "gender" 
+plot(friendship, vertex.col = gender + 2, vertex.cex = 1.2)
+
+
+2. Load the Moreno data and plot the network. In your visualization, change the Vertex size to 3
+
+Part 4- Network Descriptive Statistics
+Just as in other stats course, summary statistics can be extremely helpful. For example, the command network.size can tell us how many nodes (vertices) are in the network. This can be a good check both for how many observations you have versus what you expected, and a way to check for missing data.
+
+3. How many nodes are in the friendship network?
+
+Given that we have network data, we can go deeper in describing the network than simply number of nodes. For example, maybe we want to know if the network has a lot of ties, or a few. One way to measure this is by network density. This is a measure of the proportion of observed ties in the network relative to the maximum number of ties. So a network with a density of 1 has every single possible tie. The command gden(NETWORK NAME) will get us a measure of the network density (see example code below). Remember, for the code to work you will need to change the code below to include the name of our network.
+
+4. What is the density of the network?
+
+Part 5- Submitting lab
+Make sure you have included answers to all 4 questions and upload both the .QMD file and the PDF version of your rendered code.
