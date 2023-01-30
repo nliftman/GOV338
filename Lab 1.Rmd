@@ -6,9 +6,12 @@ output: pdf_document
 ---
 
 ## Question 1 
-### Install all required packages, and include a chunk that loads each
+### Install all required packages, and include a chunk that loads each.
 
-```{r}
+As a heads up, I set all messages, warnings, and errors to FALSE so that this single chunk wouldn't take up 4 pages :).
+
+
+```{r message = FALSE, warning = FALSE, error = FALSE}
 library(ggplot2)
 library(devtools)
 library(tidyverse)
@@ -22,17 +25,16 @@ library(UserNetR)
 
 ## Question 2
 ### Load the Moreno data and plot the network. In your visualization, change the Vertex size to 3. 
+
 ```{r}
 friendship <- UserNetR::Moreno
 
 gender <- friendship %v% "gender" 
+
+#change vertex to 3
 plot(friendship, vertex.col = gender + 2, vertex.cex = 3)
 ```
 
-
-
-Part 4- Network Descriptive Statistics
-Just as in other stats course, summary statistics can be extremely helpful. For example, the command network.size can tell us how many nodes (vertices) are in the network. This can be a good check both for how many observations you have versus what you expected, and a way to check for missing data.
 
 ## Question 3
 ### How many nodes are in the friendship network?
@@ -43,9 +45,12 @@ network.size(friendship)
 
 There are 33 nodes in the friendship network.
 
-Given that we have network data, we can go deeper in describing the network than simply number of nodes. For example, maybe we want to know if the network has a lot of ties, or a few. One way to measure this is by network density. This is a measure of the proportion of observed ties in the network relative to the maximum number of ties. So a network with a density of 1 has every single possible tie. The command gden(NETWORK NAME) will get us a measure of the network density (see example code below). Remember, for the code to work you will need to change the code below to include the name of our network.
 
-4. What is the density of the network?
+## Question 4
+### What is the density of the network?
 
-Part 5- Submitting lab
-Make sure you have included answers to all 4 questions and upload both the .QMD file and the PDF version of your rendered code.
+```{r}
+gden(friendship)
+```
+
+The density of this network is .087, which tells us this network is not very interconnected. 
