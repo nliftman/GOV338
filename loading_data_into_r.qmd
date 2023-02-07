@@ -1,0 +1,100 @@
+---
+title: "Loading Data into R"
+format: html
+editor: visual
+---
+
+## Packages
+
+We do **not** want to load both `igraph` and `sna` at the same time. They do not play nicely with each other. For now, we will use `igraph`.
+
+```{r, message=F, warning=F}
+library(rio)
+library(igraph)
+```
+
+## Load Data
+
+Note, your file **must** be in the same folder as the code. R needs to know where to find your data, so make sure your working directory is where you have this code and the `contignet.csv` file. This is an adjacency matrix with a binary indicator for whether two states are continguous (share a border).
+
+```{r}
+contig_df <- import("contignet.csv")
+```
+
+## Convert to Network object
+
+Try to plot the data, what happens?
+
+Our issue is that R doesn't know we are dealing with a network object. So we need to first convert it to a matrix, then tell R to read that matrix as a network object.
+
+```{r}
+contig_mat <- as.matrix(contig_df)
+contig_net <- graph.adjacency(contig_mat, mode=c("undirected"))
+```
+
+Now try to plot the network. Any isolates? Should there be?
+
+```{r}
+plot(contig_net)
+```
+
+### Making networks nicer
+
+```{r}
+plot(contig_net, vertex.size=18, vertex.color="yellow")
+title(main="State Contiguity Network")
+```
+
+This looks better, but what if we wanted to change edge size?
+
+```{r}
+plot(contig_net, vertex.size=18, vertex.color="yellow", edge.width =3)
+title(main="State Contiguity Network")
+```
+
+Getting fancier, what if we want to make the nodes bigger if they have more ties? In other words, can we graphically represent what states are most connected?
+
+```{r}
+### first, we want to count the number of ties each node has
+deg <- degree(contig_net, mode="all")
+
+
+plot(contig_net, vertex.size=deg, vertex.color="yellow", edge.width =2)
+title(main="State Contiguity Network")
+```
+
+Since the degree if fairly low here (max of 8) we can multiply the degree by a constant to give us bigger node sizes.
+
+```{r}
+plot(contig_net, vertex.size=deg*3, vertex.color="yellow", edge.width =2)
+title(main="State Contiguity Network")
+```
+
+If we had another quantity of interest, we could also visualize the network to identify most central actors.
+
+```{r}
+## Betweenness measures the number of shortest paths between nodes that go through any given node
+## So for example, how often is the shortest path from any two states through Missouri? 
+Betweenness <- betweenness(contig_net)
+
+
+plot(contig_net, vertex.size=Betweenness/5, vertex.color="yellow", edge.width =2)
+title(main="State Contiguity Network")
+```
+
+### Calculating network stats
+
+```{r}
+cbind(
+  size    = vcount(contig_net),
+  nedges  = ecount(contig_net),
+  density = edge_density(contig_net),
+  pathLen = mean_distance(contig_net), 
+  )
+```
+
+Another really helpful command is `dyad_census`. It will tell you how many ties are mutual, assymetric (meaning 1 direction) or non-existent. This is even more helpful when we aren't sure if network is directed. If every tie is mutual, then there is a good chance it is undirected (note, this **only** will be helpful if you read the network in as directed. If you load it as undirected it will treat every tie as mutual, no matter what)
+
+```{r}
+  dyad_census(contig_net) 
+```
