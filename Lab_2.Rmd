@@ -48,13 +48,21 @@ I made it silly, hope that was alright :)
 ```{r}
 circle_baby <- make_ring(n = 10, directed= TRUE)
 plot(circle_baby, vertex.size = 13, vertex.color = '#66D3EE')
-title(main="A Beautiful Ring Netowork", sub= 'this tree does not work')
+title(main="A Beautiful Ring Netowork", sub= 'this tree does work!')
 ```
 
-We next move on to using the make_ring() command to construct a ring network. Construct your own ring network (you can determine the number of nodes/vertices, make it directed), and then plot the network. Make sure you include a graph title, and change the node size to make it easier to see the edges. I also recommend changing the color of the vertices to get more comfortable with that code. If you are looking for help on using the make_ring() command, type ?make_ring() into the console for the help file.
 
-5. Use code to show the ring network’s size and density
-In addition to the chunk of code, include a brief write up explaining what the size and density of the network is, and what these concepts refer too.
+# Question 5
+### Use code to show the ring network’s size and density
+```{r}
+cbind(
+  size = vcount(circle_baby),
+  density = edge_density(circle_baby))
+```
+
+The size of the network is 10 because there are 10 nodes/vertices in the tree. Also the density is .11. This refers to how connected the network is, so closer to 1 is more connected and 0 is less. So this graph is less connected. 
+
+
 
 Random Network
 Next we will use the command sample_gnm() to construct a network. Rather than providing sample code I want you to familiarize yourself with using the ? in the console followed by the command name to view the documentation and sample code. With the sample_gnm code you will need to specify the number of vertices, edges, whether it is directed or not, and whether you want loops. You can customize however you want.
