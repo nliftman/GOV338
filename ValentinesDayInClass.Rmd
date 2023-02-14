@@ -1,0 +1,17 @@
+---
+title: "Valentines Day In Class Work"
+author: "Naomi Liftman"
+date: "2023-02-14"
+output: pdf_document
+---
+```{r message = FALSE, warning = FALSE, error = FALSE}
+library(rio)
+library(igraph)
+library(tidyverse)
+```
+
+```{r}
+#download the data
+dw_nom <- import("dw_nom.csv")
+```
+
