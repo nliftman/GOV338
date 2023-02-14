@@ -11,6 +11,7 @@ library(statnet)
 library(UserNetR)
 ```
 
+
 ## Question 1
 ### Constructing your own tree network
 
@@ -63,14 +64,30 @@ cbind(
 The size of the network is 10 because there are 10 nodes/vertices in the tree. Also the density is .11. This refers to how connected the network is, so closer to 1 is more connected and 0 is less. So this graph is less connected. 
 
 
+# Question 7
+### Produce a random graph using the sample_gnm function and plot it with a title
 
-Random Network
-Next we will use the command sample_gnm() to construct a network. Rather than providing sample code I want you to familiarize yourself with using the ? in the console followed by the command name to view the documentation and sample code. With the sample_gnm code you will need to specify the number of vertices, edges, whether it is directed or not, and whether you want loops. You can customize however you want.
+```{r}
+random_net <- sample_gnm(n = 10, m = 15, directed = FALSE)
+plot(random_net, vertex.size = 13, vertex.color = '#D3EE66')
+title(main="Random Graph!", sub= 'this tree does work (which is very cool)!')
+```
 
-7. Produce a random graph using the sample_gnm function and plot it with a title
-8. Calculate the network density and size, and determine if there are isolates in your network.
-9. Create Edgelist
+
+
+# Question 8
+### Calculate the network density and size, and determine if there are isolates in your network.
+```{r}
+cbind(
+  size = vcount(random_net),
+  density = edge_density(random_net))
+```
+There are no isolates in the network when I ran this origionally, however every time we run the code we get a new random network, so sometimes there are isolates. 
+
+# Question 9
+### Create Edgelist
 While in the future we will mostly focus on reading in your own data from excel or other external sources, today we will create our own edgelist using the sample code below. To answer this question includ a chunk of code that creats the edgelist and write how many observations there are
+
 
 # create data:
 ### This ccode will create a data frame that lists ties in our data
