@@ -1,0 +1,75 @@
+---
+title: "Lab 2"
+author: "Naomi Liftman"
+date: "2023-02-07"
+output: pdf_document
+---
+## Loading Packages 
+```{r warning = FALSE, error = FALSE, message = FALSE}
+library(igraph)
+library(statnet)
+library(UserNetR)
+```
+
+## Question 1
+### Constructing your own tree network
+
+```{r}
+tree <- make_tree(10, children = 7, "undirected")
+plot(tree)
+```
+
+## Question 2
+### Descriptives of the Network
+
+```{r}
+cbind(
+  size = vcount(tree),
+  density = edge_density(tree))
+```
+
+
+The size of our network is 10 and the density is .2. The size is ten because that is the number of nodes we have in our tree (which we set in the previous code chunk). Then the density is the proportion of observed ties in a network to the maximum possible ties. So in this undirected network the possible number of ties should be $L/k(k-1)/2$ where $L$ is the number of ties observed and $k$ is the total number of people. So since the density goes between 0 and 1, and our desnity is .2 we know that our network is not very interconnected. 
+
+
+3. Visualizing Network
+Within the plot command, you can customize different parts of the network, including the vertex size, vertex color, title, and subtitle (see example below). Customize your network by change the vertex size, vertex color, title, and subtitle. Your customization MUST be different than mine.
+
+plot(tr, vertex.size=30, vertex.color="red")
+title(main="Example Title", sub="Tree Graph with 40 Nodes and 3 Children")
+Ring Network
+Another type of network that you can find is a ring network. This is a special type of network where each node has two exactly two connections, meaning there is a single continuous pathway for a signal to flow through.
+
+4. Make a ring network and customize its plot
+We next move on to using the make_ring() command to construct a ring network. Construct your own ring network (you can determine the number of nodes/vertices, make it directed), and then plot the network. Make sure you include a graph title, and change the node size to make it easier to see the edges. I also recommend changing the color of the vertices to get more comfortable with that code. If you are looking for help on using the make_ring() command, type ?make_ring() into the console for the help file.
+
+5. Use code to show the ring network’s size and density
+In addition to the chunk of code, include a brief write up explaining what the size and density of the network is, and what these concepts refer too.
+
+Random Network
+Next we will use the command sample_gnm() to construct a network. Rather than providing sample code I want you to familiarize yourself with using the ? in the console followed by the command name to view the documentation and sample code. With the sample_gnm code you will need to specify the number of vertices, edges, whether it is directed or not, and whether you want loops. You can customize however you want.
+
+7. Produce a random graph using the sample_gnm function and plot it with a title
+8. Calculate the network density and size, and determine if there are isolates in your network.
+9. Create Edgelist
+While in the future we will mostly focus on reading in your own data from excel or other external sources, today we will create our own edgelist using the sample code below. To answer this question includ a chunk of code that creats the edgelist and write how many observations there are
+
+# create data:
+### This ccode will create a data frame that lists ties in our data
+links <- data.frame(
+    source=c("A","B", "A", "A", "A","F", "B"),
+    target=c("B","A", "C", "D", "F","A","E")
+    )
+10. Convert Dataframe to a Network Object and plot it
+After creating the data, we can use the command class(links) into the console to see what type of object it is (it should say dataframe). Try to plot the data by typing plot(links) into the console. You should get an error message.
+
+The problem is that we haven’t told R yet that we are working with network data. So, we must first use the graph_from_data_frame command to tell R to convert our data frame into a network object. After converting the network, plot the data and change the size of your nodes/vertices.
+
+network <- graph_from_data_frame(OBJECTNAME, directed=T/F)
+
+plot(network)
+11. Describe the network
+Describe the network. Is it directed or undirected? What is the density, are there loops? Isolates? Next week we will work more on visualizing different types of ties.
+
+12. Lastly, in your own words describe the following concepts: node, edge, network density, loop, isolate.
+Descriptions can be a single sentence, just be clear.

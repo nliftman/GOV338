@@ -29,6 +29,7 @@ Our issue is that R doesn't know we are dealing with a network object. So we nee
 
 ```{r}
 contig_mat <- as.matrix(contig_df)
+#graph.adjacency or graph.df 
 contig_net <- graph.adjacency(contig_mat, mode=c("undirected"))
 ```
 
