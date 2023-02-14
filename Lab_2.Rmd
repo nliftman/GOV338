@@ -82,27 +82,35 @@ cbind(
   size = vcount(random_net),
   density = edge_density(random_net))
 ```
-There are no isolates in the network when I ran this origionally, however every time we run the code we get a new random network, so sometimes there are isolates. 
+
+There are no isolates in the network when I ran this originally, however every time we run the code we get a new random network, so sometimes there are isolates. 
 
 # Question 9
 ### Create Edgelist
-While in the future we will mostly focus on reading in your own data from excel or other external sources, today we will create our own edgelist using the sample code below. To answer this question includ a chunk of code that creats the edgelist and write how many observations there are
 
-
-# create data:
-### This ccode will create a data frame that lists ties in our data
+```{r}
+#create data
 links <- data.frame(
     source=c("A","B", "A", "A", "A","F", "B"),
     target=c("B","A", "C", "D", "F","A","E")
     )
-10. Convert Dataframe to a Network Object and plot it
-After creating the data, we can use the command class(links) into the console to see what type of object it is (it should say dataframe). Try to plot the data by typing plot(links) into the console. You should get an error message.
+```
 
-The problem is that we haven’t told R yet that we are working with network data. So, we must first use the graph_from_data_frame command to tell R to convert our data frame into a network object. After converting the network, plot the data and change the size of your nodes/vertices.
+There are seven observations. 
 
-network <- graph_from_data_frame(OBJECTNAME, directed=T/F)
+# Question 10
+### Convert Dataframe to a Network Object and plot it
 
-plot(network)
+```{r}
+#plot(links)
+#doesnt work! 
+network <- graph_from_data_frame(links, directed=T)
+#now it works!
+plot(network, vertex.size = 13, vertex.color = '#7A67EE')
+title(main="Graphing Our Own Network", sub= 'this tree does work (which is very cool)!')
+```
+
+
 11. Describe the network
 Describe the network. Is it directed or undirected? What is the density, are there loops? Isolates? Next week we will work more on visualizing different types of ties.
 
