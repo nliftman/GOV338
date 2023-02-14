@@ -1,0 +1,198 @@
+---
+title: "Visualizing and Describing Networks"
+format: html
+editor: visual
+---
+
+# Set Up
+
+## Load Packages
+
+```{r, warning=F, message=F, echo=F}
+library(rio)
+library(igraph)
+library(sna)
+
+```
+
+Reminder, sna and igraph do not play nicely, if you load both, you will likely get error messages for commands that previously worked. To remove a package, type `detach("package:PACKAGENAME", unload = TRUE)` to remove the package.
+
+```{r}
+detach("package:sna", unload = TRUE)
+```
+
+## Load Data- Convert to Network object
+
+```{r}
+contig_df <- import("contignet.csv")
+contig_mat <- as.matrix(contig_df)
+contig_net <- graph.adjacency(contig_mat, mode=c("undirected"))
+
+```
+
+## Plot Network
+
+```{r}
+
+deg <- degree(contig_net)
+
+
+plot(contig_net, vertex.size=deg*3, vertex.color="yellow", edge.width =3)
+title(main="State Contiguity Network")
+```
+
+# Network Visualization
+
+## Setting seeds
+
+When R simulates data, or picks random locations, it uses a number generator to tell itself where to "start." We want our data to be reproducible so we want to tell R what number to start with. `set.seed()` will fix R to always start at that number. It doesn't matter which you choose, but you have to choose a number. If you set a seed at the start of a chunk producing a network, you
+
+## Random
+
+This layout will put nodes in random locations. I wouldn't recommend using it unless you don't care about the network shape.
+
+```{r}
+set.seed(12345)
+
+plot(contig_net, vertex.size=deg*3, vertex.color="yellow", edge.width =3, layout=layout_randomly)
+title(main="State Contiguity Network")
+```
+
+## Circle
+
+```{r}
+plot(contig_net, vertex.size=deg*3, vertex.color="yellow", edge.width =3, layout=layout_in_circle)
+title(main="State Contiguity Network")
+```
+
+## Sphere
+
+```{r}
+plot(contig_net, vertex.size=deg*3, vertex.color="yellow", edge.width =3, layout=layout_on_sphere)
+title(main="State Contiguity Network")
+```
+
+## Fruchterman-Reingold
+
+We are now moving to more complex layouts. The F-R layout will try to minimize the number of ties that cross over each other.
+
+```{r}
+plot(contig_net, vertex.size=deg*3, vertex.color="yellow", edge.width =3, layout=layout_with_fr)
+title(main="State Contiguity Network")
+```
+
+## Kamada Kawa
+
+```{r}
+plot(contig_net, vertex.size=15, vertex.color="yellow", edge.width =3, layout=layout_with_kk)
+title(main="State Contiguity Network")
+```
+
+## Grid
+
+```{r}
+plot(contig_net, vertex.size=15, vertex.color="yellow", edge.width =3, layout=layout_on_grid)
+title(main="State Contiguity Network")
+```
+
+## Checking out other potential layouts
+
+The code below will ask igrpah to report all potential layouts, then we have R insert each type of layout into the graph. If you want to try this out on your own nework, you just have to change the text `contig_net` to whatever your network is called.
+
+```{r, message=F, warning=F}
+layouts <- grep("^layout_", ls("package:igraph"), value=TRUE)[-1] 
+
+# Remove layouts that do not apply to our graph.
+
+layouts <- layouts[!grepl("bipartite|merge|norm|sugiyama|tree", layouts)]
+
+
+
+par(mfrow=c(3,3), mar=c(1,1,1,1))
+
+for (layout in layouts) {
+
+  print(layout)
+
+  l <- do.call(layout, list(contig_net)) 
+
+  plot(contig_net, vertex.size=deg*3, vertex.color="yellow", edge.width =3, layout=l, main=layout) }
+```
+
+# Other descriptives
+
+Often, our network is too large to easily visualize. Instead we may want to print out descriptive statistics such as most connected, central, etc.
+
+### Density
+
+```{r}
+density <- edge_density(contig_net)
+```
+
+### Diameter
+
+Widest path in network.
+
+```{r}
+diameter <- diameter(contig_net, directed=F)
+
+```
+
+Average distance.
+
+```{r}
+avg_distance <- mean_distance(contig_net)
+
+```
+
+## Evaluating connections
+
+See types of connections.
+
+```{r}
+dyad_census(contig_net)
+```
+
+Check for isolates.
+
+```{r}
+sum(degree(contig_net)==0)
+
+```
+
+Order observations by degree.
+
+```{r}
+sort(degree(contig_net))
+
+```
+
+Histogram for degree
+
+```{r}
+hist(degree(contig_net))
+
+```
+
+### Measures of centrality
+
+Closeness
+
+```{r}
+sort(closeness(contig_net))
+
+```
+
+Betweenness
+
+```{r}
+sort(betweenness(contig_net))
+
+```
+
+Eigenvector Centrality
+
+```{r}
+sort(eigen_centrality(contig_net)$vector)
+
+```
