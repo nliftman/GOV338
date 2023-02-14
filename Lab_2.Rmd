@@ -30,7 +30,7 @@ cbind(
 ```
 
 
-The size of our network is 10 and the density is .2. The size is ten because that is the number of nodes we have in our tree (which we set in the previous code chunk). Then the density is the proportion of observed ties in a network to the maximum possible ties. So in this undirected network the possible number of ties should be $L/k(k-1)/2$ where $L$ is the number of ties observed and $k$ is the total number of people. So since the density goes between 0 and 1, and our desnity is .2 we know that our network is not very interconnected. 
+The size of our network is 10 and the density is .2. The size is ten because that is the number of nodes we have in our tree (which we set in the previous code chunk). Then the density is the proportion of observed ties in a network to the maximum possible ties. So in this undirected network the possible number of ties should be $L/k(k-1)/2$ where $L$ is the number of ties observed and $k$ is the total number of people. So since the density goes between 0 and 1, and our density is .2 we know that our network is not very interconnected. 
 
 
 # Question 3
@@ -111,8 +111,17 @@ title(main="Graphing Our Own Network", sub= 'this tree does work (which is very 
 ```
 
 
-11. Describe the network
-Describe the network. Is it directed or undirected? What is the density, are there loops? Isolates? Next week we will work more on visualizing different types of ties.
+# Question 11
+### Describe the network
+```{r}
+cbind(
+  size = vcount(network),
+  density = edge_density(network))
+```
 
-12. Lastly, in your own words describe the following concepts: node, edge, network density, loop, isolate.
-Descriptions can be a single sentence, just be clear.
+Our network is directed with 6 nodes and 7 edges.The density is .23, and there are no isolates nor loops. 
+
+# Question 12
+### Lastly, in your own words describe the following concepts: node, edge, network density, loop, isolate.
+
+A node is a single actor, or the people we are looking to model the connections between. An edge is a connection between two actors in our relationship. A network is a group of people who interact with each other in some way that we are looking to model. The density is the measure of how interconnected a network is (between 0 and 1). A loop is when a node can have an edge with itself. Finally an isolate is a node without an edge to any other node in our group. 
