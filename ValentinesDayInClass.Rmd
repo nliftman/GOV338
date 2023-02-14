@@ -13,5 +13,35 @@ library(tidyverse)
 ```{r}
 #download the data
 dw_nom <- import("dw_nom.csv")
+dw_fixing <-dw_nom %>% 
+  select(bioname_j, bioname_i,ideo_dist)
+#clearly a tie list because it has i and j :)
+# we are interested in ideo_dist variable 
+dw_fixing <-graph_from_data_frame(dw_nom, directed = FALSE)
+nom_net <-graph_from_data_frame(dw_nom, directed = FALSE)
+#we have counted the ties twice since it is not directed 
+sort(degree(nom_net))
+#check if network is simple or not
+is_simple(nom_net)
+#we failed
+```
+```{r}
+#save over the ntwrok
+nom_net <-simplify_and_colorize(nom_net)
+dw_fixing <- simplify_and_colorize(nom_net)
+#now no one has over 100 ties
+sort(degree(nom_net))
+
+```
+
+```{r}
+plot(dw_fixing, vertex.size=3, vertex.color="#9e3865", layout=layout_with_kk)
+title(main="DW Nominate Data")
+```
+```{r}
+sort(eigen_centrality(nom_net)$vector)
+sort(betweenness(nom_net))
+sort(degree(nom_net))
+sort(closeness(nom_net))
 ```
 
