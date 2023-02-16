@@ -1,0 +1,19 @@
+---
+title: "Fussing with the Data"
+author: "Naomi Liftman"
+date: "2023-02-16"
+output: pdf_document
+---
+# Load Files
+```{r message = FALSE, error = FALSE, warning = FALSE}
+library(rio)
+library(tidyverse)
+```
+
+# Downlaod Data
+```{r}
+house <- import("house.csv")
+senate <- import("senate.csv")
+something_else <- import("SH.csv")
+```
+
