@@ -7,10 +7,22 @@ output: pdf_document
 ## Question 1
 ### Load `similarity_scores.dta` into R, convert into network object. Plot the network (note- start with statnet, then when switching to community detection detach `sna` and `statnet` in a chunk).
 
-Loading packages and the data:
 ```{r message = false, warning = false, error = false}
+#load packages
 library(rio)
 library(statnet)
+#load data as a df
+sim_as_df <- import("similarity_scores.dta")
+#convert to a matrix
+sim_matrix <- as.matrix(sim_as_df)
+#convert to network
+sim <-as.network(sim_matrix, mode=c("undirected"))
+#plot the network
+plot.network(sim,label = network.vertex.names(sim))
+```
+
+Convert df to network object
+```{r}
 
 ```
 
