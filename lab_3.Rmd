@@ -4,3 +4,32 @@ author: "Naomi Liftman"
 date: "2023-02-28"
 output: pdf_document
 ---
+## Question 1
+### Load `similarity_scores.dta` into R, convert into network object. Plot the network (note- start with statnet, then when switching to community detection detach `sna` and `statnet` in a chunk).
+
+## Question 2
+### Tell me the density of the network, number of nodes, level of reciprocity, whether there are any isolates, and whether it is directed.
+
+## Question 3
+### Conduct a cug-test for reciprocity. Make sure you include a plot and let us know what we can conclude about the level of reciprocity observed in the network. Set the number of simulated networks to 3000.
+
+## Question 4
+### Conduct a cug-test for density, and condition it by the size of the network. Set the number of simulated networks to 1500.
+
+## Question 5
+### Detach the packages `statnet` and `sna`. Convert the original dataframe into a network object that igraph can use.
+
+## Question 6
+### Estimate the community detection algorithm for walktrap algorithm. Plot the network with community membership included in the graph. How many communities are there?
+
+## Question 7
+### Estimate the community detection algorithm for the betweenneess community algorithm. Plot the network with community membership included in the graph. How many communities are there?
+
+## Question 8
+### Pick one of the two community detection algorithms, and plot the network as a dendogram.
+
+## Question 9
+### Use the `circlize_dendrogram` to plot the same network as a circle. Don't forget to add colors by community.
+
+## Question 10
+### Manually change the number of colors to a lower number than the total number of communities in the network. Were you surprise by the communities that merged? Based on your own understanding of states, do you agree with the categories?
