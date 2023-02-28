@@ -7,6 +7,14 @@ output: pdf_document
 ## Question 1
 ### Load `similarity_scores.dta` into R, convert into network object. Plot the network (note- start with statnet, then when switching to community detection detach `sna` and `statnet` in a chunk).
 
+Loading packages and the data:
+```{r message = false, warning = false, error = false}
+library(rio)
+library(statnet)
+
+```
+
+
 ## Question 2
 ### Tell me the density of the network, number of nodes, level of reciprocity, whether there are any isolates, and whether it is directed.
 
