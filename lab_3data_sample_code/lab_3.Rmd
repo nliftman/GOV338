@@ -13,22 +13,23 @@ library(rio)
 library(statnet)
 #load data as a df
 sim_as_df <- import("similarity_scores.dta")
-#convert to a matrix
-sim_matrix <- as.matrix(sim_as_df)
 #convert to network
-sim <-as.network(sim_matrix, mode=c("undirected"))
+sim <-as.network(sim_as_df, mode=c("directed"))
 #plot the network
 plot.network(sim,label = network.vertex.names(sim))
 ```
 
-Convert df to network object
-```{r}
-
-```
-
-
 ## Question 2
 ### Tell me the density of the network, number of nodes, level of reciprocity, whether there are any isolates, and whether it is directed.
+
+The density is 0.0221308, there are 50 nodes, the level of reciprocity is 0.8710204, which tells us it is a directed network and there are no isolates. 
+
+```{r}
+summary(sim, print.adj=FALSE)
+isolates(sim, diag=FALSE)
+grecip(sim)
+```
+
 
 ## Question 3
 ### Conduct a cug-test for reciprocity. Make sure you include a plot and let us know what we can conclude about the level of reciprocity observed in the network. Set the number of simulated networks to 3000.
