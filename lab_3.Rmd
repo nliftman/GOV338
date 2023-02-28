@@ -1,0 +1,6 @@
+---
+title: "lab_3"
+author: "Naomi Liftman"
+date: "2023-02-28"
+output: pdf_document
+---
