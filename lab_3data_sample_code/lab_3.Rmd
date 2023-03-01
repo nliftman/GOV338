@@ -76,6 +76,15 @@ plot(sim_graph)
 ## Question 6
 ### Estimate the community detection algorithm for walktrap algorithm. Plot the network with community membership included in the graph. How many communities are there?
 
+```{r}
+#create the walktrap
+walktrap_sim <- cluster_walktrap(sim_graph)
+#make a pretty plot
+plot(walktrap_sim, sim_graph, edge.width = .5, edge.arrow.size = .2)
+#had to make the edges and arrow size smaller or you couldnt see anything
+```
+There are three clear and distinct communities. 
+
 ## Question 7
 ### Estimate the community detection algorithm for the betweenneess community algorithm. Plot the network with community membership included in the graph. How many communities are there?
 
