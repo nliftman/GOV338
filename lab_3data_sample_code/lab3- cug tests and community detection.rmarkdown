@@ -1,0 +1,318 @@
+---
+title: "Lab 3"
+author: "Naomi Liftman"
+format: html
+editor: visual
+---
+
+
+## Intro
+
+This week's lab will focus on community detection algorithms (see [example](http://brucedesmarais.com/Tutorial.html)) and cug tests to conduct hypothesis testing. We will be using a network of similarity ties between US states that measure whether or not citizens perceive states to be similar to one another. The ties are binary and directed, and were generated from survey responses.
+
+To show you sample commands/code, we first walk through an example using the state contiguity data we used in previous labs, but for your own submission you will need to use dataset `similarity_scores.dta`.
+
+### Load required packages
+
+
+```{r, warning=F, message=F}
+library(rio)
+library(statnet)
+```
+
+
+### Load data
+
+
+```{r}
+contig_df <- import("contignet.csv")
+# sim_df <- import(similarity_scores.dta)
+```
+
+
+Convert to a network object
+
+
+```{r}
+## Convert to matrix
+contig_mat <- as.matrix(contig_df)
+contig_net <-as.network(contig_mat, mode=c("undirected"))
+
+plot.network(contig_net,label = network.vertex.names(contig_net))
+
+### hint for lab- sim_net <-as.network(sim_df, mode=c("directed"))
+
+
+```
+
+
+## Part 1- Cug Test
+
+Cug test will use statnet/sna commands, while part 2 will require igraph. Don't forget to detach statnet and sna in a chunk before engaging in part 2.
+
+The `cug.test` command can be used to simulate random networks, which can then be used to conduct hypothesis testing for a number of network statistics (density, reciprocity, etc). We can compare our observed network statistics to the simulated ones in order to determine whether we can conclude there is higher levels of reciprocity, etc. than a random network.
+
+## Cug test for random network
+
+We simulate a random network 10 times and compare it to the level of observed density in our network.
+
+
+```{r}
+cug_10 <- cug.test(contig_net, gden, reps=10)
+
+### First value- probability that a random network has greater levels of density than our observed network 
+cug_10
+plot(cug_10)
+```
+
+
+We can increase the number of reps.
+
+
+```{r}
+cug_100 <- cug.test(contig_net, gden, reps=100)
+
+cug_100
+plot(cug_100)
+```
+
+
+Notice the more reps, the more time it takes to estimate, but it still can estimate a lot of networks relatively quickly. The default is 1000.
+
+
+```{r}
+cug_10000 <- cug.test(contig_net, gden, reps=10000)
+
+
+cug_10000
+plot(cug_10000)
+```
+
+
+We can test for other network statistics too. Like reciprocity.
+
+
+```{r}
+cug_recip <- cug.test(contig_net, grecip)
+
+plot(cug_recip)
+```
+
+
+Or transitivity.
+
+
+```{r}
+cug_trans<- cug.test(contig_net, gtrans)
+
+plot(cug_trans)
+
+```
+
+
+## Cug test conditioned on network statistic
+
+The default for this command is to simulate networks with the size held constant. But we can also alter what we want to hold constant in the network. For example, we can see
+
+
+```{r}
+cug.test(contig_net,gtrans,cmode="size")
+cug.test(contig_net,gtrans,cmode="edges")
+cug.test(contig_net,gtrans,cmode="dyad.census")
+```
+
+
+## Part 2- Community detection algorithm
+
+
+```{r, warning=F, message=F}
+
+detach(package:statnet)
+detach(package:sna)
+
+library(igraph)
+
+```
+
+
+Note that with igraph, we need to convert our network into an igraph object.
+
+
+```{r}
+contig_net1 <- graph_from_data(contig_mat, mode=c("undirected"))
+plot(contig_net1)
+### hint for lab
+### sim_net1 <- graph_from_data_frame(sim_df, directed=T)
+
+```
+
+
+## Communities based on Edge-betweenness
+
+he idea of the edge betweenness based community structure detection is that it is likely that edges connecting separate modules have high edge betweenness as all the shortest paths from one module to another must traverse through them. So if we gradually remove the edge with the highest edge betweenness score we will get a hierarchical map, a rooted tree, called a dendrogram of the graph. The leafs of the tree are the individual vertices and the root of the tree represents the whole graph.
+
+
+```{r}
+between <- cluster_edge_betweenness(contig_net1)
+### now let's see who is group with who
+#membership(between)
+
+## we can color our communities by edge-betweenness communities
+plot(between, contig_net1)
+
+```
+
+
+## Communities based on Walktrap algorithm
+
+Calculates group that produce shortest walks for our network sub-groups. What community produces smaller average walks between members.
+
+
+```{r}
+walktrap <- cluster_walktrap(contig_net1)
+
+plot(walktrap, contig_net1)
+
+```
+
+
+## Fast Greedy
+
+This one tries to optimize based on modularity. How to create most cohesive sub-units. **This only works on undirected networks**
+
+
+```{r}
+fg <- cluster_fast_greedy(contig_net1)
+
+plot(fg, contig_net1)
+
+```
+
+
+## Optimal clustering
+
+More comprehensive version of Fast-greedy, do not use on large networks.
+
+
+```{r}
+opt <- cluster_optimal(contig_net1)
+
+plot(opt, contig_net1)
+```
+
+
+# Other way to visualize networks- dendograms
+
+Note that to make a dendogram, the detection algorithm must create a hierarchical community structure. `cluster_optimal` does not, so we cannot make a dendogram. The graph will also
+
+
+```{r}
+fg_dend <- as.dendrogram(fg)
+plot(fg_dend)
+
+```
+
+```{r}
+wt_dend <- as.dendrogram(walktrap)
+plot(wt_dend)
+
+```
+
+```{r}
+between_dend <- as.dendrogram(between)
+plot(between_dend)
+
+```
+
+
+## Customizing Dendograms
+
+First, we will need to add some packages.
+
+
+```{r, message=F, warning=F}
+#install.packages("dendextend")
+library(dendextend)
+#install.packages("circlize")
+library(circlize)
+```
+
+
+### Changing Shape of dendogram
+
+We can make the dendogram into a circular shape.
+
+
+```{r}
+circlize_dendrogram(fg_dend)
+```
+
+
+We might want to go even further, and color code by community
+
+
+```{r}
+
+## We tell R there are 7 branches because that is what the algorithm gave us.
+fg_dend <- fg_dend %>%
+  color_branches(k = 7)
+
+plot(fg_dend)
+```
+
+
+While the algorithms provide the number of communities it thinks might exist, we often have theoretical reasons to combine communities together, particularly when the algorithms disagree. One way to assess this is to tell the clustering plots to reduce the number of groups. R will automatically combine the most closely groups into a single one, giving you an idea of potent ways to combine communities. As a reminder, the lower the connection between communities on the y-axis, the stronger the connection. If we reduce communities to 5 we get the following figure.
+
+
+```{r}
+fg_dend <- fg_dend %>%
+  color_branches(k = 5)
+
+plot(fg_dend)
+```
+
+
+You can do the same with a circularized plot.
+
+
+```{r}
+circlize_dendrogram(fg_dend)
+
+```
+
+
+We might want to color the node labels too for clarity.
+
+
+```{r}
+fg_dend <- fg_dend %>%
+  color_branches(k = 5) %>%
+  color_labels(k = 5)
+
+circlize_dendrogram(fg_dend)
+
+```
+
+
+# Your Job
+
+1.  Load `similarity_scores.dta` into R, convert into network object. Plot the network (note- start with statnet, then when switching to community detection detach `sna` and `statnet` in a chunk).
+
+2.  Tell me the density of the network, number of nodes, level of reciprocity, whether there are any isolates, and whether it is directed.
+
+3.  Conduct a cug-test for reciprocity. Make sure you include a plot and let us know what we can conclude about the level of reciprocity observed in the network. Set the number of simulated networks to 3000.
+
+4.  Conduct a cug-test for density, and condition it by the size of the network. Set the number of simulated networks to 1500.
+
+5.  Detach the packages `statnet` and `sna`. Convert the original dataframe into a network object that igraph can use.
+
+6.  Estimate the community detection algorithm for walktrap algorithm. Plot the network with community membership included in the graph. How many communities are there?
+
+7.  Estimate the community detection algorithm for the betweenneess community algorithm. Plot the network with community membership included in the graph. How many communities are there?
+
+8.  Pick one of the two community detection algorithms, and plot the network as a dendogram.
+
+9.  Use the `circlize_dendrogram` to plot the same network as a circle. Don't forget to add colors by community.
+
+10. Manually change the number of colors to a lower number than the total number of communities in the network. Were you surprise by the communities that merged? Based on your own understanding of states, do you agree with the categories?
+

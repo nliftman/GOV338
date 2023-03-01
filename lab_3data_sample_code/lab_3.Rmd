@@ -7,7 +7,7 @@ output: pdf_document
 ## Question 1
 ### Load `similarity_scores.dta` into R, convert into network object. Plot the network (note- start with statnet, then when switching to community detection detach `sna` and `statnet` in a chunk).
 
-```{r message = false, warning = false, error = false}
+```{r message = FALSE, warning = FALSE, error = FALSE}
 #load packages
 library(rio)
 library(statnet)
