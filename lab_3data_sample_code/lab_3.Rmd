@@ -57,6 +57,22 @@ cug.test(sim, gden, cmode="size", reps = 1500)
 ## Question 5
 ### Detach the packages `statnet` and `sna`. Convert the original dataframe into a network object that igraph can use.
 
+```{r}
+#detatch statnet and sna
+detach(package:statnet)
+detach(package:sna)
+#load igraph
+library(igraph)
+```
+
+```{r}
+#use data frame to turn into an igraph network object
+sim_graph <- graph_from_data_frame(sim_as_df, directed = TRUE)
+#silly little plot to make sure it worked
+plot(sim_graph)
+```
+
+
 ## Question 6
 ### Estimate the community detection algorithm for walktrap algorithm. Plot the network with community membership included in the graph. How many communities are there?
 
