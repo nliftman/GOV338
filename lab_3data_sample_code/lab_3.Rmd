@@ -88,6 +88,16 @@ There are three clear and distinct communities.
 ## Question 7
 ### Estimate the community detection algorithm for the betweenneess community algorithm. Plot the network with community membership included in the graph. How many communities are there?
 
+```{r}
+#build betweeneness algorithm
+between_sim <- cluster_edge_betweenness(sim_graph)
+#plot it, but difficult to see!
+plot(between_sim, sim_graph,edge.width = .5, edge.arrow.size = .2)
+#make sure we can see the members to count correctly
+membership(between_sim)
+```
+Based on our graph there appeared to be 8 communities, and we can check this is true using the membership function! So there are 8 communities, but many of them only have themselves. 
+
 ## Question 8
 ### Pick one of the two community detection algorithms, and plot the network as a dendogram.
 
