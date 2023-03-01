@@ -117,7 +117,7 @@ library(igraph)
 Note that with igraph, we need to convert our network into an igraph object.
 
 ```{r}
-contig_net1 <- graph_from_adjacency_matrix(contig_mat, mode=c("undirected"))
+contig_net1 <- graph_from_data(contig_mat, mode=c("undirected"))
 plot(contig_net1)
 ### hint for lab
 ### sim_net1 <- graph_from_data_frame(sim_df, directed=T)
