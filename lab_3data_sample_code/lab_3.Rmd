@@ -4,7 +4,6 @@ author: "Naomi Liftman"
 date: "2023-02-28"
 output: pdf_document
 ---
-testt
 ## Question 1
 ### Load `similarity_scores.dta` into R, convert into network object. Plot the network (note- start with statnet, then when switching to community detection detach `sna` and `statnet` in a chunk).
 
