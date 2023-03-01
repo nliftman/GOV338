@@ -42,11 +42,14 @@ cug_sim_recp <- cug.test(sim, grecip, reps = 3000)
 cug_sim_recp
 plot(cug_sim_recp)
 ```
-
+We can conclude that the level of reciprocity is much higher than what we would expect for a random network with the same number of nodes. The probability of this level of reciprocity occurring in a random network of the same size is nearly zero. 
 
 ## Question 4
 ### Conduct a cug-test for density, and condition it by the size of the network. Set the number of simulated networks to 1500.
 
+```{r}
+cug.test(sim, gden, cmode="size", reps = 1500)
+```
 
 
 ## Question 5
