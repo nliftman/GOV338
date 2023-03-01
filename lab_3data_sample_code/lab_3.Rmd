@@ -25,17 +25,29 @@ plot.network(sim,label = network.vertex.names(sim))
 The density is 0.0221308, there are 50 nodes, the level of reciprocity is 0.8710204, which tells us it is a directed network and there are no isolates. 
 
 ```{r}
+#summary gives us density and nodes
 summary(sim, print.adj=FALSE)
+#isolates gives us integer for isolates
 isolates(sim, diag=FALSE)
+#grecip gives us reciprocity 
 grecip(sim)
 ```
-
 
 ## Question 3
 ### Conduct a cug-test for reciprocity. Make sure you include a plot and let us know what we can conclude about the level of reciprocity observed in the network. Set the number of simulated networks to 3000.
 
+```{r}
+#now we need to remove 
+cug_sim_recp <- cug.test(sim, grecip, reps = 3000)
+cug_sim_recp
+plot(cug_sim_recp)
+```
+
+
 ## Question 4
 ### Conduct a cug-test for density, and condition it by the size of the network. Set the number of simulated networks to 1500.
+
+
 
 ## Question 5
 ### Detach the packages `statnet` and `sna`. Convert the original dataframe into a network object that igraph can use.
