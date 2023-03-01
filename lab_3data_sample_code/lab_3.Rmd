@@ -37,9 +37,11 @@ grecip(sim)
 ### Conduct a cug-test for reciprocity. Make sure you include a plot and let us know what we can conclude about the level of reciprocity observed in the network. Set the number of simulated networks to 3000.
 
 ```{r}
-#now we need to remove 
+#conduct the test
 cug_sim_recp <- cug.test(sim, grecip, reps = 3000)
+#print out the test
 cug_sim_recp
+#give a pretty graph!
 plot(cug_sim_recp)
 ```
 We can conclude that the level of reciprocity is much higher than what we would expect for a random network with the same number of nodes. The probability of this level of reciprocity occurring in a random network of the same size is nearly zero. 
