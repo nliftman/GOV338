@@ -101,8 +101,38 @@ Based on our graph there appeared to be 8 communities, and we can check this is 
 ## Question 8
 ### Pick one of the two community detection algorithms, and plot the network as a dendogram.
 
+```{r}
+#upload packages
+library(dendextend)
+library(circlize)
+#build denogram and add colors!
+sim_den <- as.dendrogram(between_sim) %>% 
+  color_branches(k = 8) %>% 
+  color_labels(k = 8)
+#build a plot of a denogram
+plot(sim_den) 
+```
+
+
 ## Question 9
 ### Use the `circlize_dendrogram` to plot the same network as a circle. Don't forget to add colors by community.
 
+```{r}
+circlize_dendrogram(sim_den)
+```
+
+So pretty!
+
 ## Question 10
 ### Manually change the number of colors to a lower number than the total number of communities in the network. Were you surprise by the communities that merged? Based on your own understanding of states, do you agree with the categories?
+
+```{r}
+#build denogram and add colors!
+sim_den_wrong <- as.dendrogram(between_sim) %>% 
+  color_branches(k = 4) %>% 
+  color_labels(k = 4)
+#build a plot of a denogram
+plot(sim_den_wrong) 
+```
+
+I am not super surprised by the communities that they merged. They connected the states that had the closest last connection, and didn't connect the ones with the least connection. This makes sense for AK which is Alaska and HI, which is Hawaii. However, this doesn't really make sense to me for Arizona, as I thought that this was a relatively connected state, unlike Alaska and Hawaii which are not connected to $any$ other states. So I would not agree with that category. 
