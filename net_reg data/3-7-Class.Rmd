@@ -85,11 +85,17 @@ plot(latent_net, label = network.vertex.names(latent_net), vertex.cex=deg/10)
 
 ```{r}
 ### Stacking IVs into 3 dimensional matrix
+#four for the number of variables, and length needs to be the size of one of the matrices
+#all matrices should be the same dimensions
 state_matrices <- array(NA, c(4, length(census[1,]),length(census[1,]))) 
 
+#independent variable one is cencus region
 state_matrices[1,,] <- census
+#same for latent
 state_matrices[2,,] <- latent
+#same for culture
 state_matrices[3,,] <- culture
+#final for distance
 state_matrices[4,,] <- distance
 
 ### Now the Linear Model
@@ -105,13 +111,18 @@ state_matrices[4,,] <- distance
 ## Estimating model- assigning coefficient names
 
 ```{r}
+#network lm
+#similarity is the dependent and the array is the independent variables
 state_sim_lm<-netlm(similarity, state_matrices, reps=100)
 
-
+#lets label the variables! 
+#create a new list thats a summary of the model and label each of the variables
 state_model <- list()
 state_model <- summary(state_sim_lm)
+#need to make sure you label in the order you read them into R
 state_model$names <- c("Intercept", "Same Census Region", "Latent Tie", "Shared Culture", "Distance")
 
+#round the coefficients so that they are not too bad 
 state_model$coefficients = round(state_model$coefficients, 2)
 state_model
 ```
@@ -122,9 +133,12 @@ state_model
 state_model
 ```
 
+The similarity score increases by .07 for states that belong to the same census region. 
+The similarity score decreases by .02 for each 100 mile increase in states. 
 
 ## Same thing with binary outcome- logistic regression
-
+Logistic regression because we have a binary variable
+Tie-latent connection
 ```{r}
 ## IF DV is binary, ca do netlogit model
 ### Let's change DV to a model of latent nets
@@ -137,9 +151,8 @@ latent_matrices[3,,] <- culture
 latent_matrices[4,,] <- distance
 
 
+#use netlogit instead of netlm
 latent_lm<-netlogit(latent, latent_matrices, reps=100)
-
-
 
 latent_model <- list()
 latent_model <- summary(latent_lm)
@@ -153,4 +166,7 @@ latent_model$names <- c("Intercept", "Same Census Region", "Similarity Score", "
 ```{r}
 latent_model
 ```
+Interesting!! Cool
 
+Can we conclude that these factors predict latent ties or not?
+Similarity score is statistically significant, it is less than .05. So it increases by 2.29
