@@ -44,16 +44,15 @@ Want to test if more or less transitivity using cug test conditional on somethin
 
 ```{r}
 cug_trans <- cug.test(latent_net,gtrans,cmode="edges")
-
+#edges
 plot(cug_trans)
-
 ```
 
 Condition based on edges!
 
 ```{r}
 cug_trans1 <- cug.test(latent_net,gtrans,cmode="size")
-
+#size
 plot(cug_trans1)
 
 ```
@@ -62,12 +61,11 @@ Condition based on size!
 
 ```{r}
 cug_trans2 <- cug.test(latent_net,gtrans,cmode="dyad.census")
-
+#dyad cencus
 plot(cug_trans2)
-
 ```
 
-Condition based on dyad census.
+Condition based on dyad census, which tells us if it is a reciprocated, no tie, or a single tie between nodes. 
 
 ## Plot network
 
@@ -76,11 +74,10 @@ Condition based on dyad census.
 plot(latent_net)
 ```
 
-there are a lot of ties, so it's going to be a challenge to visualize. 
+There are a lot of ties, so it's going to be a challenge to visualize.
+
 ```{r}
 deg <- degree(latent_net)
-
-
 plot(latent_net, label = network.vertex.names(latent_net), vertex.cex=deg/10)
 ```
 
