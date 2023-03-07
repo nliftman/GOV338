@@ -1,0 +1,159 @@
+---
+title: "3/7 In Class Work"
+author: "Naomi Liftman"
+date: "2023-03-07"
+output: pdf_document
+---
+## Load packages and data
+
+```{r, warning=F, message=F, echo=F}
+library(rio)
+library(statnet)
+```
+
+
+```{r}
+
+# Independent variables
+census <- as.matrix(import("censusreg_mat.csv")) #same census region
+latent <- as.matrix(import("latent_mat.csv")) # latent tie
+culture <- as.matrix(import("culture_mat.csv")) # same cultural region
+distance <- as.matrix(import("distance_mat.csv")) # distance between state capitols- standardized
+
+### DV- similarity
+similarity <- as.matrix(import("sim_mat.csv"))
+```
+
+
+## For transitivity- convert latent network to network object
+```{r}
+latent_net <- as.network(latent, directed = TRUE)
+```
+
+```{r}
+gtrans(latent_net)
+#figure out what percent of triad have transitive connections
+#is this high or low?
+triad.census(latent_net)
+#code matches the table from earlier
+```
+
+Want to test if more or less transitivity using cug test conditional on something, and to see if the observed transitivity is what we expect.
+
+### Notice how our conclusions change based on what we condition.
+
+```{r}
+cug_trans <- cug.test(latent_net,gtrans,cmode="edges")
+
+plot(cug_trans)
+
+```
+
+Condition based on edges!
+
+```{r}
+cug_trans1 <- cug.test(latent_net,gtrans,cmode="size")
+
+plot(cug_trans1)
+
+```
+
+Condition based on size!
+
+```{r}
+cug_trans2 <- cug.test(latent_net,gtrans,cmode="dyad.census")
+
+plot(cug_trans2)
+
+```
+
+Condition based on dyad census.
+
+## Plot network
+
+```{r}
+## Very ugly
+plot(latent_net)
+```
+
+there are a lot of ties, so it's going to be a challenge to visualize. 
+```{r}
+deg <- degree(latent_net)
+
+
+plot(latent_net, label = network.vertex.names(latent_net), vertex.cex=deg/10)
+```
+
+# Network regression- stacking matrices
+
+```{r}
+### Stacking IVs into 3 dimensional matrix
+state_matrices <- array(NA, c(4, length(census[1,]),length(census[1,]))) 
+
+state_matrices[1,,] <- census
+state_matrices[2,,] <- latent
+state_matrices[3,,] <- culture
+state_matrices[4,,] <- distance
+
+### Now the Linear Model
+### can specify number of simulations
+### F-stat tells us if the model significant predicts ties
+### P<B gives us the p-value  for the probability of observing our coefficient if the true population parameter is not-negative
+### P<B gives us the p-value  for the probability of observing our coefficient if the true population parameter is not-positive
+### P<B gives us the p-value  for the probability of observing our coefficient if the true population parameter is not zero
+
+
+```
+
+## Estimating model- assigning coefficient names
+
+```{r}
+state_sim_lm<-netlm(similarity, state_matrices, reps=100)
+
+
+state_model <- list()
+state_model <- summary(state_sim_lm)
+state_model$names <- c("Intercept", "Same Census Region", "Latent Tie", "Shared Culture", "Distance")
+
+state_model$coefficients = round(state_model$coefficients, 2)
+state_model
+```
+
+## Print results
+
+```{r}
+state_model
+```
+
+
+## Same thing with binary outcome- logistic regression
+
+```{r}
+## IF DV is binary, ca do netlogit model
+### Let's change DV to a model of latent nets
+
+latent_matrices <- array(NA, c(4, length(census[1,]),length(census[1,]))) 
+
+latent_matrices[1,,] <- census
+latent_matrices[2,,] <- similarity
+latent_matrices[3,,] <- culture
+latent_matrices[4,,] <- distance
+
+
+latent_lm<-netlogit(latent, latent_matrices, reps=100)
+
+
+
+latent_model <- list()
+latent_model <- summary(latent_lm)
+latent_model$names <- c("Intercept", "Same Census Region", "Similarity Score", "Shared Culture", "Distance")
+
+```
+
+
+## Print results
+
+```{r}
+latent_model
+```
+
