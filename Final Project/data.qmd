@@ -36,11 +36,59 @@ pdf_2018 <- pdf_text("/Users/naomiliftman/Desktop/GOV338/Final Project/2018congr
 ```
 
 ```{r}
-#itterate throught he pages
+#iterate through the pages and remove the header
 for(i in 1:12) { #sets the iteration to go through all 12 pages
    pdf_2018[[i]] <- pdf_2018[[i]][-1:-5]
-  }
+}
+
+#iterate through the pages and remove the footer!
+for(i in 1:12) { #sets the iteration to go through all 12 pages
+   pdf_2018[[i]] <- pdf_2018[[i]][-45:-49]
+}
+```
+
+```{r}
+#first page, just to be easier to work with 
+first <- pdf_2018[[1]]
+first <- as.data.frame(first)
+
+#getting the states
+first$state<- substr(first$first, 1, 2)
+
+
+#mutating to get new columns
+reeee <- first %>% 
+  mutate(state = case_when(str_detect(first, " " ) ~ first))
 ```
 
 
+
+```{r}
+for(i in 1:length(pdf_2018)) {
+  for(j in 1:length(pdf_2018[[i]])) {
+    pdf_2018[[i]][j] <- pdf_2018[[i]][j] %>% 
+      str
+    }
+}
+```
+
+
+
+```{r}
+#the website said to do this but it dont work :(
+pdf_2018_messingabout <- pdf_2018 %>% 
+  
+```
+
+```{r}
+#reeee
+pdf_cont <- gsub('\\\\','', pdf_2018_messingabout)
+
+
+for(i in 1:length(pdf_2018_messingabout)) {
+   pdf_2018_messingabout[[i]][1] <- pdf_2018_messingabout[[i]][1] %>%
+    stringr::str_extract("(?<=c[:punct:]\\\").*")
+}
+
+```
 
