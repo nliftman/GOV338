@@ -1,0 +1,46 @@
+---
+title: "data!"
+author: "Naomi Liftman"
+format: pdf
+editor: visual
+---
+
+# Packages
+
+```{r warning = FALSE, error = FALSE, message = FALSE}
+library(incidentally)
+library(backbone)
+```
+
+# Cosponosorship Activities
+
+```{r warning = FALSE, error = FALSE}
+#pull a df with  legislators’ bill sponsorship activities
+I <- incidence.from.congress(session = 117, types = c("sres"), areas = c("All"), format = "data", narrative = TRUE)
+#pull a graph version
+B <- incidence.from.congress(session = 117, types = c("sres"), areas = c("All"), format = "igraph")
+network <- sdsm(B, alpha = 0.05, narrative = TRUE)
+```
+
+# Religious Affiliation
+
+```{r}
+library(tidyverse)
+library(pdftools)
+```
+
+```{r}
+#import and seperate on n
+pdf_2018 <- pdf_text("/Users/naomiliftman/Desktop/GOV338/Final Project/2018congressreligion.pdf") %>% 
+  str_split("\n")
+```
+
+```{r}
+#itterate throught he pages
+for(i in 1:12) { #sets the iteration to go through all 12 pages
+   pdf_2018[[i]] <- pdf_2018[[i]][-1:-5]
+  }
+```
+
+
+
