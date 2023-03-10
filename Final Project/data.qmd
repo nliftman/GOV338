@@ -27,6 +27,7 @@ network <- sdsm(B, alpha = 0.05, narrative = TRUE)
 ```{r}
 library(tidyverse)
 library(pdftools)
+library(data.table)
 ```
 
 ```{r}
@@ -55,6 +56,13 @@ first <- as.data.frame(first)
 #getting the states
 first$state<- substr(first$first, 1, 2)
 
+#getting the type they are
+first$type <-with(first, ifelse(first %like% "Senator", "Senator", "House"))
+
+selectedRows <- df[ , df$x %like% "hsa-"]
+
+df$quality <- with(df, ifelse(scored > 95, 'great',
+                         ifelse(scored > 85, 'good', 'bad')))
 
 #mutating to get new columns
 reeee <- first %>% 
