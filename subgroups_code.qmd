@@ -1,0 +1,116 @@
+---
+title: "Subgroups and Loading Data"
+format: html
+editor: visual
+---
+
+## Install/load packages
+
+We will be using the `incidentally` package for the first time, so make sure you have first installed it in the console (`install.packages("incidentally")`) and then load the package in a chunk. This package has data on congressional behavior. Secondly, we will need to install and load the `backbone` package to help us determine how many connections legislaors must have before we decide they have a tie in the network.
+
+```{r, warning=F, message=F}
+library(incidentally)
+library(backbone)
+library(igraph)
+```
+
+### Load congress data
+
+The code below tells R to extract data from the 115th congress, using senate resolutions across all topic areas, and to load it as network data. You can type `?incidence.from.congress` to learn more about this command. We can change the format to "data" if we want to see the raw data. There are 747 bills across 104 senators. We will be using igraph commands, so make sure you do not have sna or statnet loaded (detach them if they are).
+
+```{r, message=F, warning=F, include=F}
+B <- incidence.from.congress(session = 115, types = c("sres"), areas = c("All"), format = "igraph")
+```
+
+```{r}
+## Let's evaluate the network size, what is wrong?
+edge_density(B)
+vcount(B)
+```
+
+The `sdsm` package will allow us to identify what are meaningful connections, versus what are so weak they might be due to chance/not be substantively interesting for our question. We set the confidence level to .05 but you could alter it as you feel appropriate. Ties exist if there are more connections than if every senator had the same probabilities of cosponsoring, and every bill had the same number of cosponsors.
+
+```{r, warning=F, message=F}
+network <- sdsm(B, alpha = 0.01, narrative = TRUE)
+edge_density(network)
+vcount(network)
+```
+
+## Plot the network
+
+We can do better...
+
+```{r}
+plot(network)
+```
+
+Adding information about partisanship. Removing labels for now.
+
+```{r}
+#V(network)$party will tell us the vertex attribute for what party a member is.
+## rgb will tell us whether we want it to be red, green, or blue (1 if so, 0 otherwise)
+## The last will tell us how transpartent to be
+V(network)$color <- rgb(1,0,0,.5)  #Define the color of Republicans
+V(network)$color[which(V(network)$party=="D")] <- rgb(0,0,1,.5)  #...of Democrats
+V(network)$color[which(V(network)$party=="I")] <- rgb(0,1,0,.5)  #...of Independents
+
+plot(network, vertex.label = NA, vertex.color = V(network)$color, vertex.frame.color = NA, vertex.size = 10)
+
+```
+
+# Subgroups
+
+We might want to evaluate if there are sub-groups of senators. We can use these groups to answer research questions about the nature of connections in our network.
+
+## Components
+
+One way to test this is through components. Components exist if all individuals are connected to on another by at least one path. Weak components are only connected if we ignore the directionality of ties, strong components occur when members are still all connected, even when acknowledging directionality.
+
+```{r}
+
+components(network)
+
+count_components(network)
+
+```
+
+## Cliques
+
+Cliques represent cases where subgroups are all connected to one another, not just having a path between them. Given the nature of cosponsorhip, I increase the minimum size to 6.
+
+```{r}
+
+## report the cliques that are complete, I set the minimum size to 5, but you can mess around with this number
+
+cliques <- cliques(network, min=5)
+
+## Plot the distribution of the size of the cliques
+plot(clique_size_counts(network))
+
+```
+
+## K Core
+
+Members belong to the same k-core subgroup if they have a degree centrality of at least whatever our k is. the higher the number, the more core members are to our subgroup.
+
+```{r}
+coreness(network)
+
+## we can plot this as well.
+hist(coreness(network))
+
+```
+
+## Girvan Newman - Also called Edge Betweeneess
+
+```{r, warning=F, message=F}
+eb <- cluster_edge_betweenness(network)
+
+membership(eb)
+```
+
+## Modularity
+
+```{r}
+modularity(network, membership(eb))
+```
