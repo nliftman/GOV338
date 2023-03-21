@@ -24,14 +24,14 @@ network <- sdsm(B, alpha = 0.05, narrative = TRUE)
 
 # Religious Affiliation
 
-```{r}
+```{r message = FALSE, warning = FALSE, error = FALSE}
 library(tidyverse)
 library(pdftools)
 library(data.table)
 ```
 
 ```{r}
-#import and seperate on n
+#import and separate on n
 pdf_2018 <- pdf_text("/Users/naomiliftman/Desktop/GOV338/Final Project/2018congressreligion.pdf") %>% 
   str_split("\n")
 ```
@@ -58,6 +58,15 @@ first$state<- substr(first$first, 1, 2)
 
 #getting the type they are
 first$type <-with(first, ifelse(first %like% "Senator", "Senator", "House"))
+
+#getting the party 
+first$party <- with(first, ifelse(first %like% " R ", "Republican", "Democrat"))
+
+#removing the white spaces
+first$first <- gsub(" ","", as.character(first$first))
+
+#remove the first two letters and the senator or other stuff
+first$first <- gsub('AL','',first$first)
 
 selectedRows <- df[ , df$x %like% "hsa-"]
 
