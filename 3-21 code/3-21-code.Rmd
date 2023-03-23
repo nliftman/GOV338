@@ -1,0 +1,51 @@
+---
+title: "March 21st Code"
+author: "Naomi Liftman"
+date: "2023-03-21"
+output: pdf_document
+---
+
+# Packages
+
+```{r}
+library(rio)
+library(statnet)
+library(tidyverse)
+```
+
+# Load the Data
+
+```{r}
+#load the data
+df <- import("state_data.xls")
+#mutate to only pick out required
+df_2 <- df %>%
+  select(state_name:gov_contrl)
+```
+
+# Copy of ID variables
+
+```{r}
+#copy all of the variables to have a j afterwards
+df_2 <- df_2 %>% 
+  mutate(state_name_j=state_name) %>%
+  mutate(state_control_j=state_control) %>% 
+  mutate(leg_contr_j=leg_contr) %>% 
+  mutate(gov_contrl_j=gov_contrl)
+```
+
+# Create all Possible Combinations
+
+```{r}
+combos <- df_2 %>% 
+  expand(state_name, state_name_j) %>%  
+  filter(state_name != state_name_j)
+```
+
+# Bring Other Data In
+
+
+
+
+
+
