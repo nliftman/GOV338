@@ -1,6 +1,6 @@
 ---
 title: "Converting Monadic Data into Dyadic"
-format: html
+format: pdf
 editor: visual
 ---
 
