@@ -22,31 +22,31 @@ library(rio)
 #pull the 117 congress connections 
 B_117 <- incidence.from.congress(session = 117, types = c("sres"), areas = c("All"), format = "igraph")
 
-network_117 <- sdsm(B, alpha = 0.01, narrative = TRUE)
+network_117 <- sdsm(B_117, alpha = 0.01, narrative = TRUE)
 
 ## Creates matrix object (note adjacency matrix)
-el_mat_117 <- as_edgelist(network)
+el_mat_117 <- as_edgelist(network_117)
 
 ### creates data frame object
-el_117 <- as.data.frame(as_edgelist(network))
+el_117 <- as.data.frame(as_edgelist(network_117))
 ```
 
 # Mutating Cosponsorship
 
 ```{r}
 #remove the senator title from both columns
-el_117$V1 <- sub("Sen. ", "", el$V1_117)
-el_117$V2 <- sub("Sen. ", "", el$V2_117)
+el_117$V1 <- sub("Sen. ", "", el_117$V1)
+el_117$V2 <- sub("Sen. ", "", el_117$V2)
 
 #remove everything after the [
-el_117$V1 <- gsub("\\[.*","", el$V1_117)
-el_117$V2 <- gsub("\\[.*","", el$V2_117)
+el_117$V1 <- gsub("\\[.*","", el_117$V1)
+el_117$V2 <- gsub("\\[.*","", el_117$V2)
 
 #add new columns with the first and last names
-el_117$v1_first <- gsub(".*\\, ", "", el$V1_117)   
-el_117$v1_last <- gsub("\\,.*","", el$V1_117)
-el_117$v2_first <- gsub(".*\\, ", "", el$V2_117)   
-el_117$v2_last <- gsub("\\,.*","", el$V1_117) 
+el_117$v1_first <- gsub(".*\\, ", "", el_117$V1)   
+el_117$v1_last <- gsub("\\,.*","", el_117$V1)
+el_117$v2_first <- gsub(".*\\, ", "", el_117$V2)   
+el_117$v2_last <- gsub("\\,.*","", el_117$V1) 
 
 #adding them together!
 edge_117 = el_117 %>% 
