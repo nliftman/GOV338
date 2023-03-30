@@ -63,7 +63,7 @@ edge_117 = el_117 %>%
 religion_117 <- import("/Users/naomiliftman/Desktop/GOV338/Final Project/117congress.xlsx") 
 
 #rename the last five names
-relig_117 <- religion %>% 
+relig_117 <- religion_117 %>% 
   rename_with(~ tolower(gsub(".", "", .x, fixed = TRUE))) %>% 
   rename("type" = 2) %>% 
   rename("name" = 3) %>% 
@@ -75,7 +75,7 @@ relig_117 <- religion %>%
 names(relig_117)[1] = "state"  
 
 #remove the first row
-relig_117 <- relig[-c(1:1), ]
+relig_117 <- relig_117[-c(1:1), ]
 ```
 
 
