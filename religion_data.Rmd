@@ -5,7 +5,7 @@ date: "2023-03-21"
 output: pdf_document
 ---
 ## Load Packages
-```{r}
+```{r message = FALSE, warning = FALSE, error = FALSE}
 library(rio)
 library(tidyverse)
 library(dplyr)

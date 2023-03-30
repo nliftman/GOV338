@@ -10,102 +10,75 @@ editor: visual
 ```{r warning = FALSE, error = FALSE, message = FALSE}
 library(incidentally)
 library(backbone)
-```
-
-# Cosponosorship Activities
-
-```{r warning = FALSE, error = FALSE}
-#pull a df with  legislators’ bill sponsorship activities
-I <- incidence.from.congress(session = 117, types = c("sres"), areas = c("All"), format = "data", narrative = TRUE)
-#pull a graph version
-B <- incidence.from.congress(session = 117, types = c("sres"), areas = c("All"), format = "igraph")
-network <- sdsm(B, alpha = 0.05, narrative = TRUE)
-```
-
-# Religious Affiliation
-
-```{r message = FALSE, warning = FALSE, error = FALSE}
+library(smnet)
+library(igraph)
 library(tidyverse)
-library(pdftools)
-library(data.table)
+library(rio)
 ```
+
+# Scott Code for Cosponsorship
+
+```{r warning = FALSE, message = FALSE, error = FALSE}
+#pull the 117 congress connections 
+B_117 <- incidence.from.congress(session = 117, types = c("sres"), areas = c("All"), format = "igraph")
+
+network_117 <- sdsm(B, alpha = 0.01, narrative = TRUE)
+
+## Creates matrix object (note adjacency matrix)
+el_mat_117 <- as_edgelist(network)
+
+### creates data frame object
+el_117 <- as.data.frame(as_edgelist(network))
+```
+
+# Mutating Cosponsorship
 
 ```{r}
-#import and separate on n
-pdf_2018 <- pdf_text("/Users/naomiliftman/Desktop/GOV338/Final Project/2018congressreligion.pdf") %>% 
-  str_split("\n")
+#remove the senator title from both columns
+el_117$V1 <- sub("Sen. ", "", el$V1_117)
+el_117$V2 <- sub("Sen. ", "", el$V2_117)
+
+#remove everything after the [
+el_117$V1 <- gsub("\\[.*","", el$V1_117)
+el_117$V2 <- gsub("\\[.*","", el$V2_117)
+
+#add new columns with the first and last names
+el_117$v1_first <- gsub(".*\\, ", "", el$V1_117)   
+el_117$v1_last <- gsub("\\,.*","", el$V1_117)
+el_117$v2_first <- gsub(".*\\, ", "", el$V2_117)   
+el_117$v2_last <- gsub("\\,.*","", el$V1_117) 
+
+#adding them together!
+edge_117 = el_117 %>% 
+  unite(v1_full, c(v1_first, v1_last), sep = "", remove = FALSE) %>% 
+  unite(v2_full, c(v2_first, v2_last), sep = "", remove = FALSE) %>% 
+  select(v1_full, v2_full)
 ```
+
+
+# Religion Data
 
 ```{r}
-#iterate through the pages and remove the header
-for(i in 1:12) { #sets the iteration to go through all 12 pages
-   pdf_2018[[i]] <- pdf_2018[[i]][-1:-5]
-}
+#importing the df 
+religion_117 <- import("/Users/naomiliftman/Desktop/GOV338/Final Project/117congress.xlsx") 
 
-#iterate through the pages and remove the footer!
-for(i in 1:12) { #sets the iteration to go through all 12 pages
-   pdf_2018[[i]] <- pdf_2018[[i]][-45:-49]
-}
-```
+#rename the last five names
+relig_117 <- religion %>% 
+  rename_with(~ tolower(gsub(".", "", .x, fixed = TRUE))) %>% 
+  rename("type" = 2) %>% 
+  rename("name" = 3) %>% 
+  rename("party" = 4 ) %>% 
+  rename("cont" = 5) %>% 
+  rename("religion" = 6)
 
-```{r}
-#first page, just to be easier to work with 
-first <- pdf_2018[[1]]
-first <- as.data.frame(first)
+#rename the state
+names(relig_117)[1] = "state"  
 
-#getting the states
-first$state<- substr(first$first, 1, 2)
-
-#getting the type they are
-first$type <-with(first, ifelse(first %like% "Senator", "Senator", "House"))
-
-#getting the party 
-first$party <- with(first, ifelse(first %like% " R ", "Republican", "Democrat"))
-
-#removing the white spaces
-first$first <- gsub(" ","", as.character(first$first))
-
-#remove the first two letters and the senator or other stuff
-first$first <- gsub('AL','',first$first)
-
-selectedRows <- df[ , df$x %like% "hsa-"]
-
-df$quality <- with(df, ifelse(scored > 95, 'great',
-                         ifelse(scored > 85, 'good', 'bad')))
-
-#mutating to get new columns
-reeee <- first %>% 
-  mutate(state = case_when(str_detect(first, " " ) ~ first))
+#remove the first row
+relig_117 <- relig[-c(1:1), ]
 ```
 
 
 
-```{r}
-for(i in 1:length(pdf_2018)) {
-  for(j in 1:length(pdf_2018[[i]])) {
-    pdf_2018[[i]][j] <- pdf_2018[[i]][j] %>% 
-      str
-    }
-}
-```
 
-
-
-```{r}
-#the website said to do this but it dont work :(
-pdf_2018_messingabout <- pdf_2018 %>% 
-  
-```
-
-```{r}
-#reeee
-pdf_cont <- gsub('\\\\','', pdf_2018_messingabout)
-
-
-for(i in 1:length(pdf_2018_messingabout)) {
-   pdf_2018_messingabout[[i]][1] <- pdf_2018_messingabout[[i]][1] %>%
-    stringr::str_extract("(?<=c[:punct:]\\\").*")
-}
-
-```
 
