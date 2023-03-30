@@ -16,7 +16,7 @@ library(tidyverse)
 library(rio)
 ```
 
-# Scott Code for Cosponsorship
+# Scott Code for Cosponsorship of 117th
 
 ```{r warning = FALSE, message = FALSE, error = FALSE}
 #pull the 117 congress connections 
@@ -31,7 +31,7 @@ el_mat_117 <- as_edgelist(network_117)
 el_117 <- as.data.frame(as_edgelist(network_117))
 ```
 
-# Mutating Cosponsorship
+# Mutating Cosponsorship of 117th
 
 ```{r}
 #remove the senator title from both columns
@@ -56,7 +56,7 @@ edge_117 = el_117 %>%
 ```
 
 
-# Religion Data
+# Religion Data 117th
 
 ```{r}
 #importing the df 
@@ -78,7 +78,50 @@ names(relig_117)[1] = "state"
 relig_117 <- relig_117[-c(1:1), ]
 ```
 
+# Scott Code for Cosponsorship of 112th
+
+```{r warning = FALSE, message = FALSE, error = FALSE}
+#pull the 117 congress connections 
+B_112 <- incidence.from.congress(session = 112, types = c("sres"), areas = c("All"), format = "igraph")
+
+network_112 <- sdsm(B_112, alpha = 0.01, narrative = TRUE)
+
+## Creates matrix object (note adjacency matrix)
+el_mat_112 <- as_edgelist(network_112)
+
+### creates data frame object
+el_112 <- as.data.frame(as_edgelist(network_112))
+```
+
+# Mutating Cosponsorship of 117th
+
+```{r}
+#remove the senator title from both columns
+el_112$V1 <- sub("Sen. ", "", el_112$V1)
+el_112$V2 <- sub("Sen. ", "", el_112$V2)
+
+#remove everything after the [
+el_112$V1 <- gsub("\\[.*","", el_112$V1)
+el_112$V2 <- gsub("\\[.*","", el_112$V2)
+
+#add new columns with the first and last names
+el_112$v1_first <- gsub(".*\\, ", "", el_112$V1)   
+el_112$v1_last <- gsub("\\,.*","", el_112$V1)
+el_112$v2_first <- gsub(".*\\, ", "", el_112$V2)   
+el_112$v2_last <- gsub("\\,.*","", el_112$V1) 
+
+#adding them together!
+edge_112 = el_112 %>% 
+  unite(v1_full, c(v1_first, v1_last), sep = "", remove = FALSE) %>% 
+  unite(v2_full, c(v2_first, v2_last), sep = "", remove = FALSE) %>% 
+  select(v1_full, v2_full)
+```
 
 
+# Religion Data 112th
 
+```{r}
+#importing the df 
+#need to get a new csv from my boy scott!
+```
 
