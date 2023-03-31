@@ -88,8 +88,8 @@ religion_112 <- import("/Users/naomiliftman/Desktop/GOV338/Final Project/112cong
 relig_112 <- religion_112 %>% 
   rename_with(~ tolower(gsub(".", "", .x, fixed = TRUE))) %>% 
   rename("member_name" = 2) %>% 
-  rename("religius_affiliation" = 4 ) %>% 
-  sele
+  rename("religious_affiliation" = 4 ) %>% 
+  select("member_name", "religious_affiliation")
 
 #rename the state
 names(relig_117)[1] = "state"  
