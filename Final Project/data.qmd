@@ -14,6 +14,7 @@ library(smnet)
 library(igraph)
 library(tidyverse)
 library(rio)
+library(tidyr)
 ```
 
 # Scott Code for Cosponsorship of 117th
@@ -54,7 +55,6 @@ edge_117 = el_117 %>%
   unite(v2_full, c(v2_first, v2_last), sep = "", remove = FALSE) %>% 
   select(v1_full, v2_full)
 ```
-
 
 # Religion Data 117th
 
@@ -117,7 +117,6 @@ edge_112 = el_112 %>%
   select(v1_full, v2_full)
 ```
 
-
 # Religion Data 112th
 
 ```{r}
@@ -125,3 +124,30 @@ edge_112 = el_112 %>%
 #need to get a new csv from my boy scott!
 ```
 
+# Merging the 117th Religion and edge list \<3
+
+```{r}
+#okay only wanna see name and religion and the type 
+#cant figure out why we dont have any house repts
+relig_117 <- relig_117 %>% 
+  select(name, religion, type)
+
+#now we have something that has the first senators religion
+t_117 <- full_join(relig_117, edge_117, by = c("name" = "v1_full")) 
+
+#rename so we have a name i and a religion i 
+t_117 <- t_117 %>% 
+  rename("name_i" = "name",
+         "religion_i" = "religion") 
+
+#now we have something that has the second senators religion
+jesus_117 <- full_join(relig_117, edge_117, by = c("name" = "v2_full"))
+
+#rename so we have a name j and a religion j 
+jesus_117 <- jesus %>% 
+  rename("name_j" = "name",
+         "religion_j" = "religion") %>% 
+  is.na(jesus$v1_full)
+
+all_117 <- cbind(jesus, t_117)
+```
