@@ -56,7 +56,7 @@ edge_117_senate = el_117_senate %>%
   select(v1_full, v2_full)
 ```
 
-# Scott Code for Cosponsorship in HOUSE
+# Scott Code for Cosponsorship in 117th HOUSE
 
 ```{r warning = FALSE, message = FALSE, error = FALSE}
 #pull the 117 senators connections 
@@ -74,22 +74,20 @@ el_117_house <- as.data.frame(as_edgelist(network_117_house))
 
 # Mutating Cosponsorship of 117th HOUSE
 
-
-
-
-
-# Religion Data 112th
+# RELIGION FOR 117th
 
 ```{r}
 #importing the df 
-religion_112 <- import("/Users/naomiliftman/Desktop/GOV338/Final Project/112congress.xlsx") 
+religion_117 <- import("/Users/naomiliftman/Desktop/GOV338/Final Project/117congress.xlsx")
 
 #rename the last five names
-relig_112 <- religion_112 %>% 
-  rename_with(~ tolower(gsub(".", "", .x, fixed = TRUE))) %>% 
-  rename("member_name" = 2) %>% 
-  rename("religious_affiliation" = 4 ) %>% 
-  select("member_name", "religious_affiliation")
+relig_117 <- religion_117 %>% 
+    rename_with(~ tolower(gsub(".", "", .x, fixed = TRUE))) %>%
+  rename("type" = 2) %>% 
+  rename("name" = 3) %>% 
+  rename("party" = 4 ) %>% 
+  rename("cont" = 5) %>% 
+  rename("religion" = 6)
 
 #rename the state
 names(relig_117)[1] = "state"  
@@ -97,13 +95,6 @@ names(relig_117)[1] = "state"
 #remove the first row
 relig_117 <- relig_117[-c(1:1), ]
 ```
-
-
-
-
-
-
-
 
 # Scott Code for Cosponsorship of 112th SENATE
 
@@ -177,4 +168,18 @@ jesus_117 <- jesus %>%
   is.na(jesus$v1_full)
 
 all_117 <- cbind(jesus, t_117)
+```
+
+# Religion Data 112th
+
+```{r}
+#importing the df 
+religion_112 <- import("/Users/naomiliftman/Desktop/GOV338/Final Project/112congress.xlsx") 
+
+#rename the last five names
+relig_112 <- religion_112 %>% 
+  rename_with(~ tolower(gsub(".", "", .x, fixed = TRUE))) %>% 
+  rename("member_name" = 2) %>% 
+  rename("religious_affiliation" = 4 ) %>% 
+  select("member_name", "religious_affiliation")
 ```
