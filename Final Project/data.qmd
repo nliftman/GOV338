@@ -47,7 +47,7 @@ el_117_senate$V2 <- gsub("\\[.*","", el_117_senate$V2)
 el_117_senate$v1_first <- gsub(".*\\, ", "", el_117_senate$V1)   
 el_117_senate$v1_last <- gsub("\\,.*","", el_117_senate$V1)
 el_117_senate$v2_first <- gsub(".*\\, ", "", el_117_senate$V2)   
-el_117_senate$v2_last <- gsub("\\,.*","", el_117_senate$V1) 
+el_117_senate$v2_last <- gsub("\\,.*","", el_117_senate$V2) 
 
 #adding them together!
 edge_117_senate = el_117_senate %>% 
@@ -74,6 +74,40 @@ el_117_house <- as.data.frame(as_edgelist(network_117_house))
 
 # Mutating Cosponsorship of 117th HOUSE
 
+```{r}
+#remove the house title from both columns
+el_117_house$V1 <- sub("Rep. ", "", el_117_house$V1)
+el_117_house$V2 <- sub("Rep. ", "", el_117_house$V2)
+
+#remove everything after the [
+el_117_house$V1 <- gsub("\\[.*","", el_117_house$V1)
+el_117_house$V2 <- gsub("\\[.*","", el_117_house$V2)
+
+#add new columns with the first and last names
+el_117_house$v1_first <- gsub(".*\\, ", "", el_117_house$V1)   
+el_117_house$v1_last <- gsub("\\,.*","", el_117_house$V1)
+el_117_house$v2_first <- gsub(".*\\, ", "", el_117_house$V2)   
+el_117_house$v2_last <- gsub("\\,.*","", el_117_house$V2) 
+
+#adding them together!
+edge_117_house = el_117_house %>% 
+  unite(v1_full, c(v1_first, v1_last), sep = "", remove = FALSE) %>% 
+  unite(v2_full, c(v2_first, v2_last), sep = "", remove = FALSE) %>% 
+  select(v1_full, v2_full)
+```
+
+# MAKING THE FULL EDGE LIST 117th! 
+
+```{r}
+#full 117th dataframe
+full_117_edge <- rbind(edge_117_house, edge_117_senate)
+
+#renaming to get in correct scheme
+full_117_edge <- full_117_edge %>% 
+  rename("member_i" = 1,
+         "member_j" = 2)
+```
+
 # RELIGION FOR 117th
 
 ```{r}
@@ -94,7 +128,70 @@ names(relig_117)[1] = "state"
 
 #remove the first row
 relig_117 <- relig_117[-c(1:1), ]
+
+#only want their name and religion
+relig_117 <- relig_117 %>% 
+  select("name", "religion")
 ```
+
+# Merging the 117th full with the religion!!
+
+```{r}
+#now we have something that has the first senators religion
+t_117_first <- full_join(relig_117, full_117_edge, by = c("name" = "member_i")) 
+
+#rename so we have a name i and a religion i 
+#and only select the i's
+t_117_first <- t_117_first %>% 
+  rename("religion_i" = "religion",
+         "member_i" = "name") %>% 
+  select("member_i", "religion_i")
+
+#now we have something that has the second senators religion
+t_117_second <- full_join(relig_117, full_117_edge, by = c("name" = "member_j"))
+
+#now we have the name j and religion j 
+#and only select the js
+t_117_second <- t_117_second %>% 
+  rename("religion_j" = "religion",
+         "member_j" = "name") %>% 
+  select("member_j", "religion_j")
+
+#now we just need them all together!!!
+all_117 <- cbind(t_117_first, t_117_second)
+
+#need to make the NAs of the religions but we dont want NAs of the ties
+#there were 37662 ties before running this
+#THEY are the same!! this is slay
+#this is just a gut check we did it correctly
+all_117[!is.na(all_117$member_i),]
+all_117[!is.na(all_117$member_j),]
+
+#now we want to make all the NAs be "Don't know/refused"
+#for i
+all_117$religion_i <- all_117$religion_i %>%  
+  replace_na("Don't know/refused")
+
+#for j
+all_117$religion_j <- all_117$religion_j %>%  
+  replace_na("Don't know/refused")
+#YAYAYYAYAYAY
+
+#now we want to assign a value to if they have the same religion!
+DF$score_young <- ifelse(DF$Age <= 16, DF$Score, NA)
+
+#create similarity score!! yay!!
+all_117$similarity<- ifelse(all_117$religion_i == all_117$religion_j, 1, 0)
+
+```
+
+
+
+
+
+
+
+
 
 # Scott Code for Cosponsorship of 112th SENATE
 
@@ -111,7 +208,7 @@ el_mat_112_senate <- as_edgelist(network_112_senate)
 el_112_senate <- as.data.frame(as_edgelist(network_112_senate))
 ```
 
-# Mutating Cosponsorship of 117th
+# Mutating Cosponsorship of 112th SENATE
 
 ```{r}
 #remove the senator title from both columns
@@ -139,41 +236,6 @@ edge_112_senate = el_112_senate %>%
 
 ```{r}
 #importing the df 
-#need to get a new csv from my boy scott!
-```
-
-# Merging the 117th Religion and edge list \<3
-
-```{r}
-#okay only wanna see name and religion and the type 
-#cant figure out why we dont have any house repts
-relig_117 <- relig_117 %>% 
-  select(name, religion, type)
-
-#now we have something that has the first senators religion
-t_117 <- full_join(relig_117, edge_117, by = c("name" = "v1_full")) 
-
-#rename so we have a name i and a religion i 
-t_117 <- t_117 %>% 
-  rename("name_i" = "name",
-         "religion_i" = "religion") 
-
-#now we have something that has the second senators religion
-jesus_117 <- full_join(relig_117, edge_117, by = c("name" = "v2_full"))
-
-#rename so we have a name j and a religion j 
-jesus_117 <- jesus %>% 
-  rename("name_j" = "name",
-         "religion_j" = "religion") %>% 
-  is.na(jesus$v1_full)
-
-all_117 <- cbind(jesus, t_117)
-```
-
-# Religion Data 112th
-
-```{r}
-#importing the df 
 religion_112 <- import("/Users/naomiliftman/Desktop/GOV338/Final Project/112congress.xlsx") 
 
 #rename the last five names
@@ -183,3 +245,4 @@ relig_112 <- religion_112 %>%
   rename("religious_affiliation" = 4 ) %>% 
   select("member_name", "religious_affiliation")
 ```
+
