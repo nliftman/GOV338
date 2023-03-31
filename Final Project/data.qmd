@@ -17,59 +17,79 @@ library(rio)
 library(tidyr)
 ```
 
-# Scott Code for Cosponsorship of 117th
+# Scott Code for Cosponsorship of 117th SENATE
 
 ```{r warning = FALSE, message = FALSE, error = FALSE}
-#pull the 117 congress connections 
-B_117 <- incidence.from.congress(session = 117, types = c("sres"), areas = c("All"), format = "igraph")
+#pull the 117 senators connections 
+B_117_senate <- incidence.from.congress(session = 117, types = c("s", "sres", "sjres", "sconres"), areas = c("All"), format = "igraph")
 
-network_117 <- sdsm(B_117, alpha = 0.01, narrative = TRUE)
+network_117_senate <- sdsm(B_117_senate, alpha = 0.01, narrative = TRUE)
 
 ## Creates matrix object (note adjacency matrix)
-el_mat_117 <- as_edgelist(network_117)
+el_mat_117_senate <- as_edgelist(network_117_senate)
 
 ### creates data frame object
-el_117 <- as.data.frame(as_edgelist(network_117))
+el_117_senate <- as.data.frame(as_edgelist(network_117_senate))
 ```
 
-# Mutating Cosponsorship of 117th
+# Mutating Cosponsorship of 117th SENATE
 
 ```{r}
 #remove the senator title from both columns
-el_117$V1 <- sub("Sen. ", "", el_117$V1)
-el_117$V2 <- sub("Sen. ", "", el_117$V2)
+el_117_senate$V1 <- sub("Sen. ", "", el_117_senate$V1)
+el_117_senate$V2 <- sub("Sen. ", "", el_117_senate$V2)
 
 #remove everything after the [
-el_117$V1 <- gsub("\\[.*","", el_117$V1)
-el_117$V2 <- gsub("\\[.*","", el_117$V2)
+el_117_senate$V1 <- gsub("\\[.*","", el_117_senate$V1)
+el_117_senate$V2 <- gsub("\\[.*","", el_117_senate$V2)
 
 #add new columns with the first and last names
-el_117$v1_first <- gsub(".*\\, ", "", el_117$V1)   
-el_117$v1_last <- gsub("\\,.*","", el_117$V1)
-el_117$v2_first <- gsub(".*\\, ", "", el_117$V2)   
-el_117$v2_last <- gsub("\\,.*","", el_117$V1) 
+el_117_senate$v1_first <- gsub(".*\\, ", "", el_117_senate$V1)   
+el_117_senate$v1_last <- gsub("\\,.*","", el_117_senate$V1)
+el_117_senate$v2_first <- gsub(".*\\, ", "", el_117_senate$V2)   
+el_117_senate$v2_last <- gsub("\\,.*","", el_117_senate$V1) 
 
 #adding them together!
-edge_117 = el_117 %>% 
+edge_117_senate = el_117_senate %>% 
   unite(v1_full, c(v1_first, v1_last), sep = "", remove = FALSE) %>% 
   unite(v2_full, c(v2_first, v2_last), sep = "", remove = FALSE) %>% 
   select(v1_full, v2_full)
 ```
 
-# Religion Data 117th
+# Scott Code for Cosponsorship in HOUSE
+
+```{r warning = FALSE, message = FALSE, error = FALSE}
+#pull the 117 senators connections 
+B_117_house <- incidence.from.congress(session = 117, types = c("hr", "hres", "hjres", "hconres"), areas = c("All"), format = "igraph")
+
+#this is taking forever to run, not sure why, will check out later
+network_117_house <- sdsm(B_117_house, alpha = 0.01, narrative = TRUE)
+
+## Creates matrix object (note adjacency matrix)
+el_mat_117_house <- as_edgelist(network_117_house)
+
+### creates data frame object
+el_117_house <- as.data.frame(as_edgelist(network_117_house))
+```
+
+# Mutating Cosponsorship of 117th HOUSE
+
+
+
+
+
+# Religion Data 112th
 
 ```{r}
 #importing the df 
-religion_117 <- import("/Users/naomiliftman/Desktop/GOV338/Final Project/117congress.xlsx") 
+religion_112 <- import("/Users/naomiliftman/Desktop/GOV338/Final Project/112congress.xlsx") 
 
 #rename the last five names
-relig_117 <- religion_117 %>% 
+relig_112 <- religion_112 %>% 
   rename_with(~ tolower(gsub(".", "", .x, fixed = TRUE))) %>% 
-  rename("type" = 2) %>% 
-  rename("name" = 3) %>% 
-  rename("party" = 4 ) %>% 
-  rename("cont" = 5) %>% 
-  rename("religion" = 6)
+  rename("member_name" = 2) %>% 
+  rename("religius_affiliation" = 4 ) %>% 
+  sele
 
 #rename the state
 names(relig_117)[1] = "state"  
@@ -78,40 +98,47 @@ names(relig_117)[1] = "state"
 relig_117 <- relig_117[-c(1:1), ]
 ```
 
-# Scott Code for Cosponsorship of 112th
+
+
+
+
+
+
+
+# Scott Code for Cosponsorship of 112th SENATE
 
 ```{r warning = FALSE, message = FALSE, error = FALSE}
 #pull the 117 congress connections 
-B_112 <- incidence.from.congress(session = 112, types = c("sres"), areas = c("All"), format = "igraph")
+B_112_senate <- incidence.from.congress(session = 112, types = c("s", "sres", "sjres", "sconres"), areas = c("All"), format = "igraph")
 
-network_112 <- sdsm(B_112, alpha = 0.01, narrative = TRUE)
+network_112_senate <- sdsm(B_112_senate, alpha = 0.01, narrative = TRUE)
 
 ## Creates matrix object (note adjacency matrix)
-el_mat_112 <- as_edgelist(network_112)
+el_mat_112_senate <- as_edgelist(network_112_senate)
 
 ### creates data frame object
-el_112 <- as.data.frame(as_edgelist(network_112))
+el_112_senate <- as.data.frame(as_edgelist(network_112_senate))
 ```
 
 # Mutating Cosponsorship of 117th
 
 ```{r}
 #remove the senator title from both columns
-el_112$V1 <- sub("Sen. ", "", el_112$V1)
-el_112$V2 <- sub("Sen. ", "", el_112$V2)
+el_112_senate$V1 <- sub("Sen. ", "", el_112_senate$V1)
+el_112_senate$V2 <- sub("Sen. ", "", el_112_senate$V2)
 
 #remove everything after the [
-el_112$V1 <- gsub("\\[.*","", el_112$V1)
-el_112$V2 <- gsub("\\[.*","", el_112$V2)
+el_112_senate$V1 <- gsub("\\[.*","", el_112_senate$V1)
+el_112_senate$V2 <- gsub("\\[.*","", el_112_senate$V2)
 
 #add new columns with the first and last names
-el_112$v1_first <- gsub(".*\\, ", "", el_112$V1)   
-el_112$v1_last <- gsub("\\,.*","", el_112$V1)
-el_112$v2_first <- gsub(".*\\, ", "", el_112$V2)   
-el_112$v2_last <- gsub("\\,.*","", el_112$V1) 
+el_112_senate$v1_first <- gsub(".*\\, ", "", el_112_senate$V1)   
+el_112_senate$v1_last <- gsub("\\,.*","", el_112_senate$V1)
+el_112_senate$v2_first <- gsub(".*\\, ", "", el_112_senate$V2)   
+el_112_senate$v2_last <- gsub("\\,.*","", el_112_senate$V1) 
 
 #adding them together!
-edge_112 = el_112 %>% 
+edge_112_senate = el_112_senate %>% 
   unite(v1_full, c(v1_first, v1_last), sep = "", remove = FALSE) %>% 
   unite(v2_full, c(v2_first, v2_last), sep = "", remove = FALSE) %>% 
   select(v1_full, v2_full)
