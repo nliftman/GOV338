@@ -167,6 +167,10 @@ all_117 <- cbind(t_117_first, t_117_second)
 all_117[!is.na(all_117$member_i),]
 all_117[!is.na(all_117$member_j),]
 
+#count the number of NAs
+sum(is.na(all_117$religion_i))
+sum(is.na(all_117$religion_j))
+
 #now we want to make all the NAs be "Don't know/refused"
 #for i
 all_117$religion_i <- all_117$religion_i %>%  
@@ -177,20 +181,13 @@ all_117$religion_j <- all_117$religion_j %>%
   replace_na("Don't know/refused")
 #YAYAYYAYAYAY
 
-#now we want to assign a value to if they have the same religion!
-DF$score_young <- ifelse(DF$Age <= 16, DF$Score, NA)
-
 #create similarity score!! yay!!
 all_117$similarity<- ifelse(all_117$religion_i == all_117$religion_j, 1, 0)
 
+#trying to remove the ones where the member is the same member!! 
+#all done!!
+all_117 <- all_117[all_117$member_i != all_117$member_j, ]      
 ```
-
-
-
-
-
-
-
 
 
 # Scott Code for Cosponsorship of 112th SENATE
@@ -207,7 +204,6 @@ el_mat_112_senate <- as_edgelist(network_112_senate)
 ### creates data frame object
 el_112_senate <- as.data.frame(as_edgelist(network_112_senate))
 ```
-
 # Mutating Cosponsorship of 112th SENATE
 
 ```{r}
@@ -232,6 +228,47 @@ edge_112_senate = el_112_senate %>%
   select(v1_full, v2_full)
 ```
 
+# Scott Code for Cosponsorship in the 112th HOUSE
+
+```{r warning = FALSE, message = FALSE, error = FALSE}
+#pull the 117 senators connections 
+B_112_house <- incidence.from.congress(session = 112, types = c("hr", "hres", "hjres", "hconres"), areas = c("All"), format = "igraph")
+
+#this is taking forever to run, not sure why, will check out later
+network_112_house <- sdsm(B_112_house, alpha = 0.01, narrative = TRUE)
+
+## Creates matrix object (note adjacency matrix)
+el_mat_112_house <- as_edgelist(network_112_house)
+
+### creates data frame object
+el_112_house <- as.data.frame(as_edgelist(network_112_house))
+```
+
+# Mutating Cosponsorship of 112th HOUSE
+
+```{r}
+#remove the house title from both columns
+el_112_house$V1 <- sub("Rep. ", "", el_112_house$V1)
+el_112_house$V2 <- sub("Rep. ", "", el_112_house$V2)
+
+#remove everything after the [
+el_112_house$V1 <- gsub("\\[.*","", el_112_house$V1)
+el_112_house$V2 <- gsub("\\[.*","", el_112_house$V2)
+
+#add new columns with the first and last names
+el_112_house$v1_first <- gsub(".*\\, ", "", el_112_house$V1)   
+el_112_house$v1_last <- gsub("\\,.*","", el_112_house$V1)
+el_112_house$v2_first <- gsub(".*\\, ", "", el_112_house$V2)   
+el_112_house$v2_last <- gsub("\\,.*","", el_112_house$V2) 
+
+#adding them together!
+edge_112_house = el_112_house %>% 
+  unite(v1_full, c(v1_first, v1_last), sep = "", remove = FALSE) %>% 
+  unite(v2_full, c(v2_first, v2_last), sep = "", remove = FALSE) %>% 
+  select(v1_full, v2_full)
+```
+
+
 # Religion Data 112th
 
 ```{r}
@@ -246,3 +283,66 @@ relig_112 <- religion_112 %>%
   select("member_name", "religious_affiliation")
 ```
 
+# Merging the 112th full with the religion!!
+
+```{r}
+#full 117th dataframe
+full_112_edge <- rbind(edge_112_house, edge_112_senate)
+
+#renaming to get in correct scheme
+full_112_edge <- full_112_edge %>% 
+  rename("member_i" = 1,
+         "member_j" = 2)
+
+#now we have something that has the first senators religion
+t_112_first <- full_join(relig_112, full_112_edge, by = c("member_name" = "member_i")) 
+
+#remove all the NAs that were created
+t_112_first <- t_112_first %>% 
+  drop_na(member_j)
+
+#rename so we have a name i and a religion i 
+#and only select the i's
+t_112_first <- t_112_first %>% 
+  rename("religion_i" = "religious_affiliation",
+         "member_i" = "member_name") %>% 
+  select("member_i", "religion_i")
+
+#now we have something that has the second senators religion
+t_112_second <- full_join(relig_112, full_112_edge, by = c("member_name" = "member_j"))
+
+#remove all the NAs that were created
+t_112_second <- t_112_second %>% 
+  drop_na(member_i)
+
+#now we have the name j and religion j 
+#and only select the js
+t_112_second <- t_112_second %>% 
+  rename("religion_j" = "religious_affiliation",
+         "member_j" = "member_name") %>% 
+  select("member_j", "religion_j")
+
+#now we just need them all together!!!
+all_112 <- cbind(t_112_first, t_112_second)
+
+#count the number of NAs
+sum(is.na(all_112$religion_i))
+sum(is.na(all_112$religion_j))
+
+#now we want to make all the NAs be "Don't know/refused"
+#for i
+all_112$religion_i <- all_112$religion_i %>%  
+  replace_na("Unspecified")
+
+#for j
+all_112$religion_j <- all_112$religion_j %>%  
+  replace_na("Unspecified")
+#YAYAYYAYAYAY
+
+#create similarity score!! yay!!
+all_112$similarity<- ifelse(all_112$religion_i == all_112$religion_j, 1, 0)
+
+#trying to remove the ones where the member is the same member!! 
+#all done!!
+all_112 <- all_112[all_112$member_i != all_112$member_j, ]      
+```
