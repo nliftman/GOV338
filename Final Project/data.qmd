@@ -408,12 +408,25 @@ relig_117 %>%
   group_by(religion) %>% 
   summarize(n = n())
 
-#fix all methodist
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'African Methodist Episcopal', 'Methodist', rel_112$religious_affiliation)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Evangelical Methodist', 'Methodist', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'United Methodist', 'Methodist', rel_112$fix_relig)
+rel_117 <- relig_117
+
+#fix all protestant
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Adventist', 'Protestant', rel_117$religion)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Congregationalist', 'Protestant', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Pentecostal', 'Protestant', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Protestant unspecified', 'Protestant', rel_117$fix_relig)
+
+#fix all general christianity
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Pietist', 'General Christianity', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Reformed', 'General Christianity', rel_117$fix_relig)
+
+#fixing all non-denominational
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Unaffiliated', 'Nondemoninational', rel_117$fix_relig)
 
 
+rel_117 %>% 
+  group_by(fix_relig) %>% 
+  summarize(n = n())
 ```
 
 
