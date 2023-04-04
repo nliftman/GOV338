@@ -1,0 +1,47 @@
+---
+title: "Lab 4"
+author: "Naomi Liftman"
+date: "2023-04-04"
+output: pdf_document
+---
+# Lab 4
+
+I will be using the `civil_rights.csv` data, as the data we are using for our project is around 35,000 edges. 
+
+Part 1- loading data and summary statistics
+Load your data, convert it into a network, and plot it. For now, only load rio , igraph, and tidyverse.
+## Section 1
+### Part 1 
+```{r message = FALSE, warning = FALSE, error = FALSE}
+library(rio)
+library(igraph)
+library(tidyverse)
+```
+
+```{r}
+
+```
+
+
+
+Provide the following descriptive of the network: number of edges, number of nodes, density, and report the minimum, maximum, and mean degree in our network.
+
+Identify and list the 3 nodes with the highest degree in the data.
+
+Part 2- Role Analysis
+Load concoR and construct a correlation of ties between your nodes. Look at the first column of the correlation matrix, which reflects the correlations between that node and all others in the data. Which node is most strongly correlated with the first node? Hint you need to first extract an adjacency matrix from your igraph object.
+
+Use Concor’s hierarhcical clustering algorithm (concor_hca) to partition you matrix. How many blocks are produced?
+
+Assign the blocks to your nodes in the network and plot the network with node color being determined by block membership.
+
+Look at the plot, the correlation matrix, and your calculations for node degree. Were you surprised by which groups were put in the same block?
+
+Part 3- Dendograms and collapsed block graphs
+You can now load SNA and network. Use the equiv.clust command to calculate structurally equivalent nodes in your matrix. Plot the results.
+
+Partition your data (rect.hclust command) by the number of blocks you believe best divide the plot produced in 8. Re-make the plot with the partitions overlaid.
+
+Estimate the blockmodel (blockmodel) with the specified number of divisions you felt was the best fit for 9. Plot the collapsed version of the block model (see gplot sample code).
+
+Lastly, look at the nodes that are assigned to the same blocks. Can you identify any similar between these nodes, either in how they appear in the visualized network, or based on some characteristics of the nodes? For example, are states grouped by ideology/region, etc?
