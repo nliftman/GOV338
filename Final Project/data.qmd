@@ -249,6 +249,9 @@ rel_117$fix_relig <- rel_117$fix_relig %>% replace_na('Unknown')
 rel_117 %>% 
   group_by(fix_relig) %>% 
   summarize(n = n())
+
+rel_117 <- rel_117 %>% 
+  select("name", "fix_relig")
 ```
 
 
@@ -324,6 +327,9 @@ rel_112$fix_relig <- rel_112$fix_relig %>% replace_na('Unknown')
 rel_112 %>% 
   group_by(fix_relig) %>% 
   summarize(n = n())
+
+rel_112 <- rel_112 %>% 
+  select("member_name", "fix_relig")
 ```
 
 
@@ -331,22 +337,22 @@ rel_112 %>%
 
 ```{r}
 #now we have something that has the first senators religion
-t_117_first <- full_join(relig_117, full_117_edge, by = c("name" = "member_i")) 
+t_117_first <- full_join(rel_117, full_117_edge, by = c("name" = "member_i")) 
 
 #rename so we have a name i and a religion i 
 #and only select the i's
 t_117_first <- t_117_first %>% 
-  rename("religion_i" = "religion",
+  rename("religion_i" = "fix_relig",
          "member_i" = "name") %>% 
   select("member_i", "religion_i")
 
 #now we have something that has the second senators religion
-t_117_second <- full_join(relig_117, full_117_edge, by = c("name" = "member_j"))
+t_117_second <- full_join(rel_117, full_117_edge, by = c("name" = "member_j"))
 
 #now we have the name j and religion j 
 #and only select the js
 t_117_second <- t_117_second %>% 
-  rename("religion_j" = "religion",
+  rename("religion_j" = "fix_relig",
          "member_j" = "name") %>% 
   select("member_j", "religion_j")
 
@@ -364,20 +370,20 @@ all_117[!is.na(all_117$member_j),]
 sum(is.na(all_117$religion_i))
 sum(is.na(all_117$religion_j))
 
-#now we want to make all the NAs be "Don't know/refused"
+#now we want to make all the NAs be "Unknown
 #for i
 all_117$religion_i <- all_117$religion_i %>%  
-  replace_na("Don't know/refused")
+  replace_na("Unknown")
 
 #for j
 all_117$religion_j <- all_117$religion_j %>%  
-  replace_na("Don't know/refused")
+  replace_na("Unknown")
 #YAYAYYAYAYAY
 
 #create similarity score!! yay!!
 all_117$similarity<- ifelse(all_117$religion_i == all_117$religion_j, 1, 0)
 
-#trying to remove the ones where the member is the same member!! 
+2#trying to remove the ones where the member is the same member!! 
 #all done!!
 all_117 <- all_117[all_117$member_i != all_117$member_j, ]      
 ```
@@ -396,7 +402,7 @@ full_112_edge <- full_112_edge %>%
          "member_j" = 2)
 
 #now we have something that has the first senators religion
-t_112_first <- full_join(relig_112, full_112_edge, by = c("member_name" = "member_i")) 
+t_112_first <- full_join(rel_112, full_112_edge, by = c("member_name" = "member_i")) 
 
 #remove all the NAs that were created
 t_112_first <- t_112_first %>% 
@@ -405,7 +411,7 @@ t_112_first <- t_112_first %>%
 #rename so we have a name i and a religion i 
 #and only select the i's
 t_112_first <- t_112_first %>% 
-  rename("religion_i" = "religious_affiliation",
+  rename("religion_i" = "fix_relig",
          "member_i" = "member_name") %>% 
   select("member_i", "religion_i")
 
@@ -430,14 +436,14 @@ all_112 <- cbind(t_112_first, t_112_second)
 sum(is.na(all_112$religion_i))
 sum(is.na(all_112$religion_j))
 
-#now we want to make all the NAs be "Don't know/refused"
+#now we want to make all the NAs be "Unknown"
 #for i
 all_112$religion_i <- all_112$religion_i %>%  
-  replace_na("Unspecified")
+  replace_na("Unknown")
 
 #for j
 all_112$religion_j <- all_112$religion_j %>%  
-  replace_na("Unspecified")
+  replace_na("Unknown")
 #YAYAYYAYAYAY
 
 #create similarity score!! yay!!
