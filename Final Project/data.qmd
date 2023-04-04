@@ -382,6 +382,7 @@ rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Christian', 'Assor
 rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Community of Christ', 'Assorted Christianity', rel_112$fix_relig)
 rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Eastern Orthodox', 'Assorted Christianity', rel_112$fix_relig)
 rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Evangelical Christian', 'Assorted Christianity', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Unitarian', 'Assorted Christianity', rel_112$fix_relig)
 
 #fixing all baptists
 rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Congregationalist Baptist', 'Baptist', rel_112$fix_relig)
