@@ -9,9 +9,11 @@ output: pdf_document
 I will be using the `civil_rights.csv` data, as the data we are using for our project is around 35,000 edges. 
 
 Part 1- loading data and summary statistics
+
+## Part 1
+### Question 1
 Load your data, convert it into a network, and plot it. For now, only load rio , igraph, and tidyverse.
-## Section 1
-### Part 1 
+
 ```{r message = FALSE, warning = FALSE, error = FALSE}
 library(rio)
 library(igraph)
@@ -19,10 +21,24 @@ library(tidyverse)
 ```
 
 ```{r}
-
+#import data
+civ <- import("/Users/naomiliftman/Desktop/GOV338/lab4/civil_rights.csv")
+#create a network
+civ_net <- graph.data.frame(civ, directed=T)
+#plot
+plot(civ_net, edge.width=.3,  edge.arrow.size=.3,
+     vertex.color="green")
 ```
 
 
+### Question 2
+```{r}
+#providing descriptive statistics
+gsize(civ_net)
+vcount(civ_net)
+summary(degree(civ_net))
+```
+There are 50 nodes and 263 edges. The minimum is 3 maximum is 21 and mean is 10.52. 
 
 Provide the following descriptive of the network: number of edges, number of nodes, density, and report the minimum, maximum, and mean degree in our network.
 
