@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-0.9.449">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Lab 4- Due Friday, April 14th</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+<script src="lab4_files/libs/clipboard/clipboard.min.js"></script>
+<script src="lab4_files/libs/quarto-html/quarto.js"></script>
+<script src="lab4_files/libs/quarto-html/popper.min.js"></script>
+<script src="lab4_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="lab4_files/libs/quarto-html/anchor.min.js"></script>
+<link href="lab4_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link id="quarto-text-highlighting-styles" href="lab4_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet">
+<script src="lab4_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="lab4_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="lab4_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet">
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Lab 4- Due Friday, April 14th</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    
+  </div>
+  
+
+</header>
+
+<section id="overview" class="level1">
+<h1>Overview</h1>
+<p>For this lab, you can either use your group’s final project data, or the sample network data provided. The sample data is on the latent network of state policy adoptions on civil rights. If your network is particularly challenging to plot/visualize, I suggest you use the provided data, but that isn’t a requirement.</p>
+</section>
+<section id="part-1--loading-data-and-summary-statistics" class="level1">
+<h1>Part 1- loading data and summary statistics</h1>
+<ol type="1">
+<li><p>Load your data, convert it into a network, and plot it. For now, only load rio , igraph, and tidyverse.</p></li>
+<li><p>Provide the following descriptive of the network: number of edges, number of nodes, density, and report the minimum, maximum, and mean degree in our network.</p></li>
+<li><p>Identify and list the 3 nodes with the highest degree in the data.</p></li>
+</ol>
+</section>
+<section id="part-2--role-analysis" class="level1">
+<h1>Part 2- Role Analysis</h1>
+<ol start="4" type="1">
+<li><p>Load concoR and construct a correlation of ties between your nodes. Look at the first column of the correlation matrix, which reflects the correlations between that node and all others in the data. Which node is most strongly correlated with the first node? Hint you need to first extract an adjacency matrix from your igraph object.</p></li>
+<li><p>Use Concor’s hierarhcical clustering algorithm (<code>concor_hca</code>) to partition you matrix. How many blocks are produced?</p></li>
+<li><p>Assign the blocks to your nodes in the network and plot the network with node color being determined by block membership.</p></li>
+<li><p>Look at the plot, the correlation matrix, and your calculations for node degree. Were you surprised by which groups were put in the same block?</p></li>
+</ol>
+</section>
+<section id="part-3--dendograms-and-collapsed-block-graphs" class="level1">
+<h1>Part 3- Dendograms and collapsed block graphs</h1>
+<ol start="8" type="1">
+<li><p>You can now load SNA and network. Use the equiv.clust command to calculate structurally equivalent nodes in your matrix. Plot the results.</p></li>
+<li><p>Partition your data (<code>rect.hclust</code> command) by the number of blocks you believe best divide the plot produced in 8. Re-make the plot with the partitions overlaid.</p></li>
+<li><p>Estimate the blockmodel (<code>blockmodel</code>) with the specified number of divisions you felt was the best fit for 9. Plot the collapsed version of the block model (see <code>gplot</code> sample code).</p></li>
+<li><p>Lastly, look at the nodes that are assigned to the same blocks. Can you identify any similar between these nodes, either in how they appear in the visualized network, or based on some characteristics of the nodes? For example, are states grouped by ideology/region, etc?</p></li>
+</ol>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      let href = ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
