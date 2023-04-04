@@ -346,3 +346,74 @@ all_112$similarity<- ifelse(all_112$religion_i == all_112$religion_j, 1, 0)
 #all done!!
 all_112 <- all_112[all_112$member_i != all_112$member_j, ]      
 ```
+
+# Fixing religious data for 112!!
+
+```{r}
+#how many religions origionally
+relig_112 %>% 
+  group_by(religious_affiliation) %>% 
+  summarize(n = n())
+
+rel_112 <- relig_112
+
+#can have a look at this link to check out how i changes stuff!
+#https://docs.google.com/spreadsheets/d/1f9_-ZjcC0kuK7Dg7KXthcCvUdnOw47xS3qLIte1BUAs/edit?usp=sharing 
+
+#fix all methodist
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'African Methodist Episcopal', 'Methodist', rel_112$religious_affiliation)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Evangelical Methodist', 'Methodist', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'United Methodist', 'Methodist', rel_112$fix_relig)
+
+#fixing all catholic
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Anglican', 'Catholic', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Anglican Catholic', 'Catholic', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Roman Catholic', 'Catholic', rel_112$fix_relig)
+
+#fixing all assorted christianity
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Antioch Orthodox Christian Church', 'Assorted Christianity', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Christian', 'Assorted Christianity', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Christian non-denominational', 'Assorted Christianity', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Christian Reformed', 'Assorted Christianity', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Christian Scientist', 'Assorted Christianity', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Church of Christ', 'Assorted Christianity', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Antioch Orthodox Christian Church', 'Assorted Christianity', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Christian', 'Assorted Christianity', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Community of Christ', 'Assorted Christianity', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Eastern Orthodox', 'Assorted Christianity', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Evangelical Christian', 'Assorted Christianity', rel_112$fix_relig)
+
+#fixing all baptists
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Congregationalist Baptist', 'Baptist', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Southern Baptist', 'Baptist', rel_112$fix_relig)
+
+#fixing all lutheran
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Evangelical Lutheran', 'Lutheran', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Lutheran - Missouri Synod', 'Lutheran', rel_112$fix_relig)
+
+#fixing all protestant
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Nazarene', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Seventh-day Adventist', 'Protestant', rel_112$fix_relig)
+
+#how many different religions there are now!
+rel_112 %>% 
+  group_by(fix_relig) %>% 
+  summarize(n = n())
+```
+
+# Fixing religious data for 117th!
+```{r}
+#having a look at the origional breakdowns
+relig_117 %>% 
+  group_by(religion) %>% 
+  summarize(n = n())
+
+#fix all methodist
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'African Methodist Episcopal', 'Methodist', rel_112$religious_affiliation)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Evangelical Methodist', 'Methodist', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'United Methodist', 'Methodist', rel_112$fix_relig)
+
+
+```
+
+
