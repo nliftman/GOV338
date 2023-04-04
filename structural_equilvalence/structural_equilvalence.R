@@ -6,7 +6,7 @@ library(rio)
 library(igraph)
 
 ### notice how even though our network started from an edgelist, we can convert it to a matrix easily
-crime <- import("crime.csv")
+crime <- import("/Users/naomiliftman/Desktop/GOV338/structural_equilvalence/crime.csv")
 crime_net <- graph.data.frame(crime, directed=T)
 
 ### turn edge list into a matrix object
@@ -14,7 +14,6 @@ mat <- as.matrix(get.adjacency(crime_net))
 
 ## Let's plot the network
 ### This is messy, difficult to see equivalent actors
-windows()
 plot(crime_net, edge.width=.1,  edge.arrow.size=.1, 
      vertex.color="white",
      vertex.label.color="black",
