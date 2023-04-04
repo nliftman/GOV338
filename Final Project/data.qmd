@@ -394,6 +394,11 @@ rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Lutheran - Missour
 #fixing all protestant
 rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Nazarene', 'Protestant', rel_112$fix_relig)
 rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Seventh-day Adventist', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Quaker', 'Protestant', rel_112$fix_relig)
+
+#replace all NAs with unknown
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Unspecified', 'Unknown', rel_112$fix_relig)
+rel_112$fix_relig <- rel_112$fix_relig %>% replace_na('Unknown')
 
 #how many different religions there are now!
 rel_112 %>% 
@@ -421,7 +426,12 @@ rel_117$fix_relig <- ifelse(rel_117$religion == 'Pietist', 'General Christianity
 rel_117$fix_relig <- ifelse(rel_117$religion == 'Reformed', 'General Christianity', rel_117$fix_relig)
 
 #fixing all non-denominational
-rel_117$fix_relig <- ifelse(rel_117$religion == 'Unaffiliated', 'Nondemoninational', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Unaffiliated', 'Nondenominational', rel_117$fix_relig)
+
+#replacing all of the NAs with Unknown along with the dont know
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Don\'t know/refused', 'Unknown', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Other', 'Unknown', rel_117$fix_relig)
+rel_117$fix_relig <- rel_117$fix_relig %>% replace_na('Unknown')
 
 
 rel_117 %>% 
