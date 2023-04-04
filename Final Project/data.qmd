@@ -422,8 +422,8 @@ rel_117$fix_relig <- ifelse(rel_117$religion == 'Pentecostal', 'Protestant', rel
 rel_117$fix_relig <- ifelse(rel_117$religion == 'Protestant unspecified', 'Protestant', rel_117$fix_relig)
 
 #fix all general christianity
-rel_117$fix_relig <- ifelse(rel_117$religion == 'Pietist', 'General Christianity', rel_117$fix_relig)
-rel_117$fix_relig <- ifelse(rel_117$religion == 'Reformed', 'General Christianity', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Pietist', 'Assorted Christianity', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Reformed', 'Assorted Christianity', rel_117$fix_relig)
 
 #fixing all non-denominational
 rel_117$fix_relig <- ifelse(rel_117$religion == 'Unaffiliated', 'Nondenominational', rel_117$fix_relig)
