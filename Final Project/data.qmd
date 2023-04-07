@@ -220,22 +220,21 @@ relig_117 <- relig_117 %>%
 relig_117 %>% 
   group_by(religion) %>% 
   summarize(n = n())
-
-ree <- import("/Users/naomiliftman/Desktop/GOV338/Final Project/HS117_members.csv")
-
 rel_117 <- relig_117
 
-#fix all protestant
+#fix all protestant:
 rel_117$fix_relig <- ifelse(rel_117$religion == 'Adventist', 'Protestant', rel_117$religion)
 rel_117$fix_relig <- ifelse(rel_117$religion == 'Congregationalist', 'Protestant', rel_117$fix_relig)
 rel_117$fix_relig <- ifelse(rel_117$religion == 'Pentecostal', 'Protestant', rel_117$fix_relig)
 rel_117$fix_relig <- ifelse(rel_117$religion == 'Protestant unspecified', 'Protestant', rel_117$fix_relig)
 
-#fix all general christianity
-rel_117$fix_relig <- ifelse(rel_117$religion == 'Pietist', 'Assorted Christianity', rel_117$fix_relig)
-rel_117$fix_relig <- ifelse(rel_117$religion == 'Reformed', 'Assorted Christianity', rel_117$fix_relig)
+#fix all general catholic
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Anglican Catholic', 'Catholic', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Reformed', 'Catholic', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Pietist', 'Catholic', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Reformed', 'Catholic', rel_117$fix_relig)
 
-#fixing all non-denominational
+#fixing all other
 rel_117$fix_relig <- ifelse(rel_117$religion == 'Unaffiliated', 'Nondenominational', rel_117$fix_relig)
 
 #replacing all of the NAs with Unknown along with the dont know
@@ -263,7 +262,7 @@ relig_112 <- religion_112 %>%
   rename_with(~ tolower(gsub(".", "", .x, fixed = TRUE))) %>% 
   rename("member_name" = 2) %>% 
   rename("religious_affiliation" = 4 ) %>% 
-  select("member_name", "religious_affiliation")
+  select("member_name", "religious_affiliation", "party")
 ```
 
 # Fixing religious data for 112!!
@@ -276,45 +275,43 @@ relig_112 %>%
 
 rel_112 <- relig_112
 
-#can have a look at this link to check out how i changes stuff!
-#https://docs.google.com/spreadsheets/d/1f9_-ZjcC0kuK7Dg7KXthcCvUdnOw47xS3qLIte1BUAs/edit?usp=sharing 
-
-#fix all methodist
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'African Methodist Episcopal', 'Methodist', rel_112$religious_affiliation)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Evangelical Methodist', 'Methodist', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'United Methodist', 'Methodist', rel_112$fix_relig)
+#fix all other
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Quaker', 'Other', rel_112$religious_affiliation)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Nazarene', 'Other', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Greek Orthodox', 'Other', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Mormon', 'Other', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Buddhist', 'Other', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Muslim', 'Other', rel_112$fix_relig)
 
 #fixing all catholic
 rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Anglican', 'Catholic', rel_112$fix_relig)
 rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Anglican Catholic', 'Catholic', rel_112$fix_relig)
 rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Roman Catholic', 'Catholic', rel_112$fix_relig)
-
-#fixing all assorted christianity
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Antioch Orthodox Christian Church', 'Assorted Christianity', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Christian', 'Assorted Christianity', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Christian non-denominational', 'Assorted Christianity', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Christian Reformed', 'Assorted Christianity', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Christian Scientist', 'Assorted Christianity', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Church of Christ', 'Assorted Christianity', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Antioch Orthodox Christian Church', 'Assorted Christianity', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Christian', 'Assorted Christianity', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Community of Christ', 'Assorted Christianity', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Eastern Orthodox', 'Assorted Christianity', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Evangelical Christian', 'Assorted Christianity', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Unitarian', 'Assorted Christianity', rel_112$fix_relig)
-
-#fixing all baptists
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Congregationalist Baptist', 'Baptist', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Southern Baptist', 'Baptist', rel_112$fix_relig)
-
-#fixing all lutheran
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Evangelical Lutheran', 'Lutheran', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Lutheran - Missouri Synod', 'Lutheran', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Unitarian', 'Catholic', rel_112$fix_relig)
 
 #fixing all protestant
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Nazarene', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'African Methodist Episcopal', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Evangelical Methodist', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'United Methodist', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Methodist', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Christian', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Christian non-denominational', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Christian Reformed', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Christian Scientist', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Church of Christ', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Antioch Orthodox Christian Church', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Eastern Orthodox', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Evangelical Christian', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Southern Baptist', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Baptist', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Episcopalian', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Presbyterian', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Lutheran', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Lutheran - Missouri Synod', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Evangelical Lutheran', 'Protestant', rel_112$fix_relig)
 rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Seventh-day Adventist', 'Protestant', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Quaker', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Community of Christ', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Congregationalist Baptist', 'Protestant', rel_112$fix_relig)
 
 #replace all NAs with unknown
 rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Unspecified', 'Unknown', rel_112$fix_relig)
