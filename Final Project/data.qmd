@@ -224,22 +224,32 @@ rel_117 <- relig_117
 
 #fix all protestant:
 rel_117$fix_relig <- ifelse(rel_117$religion == 'Adventist', 'Protestant', rel_117$religion)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Baptist', 'Protestant', rel_117$fix_relig)
 rel_117$fix_relig <- ifelse(rel_117$religion == 'Congregationalist', 'Protestant', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Episcopalian', 'Protestant', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Lutheran', 'Protestant', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Methodist', 'Protestant', rel_117$fix_relig)
 rel_117$fix_relig <- ifelse(rel_117$religion == 'Pentecostal', 'Protestant', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Pietist', 'Protestant', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Presbyterian', 'Protestant', rel_117$fix_relig)
 rel_117$fix_relig <- ifelse(rel_117$religion == 'Protestant unspecified', 'Protestant', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Reformed', 'Protestant', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Restorationist', 'Protestant', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Unitarian Universalist', 'Protestant', rel_117$fix_relig)
 
 #fix all general catholic
-rel_117$fix_relig <- ifelse(rel_117$religion == 'Anglican Catholic', 'Catholic', rel_117$fix_relig)
-rel_117$fix_relig <- ifelse(rel_117$religion == 'Reformed', 'Catholic', rel_117$fix_relig)
-rel_117$fix_relig <- ifelse(rel_117$religion == 'Pietist', 'Catholic', rel_117$fix_relig)
-rel_117$fix_relig <- ifelse(rel_117$religion == 'Reformed', 'Catholic', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Orthodox', 'Catholic', rel_117$fix_relig)
 
 #fixing all other
-rel_117$fix_relig <- ifelse(rel_117$religion == 'Unaffiliated', 'Nondenominational', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Unaffiliated', 'Other', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Buddhist', 'Other', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Hindu', 'Other', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Mormon', 'Other', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Muslim', 'Other', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Nondenominational', 'Other', rel_117$fix_relig)
 
 #replacing all of the NAs with Unknown along with the dont know
 rel_117$fix_relig <- ifelse(rel_117$religion == 'Don\'t know/refused', 'Unknown', rel_117$fix_relig)
-rel_117$fix_relig <- ifelse(rel_117$religion == 'Other', 'Unknown', rel_117$fix_relig)
 rel_117$fix_relig <- rel_117$fix_relig %>% replace_na('Unknown')
 
 
