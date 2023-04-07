@@ -1,0 +1,47 @@
+---
+title: "Research Design"
+author: "Naomi Liftman and Natalie Dionne"
+date: "2023-04-07"
+output: pdf_document
+---
+# Research Design
+
+To assess the effects of religion on cosponsorship in the United States Congress our study used network regression with a single dependent variable and three independent variables. To measure if the effects of religion have changed in recent times of polarization, we will be using data from the 112th and the 117th congress’ and comparing them. 
+
+# Nodes and Ties
+
+In this data a node is a congressperson, with a tie being their cosponsorship behaviors. Ties in this network are weighted, directed, and exclude self-ties. Ties are weighted with more occurrences of cosponsorship correlating to a stronger tie, and less occurrences of cosponsorship being a weak tie. If a congressperson never cosponsors a bill with another member, then there is no tie. Ties are also directed as a member supporting another person's legislation does not automatically mean the reverse is true. 
+
+# Variables
+## Dependent Variable
+
+The dependent variable in our model is `cosponsorship`, which is measured as a weighted and directed tie between two congresspeople. A member cosponsoring another member's legislation is considered a tie, with the weight of the tie corresponding to the likelihood of that occurrence. This paper considers legislation to be any of the following proposals in both the House and the Senate: Bill, Joint Resolution, Concurrent Resolution, and a Simple Resolution. See `Data Collection` section for more information about the collection process of the `cosponsorship` data. 
+
+## Independent Variables
+
+There are three independent variables used in our model: `religion`, `ideology`, and `party`. While `religion` is the one we are focusing our attention on, as there is a large gap in the literature surrounding it, we decided to include `ideology` and `party` as other independent variables as we believe that religion, ideology, and party of members are intertwined. 
+
+### Religion
+
+The first, and most important of our Independent Variables is `religion`, which is measured using CQ Roll Call questionnaire which asks members of the House and Senate identity based questions such as their religion. With this, each member reported their religious affiliation; however, there are a wide range of different religions across the United States, and Congress is a fair representation of that as well. In the 112th congress members reported 36 different religious affiliations amongst them with only a slight decrease to 25 in the 117th. But many of these categories of religion either only include a handful (or oftentimes only 1) of members or fall under broader religious categories. To deal with this we used the [Pew Research Centers](https://www.pewresearch.org/religion/2021/01/04/faith-on-the-hill-2021/) methodology to determine what religions could be categorized under larger ones, and ended with five main religious groups: Catholic, Mainline Protestant, Jewish, Other, and Unknown. If two members belong to the same of these five groups, then they are given a 1 and if they are different they are given a 0. There is no weight to the connection. See `Data Collection` section for more information about the collection process of the `religion` data. 
+
+### Ideology
+
+The second independent variable in our model is `ideology`, and to measure ideological similarities between members we used DW-NOMINATE scores. NOMINATE is an acronym for Nominal Three-Step Estimation and is often used to describe political ideologies of people, parties, and political institutions. We will be using the first dimension, which is measured on a scale from -1 to 1 on a liberal-conservative scale. With -1 describing an extreme liberal and a 1 describing an extreme conservative. In our model we calculated the absolute value of the difference between DW-NOMINATE scores between members. Members who were very similar in ideology would have a close to zero score and members with extreme ideological differences would be close to 2. See `Data Collection` section for more information about the collection process of the `ideology` data. 
+
+
+### Party
+	
+The final independent variable in our model is `party` which refers to the political party of the members. This is measured as either Republican, Democrat, or Independent and if two members are a part of the same party they receive a 1. If they are a part of different parties they receive a zero. See `Data Collection` section for more information about the collection process of the `party` data. 
+
+
+# Data Collection
+
+The data for this project was collected from two main sources: congress’ website on cosponsorship in the House of Representatives and Senate, and the Pew research Centers’ resources on the religion of congresspeople. To aggregate data on cosponsorship we used the `incidentally` package which automatically goes through congress’s [website](https://www.congress.gov/) to get data on legislators’ bill sponsorship and cosponsorship activities. To aggregate data on the religion of members we used two documents collected by the Pew Research Center for both the [117th](https://www.pewresearch.org/religion/2021/01/04/faith-on-the-hill-2021/ ) and the [112th](https://www.pewresearch.org/religion/2011/01/05/faith-on-the-hill-the-religious-composition-of-the-112th-congress/#a-look-back ) congress. These documents from the Pew Research Center also had information on the party affiliation of members, which allowed us to aggregate the data easier. Then for the other independent variable of DW-NOMINATE we used the website [voteview](https://voteview.com/data) to collect each member's scores. 
+
+
+There are different levels of confidence in each of our data sources. For the cosponsorship data there are high levels of comprehensiveness as it was collected directly from Congress’s website, which leaves little room for incorrect information. However the religious data is collected through CQ Roll Call which surveys members about their demographic characteristics. While this is also strong data because it is reported directly by the congress members, the data for the 112th congress has 103 missing values for members. This is around 20 percent of congress without any information on their religious affiliations. Finally the DW-NOMINATE scores are quite comprehensive and are often used by trusted journals, researchers, and other groups.  
+
+# Summary Statistics 
+
+There are a total of 32,500 cosponsorship ties in the 112th congress after removing ties between the same congressperson, and 37,299 in the 117th congress after the same removal process. *more to come once the data is more in order*
