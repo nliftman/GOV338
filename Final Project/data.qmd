@@ -208,9 +208,9 @@ names(relig_117)[1] = "state"
 #remove the first row
 relig_117 <- relig_117[-c(1:1), ]
 
-#only want their name and religion
+#only want their name, relig, and party
 relig_117 <- relig_117 %>% 
-  select("name", "religion")
+  select("name", "religion", "party")
 ```
 
 # Fixing religious data for 117th!
@@ -220,6 +220,8 @@ relig_117 <- relig_117 %>%
 relig_117 %>% 
   group_by(religion) %>% 
   summarize(n = n())
+
+ree <- import("/Users/naomiliftman/Desktop/GOV338/Final Project/HS117_members.csv")
 
 rel_117 <- relig_117
 
