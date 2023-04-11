@@ -108,7 +108,311 @@ full_117_edge <- full_117_edge %>%
          "member_j" = 2)
 ```
 
-# Fixing all the Incorrect Missmaches!
+
+# RELIGION FOR 117th
+
+```{r}
+#importing the df 
+religion_117 <- import("/Users/naomiliftman/Desktop/GOV338/Final Project/117congress.xlsx")
+
+#rename the last five names
+relig_117 <- religion_117 %>% 
+    rename_with(~ tolower(gsub(".", "", .x, fixed = TRUE))) %>%
+  rename("type" = 2) %>% 
+  rename("name" = 3) %>% 
+  rename("party" = 4 ) %>% 
+  rename("cont" = 5) %>% 
+  rename("religion" = 6)
+
+#rename the state
+names(relig_117)[1] = "state"  
+
+#remove the first row
+relig_117 <- relig_117[-c(1:1), ]
+
+#only want their name, relig, and party
+relig_117 <- relig_117 %>% 
+  select("name", "religion", "party")
+```
+
+# Fixing religious data for 117th!
+
+```{r}
+#having a look at the origional breakdowns
+relig_117 %>% 
+  group_by(religion) %>% 
+  summarize(n = n())
+
+#creating a new 117
+rel_117 <- relig_117
+
+#fix all protestant:
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Adventist', 'Protestant', rel_117$religion)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Baptist', 'Protestant', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Congregationalist', 'Protestant', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Episcopalian', 'Protestant', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Lutheran', 'Protestant', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Methodist', 'Protestant', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Pentecostal', 'Protestant', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Pietist', 'Protestant', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Presbyterian', 'Protestant', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Protestant unspecified', 'Protestant', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Reformed', 'Protestant', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Restorationist', 'Protestant', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Unitarian Universalist', 'Protestant', rel_117$fix_relig)
+
+#fix all general catholic
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Orthodox', 'Catholic', rel_117$fix_relig)
+
+#fixing all other
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Unaffiliated', 'Other', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Buddhist', 'Other', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Hindu', 'Other', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Mormon', 'Other', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Muslim', 'Other', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Nondenominational', 'Other', rel_117$fix_relig)
+
+#replacing all of the NAs with Unknown along with the dont know
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Don\'t know/refused', 'Unknown', rel_117$fix_relig)
+rel_117$fix_relig <- rel_117$fix_relig %>% replace_na('Unknown')
+
+
+rel_117 %>% 
+  group_by(fix_relig) %>% 
+  summarize(n = n())
+
+rel_117 <- rel_117 %>% 
+  select("name", "fix_relig")
+```
+
+# Merging the 117th full with the religion!!
+
+```{r}
+#now we have something that has the first senators religion
+t_117_first <- full_join(rel_117, full_117_edge, by = c("name" = "member_i")) 
+
+#rename so we have a name i and a religion i 
+#and only select the i's
+t_117_first <- t_117_first %>% 
+  rename("religion_i" = "fix_relig",
+         "member_i" = "name") %>% 
+  select("member_i", "religion_i")
+
+#now we have something that has the second senators religion
+t_117_second <- full_join(rel_117, full_117_edge, by = c("name" = "member_j"))
+
+#now we have the name j and religion j 
+#and only select the js
+t_117_second <- t_117_second %>% 
+  rename("religion_j" = "fix_relig",
+         "member_j" = "name") %>% 
+  select("member_j", "religion_j")
+
+#now we just need them all together!!!
+all_117 <- cbind(t_117_first, t_117_second)
+
+#need to make the NAs of the religions but we dont want NAs of the ties
+#there were 37662 ties before running this
+#THEY are the same!! this is slay
+#this is just a gut check we did it correctly
+all_117[!is.na(all_117$member_i),]
+all_117[!is.na(all_117$member_j),]
+
+#count the number of NAs
+sum(is.na(all_117$religion_i))
+sum(is.na(all_117$religion_j))
+
+#now we want to make all the NAs be "Unknown
+#for i
+all_117$religion_i <- all_117$religion_i %>%  
+  replace_na("Unknown")
+
+#for j
+all_117$religion_j <- all_117$religion_j %>%  
+  replace_na("Unknown")
+#YAYAYYAYAYAY
+
+#create similarity score!! yay!!
+all_117$similarity<- ifelse(all_117$religion_i == all_117$religion_j, 1, 0)
+
+#trying to remove the ones where the member is the same member!! 
+#all done!!
+all_117 <- all_117[all_117$member_i != all_117$member_j, ]      
+
+#checking number of unknown
+
+```
+
+
+
+# Scott Code for Cosponsorship of 112th SENATE
+
+```{r warning = FALSE, message = FALSE, error = FALSE}
+#pull the 117 congress connections 
+B_112_senate <- incidence.from.congress(session = 112, types = c("s", "sres", "sjres", "sconres"), areas = c("All"), format = "igraph")
+
+network_112_senate <- sdsm(B_112_senate, alpha = 0.01, narrative = TRUE)
+
+## Creates matrix object (note adjacency matrix)
+el_mat_112_senate <- as_edgelist(network_112_senate)
+
+### creates data frame object
+el_112_senate <- as.data.frame(as_edgelist(network_112_senate))
+```
+
+# Mutating Cosponsorship of 112th SENATE
+
+```{r}
+#remove the senator title from both columns
+el_112_senate$V1 <- sub("Sen. ", "", el_112_senate$V1)
+el_112_senate$V2 <- sub("Sen. ", "", el_112_senate$V2)
+
+#remove everything after the [
+el_112_senate$V1 <- gsub("\\[.*","", el_112_senate$V1)
+el_112_senate$V2 <- gsub("\\[.*","", el_112_senate$V2)
+
+#add new columns with the first and last names
+el_112_senate$v1_first <- gsub(".*\\, ", "", el_112_senate$V1)   
+el_112_senate$v1_last <- gsub("\\,.*","", el_112_senate$V1)
+el_112_senate$v2_first <- gsub(".*\\, ", "", el_112_senate$V2)   
+el_112_senate$v2_last <- gsub("\\,.*","", el_112_senate$V2) 
+
+#adding them together!
+edge_112_senate = el_112_senate %>% 
+  unite(v1_full, c(v1_first, v1_last), sep = "", remove = FALSE) %>% 
+  unite(v2_full, c(v2_first, v2_last), sep = "", remove = FALSE) %>% 
+  select(v1_full, v2_full)
+```
+
+# Scott Code for Cosponsorship in the 112th HOUSE
+
+```{r warning = FALSE, message = FALSE, error = FALSE}
+#pull the 117 senators connections 
+B_112_house <- incidence.from.congress(session = 112, types = c("hr", "hres", "hjres", "hconres"), areas = c("All"), format = "igraph")
+
+#this is taking forever to run, not sure why, will check out later
+network_112_house <- sdsm(B_112_house, alpha = 0.01, narrative = TRUE)
+
+## Creates matrix object (note adjacency matrix)
+el_mat_112_house <- as_edgelist(network_112_house)
+
+### creates data frame object
+el_112_house <- as.data.frame(as_edgelist(network_112_house))
+```
+
+# Mutating Cosponsorship of 112th HOUSE
+
+```{r}
+#remove the house title from both columns
+el_112_house$V1 <- sub("Rep. ", "", el_112_house$V1)
+el_112_house$V2 <- sub("Rep. ", "", el_112_house$V2)
+
+#remove everything after the [
+el_112_house$V1 <- gsub("\\[.*","", el_112_house$V1)
+el_112_house$V2 <- gsub("\\[.*","", el_112_house$V2)
+
+#add new columns with the first and last names
+el_112_house$v1_first <- gsub(".*\\, ", "", el_112_house$V1)   
+el_112_house$v1_last <- gsub("\\,.*","", el_112_house$V1)
+el_112_house$v2_first <- gsub(".*\\, ", "", el_112_house$V2)   
+el_112_house$v2_last <- gsub("\\,.*","", el_112_house$V2) 
+
+#adding them together!
+edge_112_house = el_112_house %>% 
+  unite(v1_full, c(v1_first, v1_last), sep = "", remove = FALSE) %>% 
+  unite(v2_full, c(v2_first, v2_last), sep = "", remove = FALSE) %>% 
+  select(v1_full, v2_full)
+```
+
+# BUILDING FULL 112th
+```{r}
+#full 117th dataframe
+full_112_edge <- rbind(edge_112_house, edge_112_senate)
+
+#renaming to get in correct scheme
+full_112_edge <- full_112_edge %>% 
+  rename("member_i" = 1,
+         "member_j" = 2)
+
+```
+
+
+# Religion Data 112th
+
+```{r}
+#importing the df 
+religion_112 <- import("/Users/naomiliftman/Desktop/GOV338/Final Project/112congress.xlsx") 
+
+#rename the last five names
+relig_112 <- religion_112 %>% 
+  rename_with(~ tolower(gsub(".", "", .x, fixed = TRUE))) %>% 
+  rename("member_name" = 2) %>% 
+  rename("religious_affiliation" = 4 ) %>% 
+  select("member_name", "religious_affiliation", "party")
+```
+
+# Fixing religious data for 112!!
+
+```{r}
+#how many religions origionally
+relig_112 %>% 
+  group_by(religious_affiliation) %>% 
+  summarize(n = n())
+
+rel_112 <- relig_112
+
+#fix all other
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Quaker', 'Other', rel_112$religious_affiliation)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Nazarene', 'Other', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Greek Orthodox', 'Other', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Mormon', 'Other', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Buddhist', 'Other', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Muslim', 'Other', rel_112$fix_relig)
+
+#fixing all catholic
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Anglican', 'Catholic', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Anglican Catholic', 'Catholic', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Roman Catholic', 'Catholic', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Unitarian', 'Catholic', rel_112$fix_relig)
+
+#fixing all protestant
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'African Methodist Episcopal', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Evangelical Methodist', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'United Methodist', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Methodist', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Christian', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Christian non-denominational', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Christian Reformed', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Christian Scientist', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Church of Christ', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Antioch Orthodox Christian Church', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Eastern Orthodox', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Evangelical Christian', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Southern Baptist', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Baptist', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Episcopalian', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Presbyterian', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Lutheran', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Lutheran - Missouri Synod', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Evangelical Lutheran', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Seventh-day Adventist', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Community of Christ', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Congregationalist Baptist', 'Protestant', rel_112$fix_relig)
+
+#replace all NAs with unknown
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Unspecified', 'Unknown', rel_112$fix_relig)
+rel_112$fix_relig <- rel_112$fix_relig %>% replace_na('Unknown')
+
+#how many different religions there are now!
+rel_112 %>% 
+  group_by(fix_relig) %>% 
+  summarize(n = n())
+
+rel_112 <- rel_112 %>% 
+  select("member_name", "fix_relig")
+```
+
+# Fixing all the Incorrect Missmaches 112!
 
 ```{r}
 full_112_edge <- full_112_edge %>% 
@@ -313,305 +617,21 @@ full_112_edge <- full_112_edge %>%
          member_i = ifelse(full_112_edge$member_i == "Allen B. West", "Allen West", member_i),
          member_j = ifelse(full_112_edge$member_j == "Allen B. West", "Allen West", member_j),
          member_i = ifelse(full_112_edge$member_i == "Charles A. Gonzalez", "Charlie Gonzalez", member_i),
-         member_j = ifelse(full_112_edge$member_j == "Charles A. Gonzalez", "Charlie Gonzalez", member_j))
+         member_j = ifelse(full_112_edge$member_j == "Charles A. Gonzalez", "Charlie Gonzalez", member_j),
+         member_i = ifelse(full_112_edge$member_i == "Timothy J. Walz", "Tim Walz", member_i),
+         member_j = ifelse(full_112_edge$member_j == "Timothy J. Walz", "Tim Walz", member_j),
+         member_i = ifelse(full_112_edge$member_i == "Christopher J. Lee", "Christopher Lee", member_i),
+         member_j = ifelse(full_112_edge$member_j == "Christopher J. Lee", "Christopher Lee", member_j),
+         member_i = ifelse(full_112_edge$member_i == "III Manchin", "Joe Manchin III", member_i),
+         member_j = ifelse(full_112_edge$member_j == "III Manchin", "Joe Manchin III", member_j),
+         member_i = ifelse(full_112_edge$member_i == "", "", member_i),
+         member_j = ifelse(full_112_edge$member_j == "", "", member_j))
 ```
 
-# RELIGION FOR 117th
-
-```{r}
-#importing the df 
-religion_117 <- import("/Users/naomiliftman/Desktop/GOV338/Final Project/117congress.xlsx")
-
-#rename the last five names
-relig_117 <- religion_117 %>% 
-    rename_with(~ tolower(gsub(".", "", .x, fixed = TRUE))) %>%
-  rename("type" = 2) %>% 
-  rename("name" = 3) %>% 
-  rename("party" = 4 ) %>% 
-  rename("cont" = 5) %>% 
-  rename("religion" = 6)
-
-#rename the state
-names(relig_117)[1] = "state"  
-
-#remove the first row
-relig_117 <- relig_117[-c(1:1), ]
-
-#only want their name, relig, and party
-relig_117 <- relig_117 %>% 
-  select("name", "religion", "party")
-```
-
-# Fixing religious data for 117th!
-
-```{r}
-#having a look at the origional breakdowns
-relig_117 %>% 
-  group_by(religion) %>% 
-  summarize(n = n())
-rel_117 <- relig_117
-
-#fix all protestant:
-rel_117$fix_relig <- ifelse(rel_117$religion == 'Adventist', 'Protestant', rel_117$religion)
-rel_117$fix_relig <- ifelse(rel_117$religion == 'Baptist', 'Protestant', rel_117$fix_relig)
-rel_117$fix_relig <- ifelse(rel_117$religion == 'Congregationalist', 'Protestant', rel_117$fix_relig)
-rel_117$fix_relig <- ifelse(rel_117$religion == 'Episcopalian', 'Protestant', rel_117$fix_relig)
-rel_117$fix_relig <- ifelse(rel_117$religion == 'Lutheran', 'Protestant', rel_117$fix_relig)
-rel_117$fix_relig <- ifelse(rel_117$religion == 'Methodist', 'Protestant', rel_117$fix_relig)
-rel_117$fix_relig <- ifelse(rel_117$religion == 'Pentecostal', 'Protestant', rel_117$fix_relig)
-rel_117$fix_relig <- ifelse(rel_117$religion == 'Pietist', 'Protestant', rel_117$fix_relig)
-rel_117$fix_relig <- ifelse(rel_117$religion == 'Presbyterian', 'Protestant', rel_117$fix_relig)
-rel_117$fix_relig <- ifelse(rel_117$religion == 'Protestant unspecified', 'Protestant', rel_117$fix_relig)
-rel_117$fix_relig <- ifelse(rel_117$religion == 'Reformed', 'Protestant', rel_117$fix_relig)
-rel_117$fix_relig <- ifelse(rel_117$religion == 'Restorationist', 'Protestant', rel_117$fix_relig)
-rel_117$fix_relig <- ifelse(rel_117$religion == 'Unitarian Universalist', 'Protestant', rel_117$fix_relig)
-
-#fix all general catholic
-rel_117$fix_relig <- ifelse(rel_117$religion == 'Orthodox', 'Catholic', rel_117$fix_relig)
-
-#fixing all other
-rel_117$fix_relig <- ifelse(rel_117$religion == 'Unaffiliated', 'Other', rel_117$fix_relig)
-rel_117$fix_relig <- ifelse(rel_117$religion == 'Buddhist', 'Other', rel_117$fix_relig)
-rel_117$fix_relig <- ifelse(rel_117$religion == 'Hindu', 'Other', rel_117$fix_relig)
-rel_117$fix_relig <- ifelse(rel_117$religion == 'Mormon', 'Other', rel_117$fix_relig)
-rel_117$fix_relig <- ifelse(rel_117$religion == 'Muslim', 'Other', rel_117$fix_relig)
-rel_117$fix_relig <- ifelse(rel_117$religion == 'Nondenominational', 'Other', rel_117$fix_relig)
-
-#replacing all of the NAs with Unknown along with the dont know
-rel_117$fix_relig <- ifelse(rel_117$religion == 'Don\'t know/refused', 'Unknown', rel_117$fix_relig)
-rel_117$fix_relig <- rel_117$fix_relig %>% replace_na('Unknown')
-
-
-rel_117 %>% 
-  group_by(fix_relig) %>% 
-  summarize(n = n())
-
-rel_117 <- rel_117 %>% 
-  select("name", "fix_relig")
-```
-
-# Merging the 117th full with the religion!!
-
-```{r}
-#now we have something that has the first senators religion
-t_117_first <- full_join(rel_117, full_117_edge, by = c("name" = "member_i")) 
-
-#rename so we have a name i and a religion i 
-#and only select the i's
-t_117_first <- t_117_first %>% 
-  rename("religion_i" = "fix_relig",
-         "member_i" = "name") %>% 
-  select("member_i", "religion_i")
-
-#now we have something that has the second senators religion
-t_117_second <- full_join(rel_117, full_117_edge, by = c("name" = "member_j"))
-
-#now we have the name j and religion j 
-#and only select the js
-t_117_second <- t_117_second %>% 
-  rename("religion_j" = "fix_relig",
-         "member_j" = "name") %>% 
-  select("member_j", "religion_j")
-
-#now we just need them all together!!!
-all_117 <- cbind(t_117_first, t_117_second)
-
-#need to make the NAs of the religions but we dont want NAs of the ties
-#there were 37662 ties before running this
-#THEY are the same!! this is slay
-#this is just a gut check we did it correctly
-all_117[!is.na(all_117$member_i),]
-all_117[!is.na(all_117$member_j),]
-
-#count the number of NAs
-sum(is.na(all_117$religion_i))
-sum(is.na(all_117$religion_j))
-
-#now we want to make all the NAs be "Unknown
-#for i
-all_117$religion_i <- all_117$religion_i %>%  
-  replace_na("Unknown")
-
-#for j
-all_117$religion_j <- all_117$religion_j %>%  
-  replace_na("Unknown")
-#YAYAYYAYAYAY
-
-#create similarity score!! yay!!
-all_117$similarity<- ifelse(all_117$religion_i == all_117$religion_j, 1, 0)
-
-#trying to remove the ones where the member is the same member!! 
-#all done!!
-all_117 <- all_117[all_117$member_i != all_117$member_j, ]      
-```
-
-
-
-# Scott Code for Cosponsorship of 112th SENATE
-
-```{r warning = FALSE, message = FALSE, error = FALSE}
-#pull the 117 congress connections 
-B_112_senate <- incidence.from.congress(session = 112, types = c("s", "sres", "sjres", "sconres"), areas = c("All"), format = "igraph")
-
-network_112_senate <- sdsm(B_112_senate, alpha = 0.01, narrative = TRUE)
-
-## Creates matrix object (note adjacency matrix)
-el_mat_112_senate <- as_edgelist(network_112_senate)
-
-### creates data frame object
-el_112_senate <- as.data.frame(as_edgelist(network_112_senate))
-```
-
-# Mutating Cosponsorship of 112th SENATE
-
-```{r}
-#remove the senator title from both columns
-el_112_senate$V1 <- sub("Sen. ", "", el_112_senate$V1)
-el_112_senate$V2 <- sub("Sen. ", "", el_112_senate$V2)
-
-#remove everything after the [
-el_112_senate$V1 <- gsub("\\[.*","", el_112_senate$V1)
-el_112_senate$V2 <- gsub("\\[.*","", el_112_senate$V2)
-
-#add new columns with the first and last names
-el_112_senate$v1_first <- gsub(".*\\, ", "", el_112_senate$V1)   
-el_112_senate$v1_last <- gsub("\\,.*","", el_112_senate$V1)
-el_112_senate$v2_first <- gsub(".*\\, ", "", el_112_senate$V2)   
-el_112_senate$v2_last <- gsub("\\,.*","", el_112_senate$V1) 
-
-#adding them together!
-edge_112_senate = el_112_senate %>% 
-  unite(v1_full, c(v1_first, v1_last), sep = "", remove = FALSE) %>% 
-  unite(v2_full, c(v2_first, v2_last), sep = "", remove = FALSE) %>% 
-  select(v1_full, v2_full)
-```
-
-# Scott Code for Cosponsorship in the 112th HOUSE
-
-```{r warning = FALSE, message = FALSE, error = FALSE}
-#pull the 117 senators connections 
-B_112_house <- incidence.from.congress(session = 112, types = c("hr", "hres", "hjres", "hconres"), areas = c("All"), format = "igraph")
-
-#this is taking forever to run, not sure why, will check out later
-network_112_house <- sdsm(B_112_house, alpha = 0.01, narrative = TRUE)
-
-## Creates matrix object (note adjacency matrix)
-el_mat_112_house <- as_edgelist(network_112_house)
-
-### creates data frame object
-el_112_house <- as.data.frame(as_edgelist(network_112_house))
-```
-
-# Mutating Cosponsorship of 112th HOUSE
-
-```{r}
-#remove the house title from both columns
-el_112_house$V1 <- sub("Rep. ", "", el_112_house$V1)
-el_112_house$V2 <- sub("Rep. ", "", el_112_house$V2)
-
-#remove everything after the [
-el_112_house$V1 <- gsub("\\[.*","", el_112_house$V1)
-el_112_house$V2 <- gsub("\\[.*","", el_112_house$V2)
-
-#add new columns with the first and last names
-el_112_house$v1_first <- gsub(".*\\, ", "", el_112_house$V1)   
-el_112_house$v1_last <- gsub("\\,.*","", el_112_house$V1)
-el_112_house$v2_first <- gsub(".*\\, ", "", el_112_house$V2)   
-el_112_house$v2_last <- gsub("\\,.*","", el_112_house$V2) 
-
-#adding them together!
-edge_112_house = el_112_house %>% 
-  unite(v1_full, c(v1_first, v1_last), sep = "", remove = FALSE) %>% 
-  unite(v2_full, c(v2_first, v2_last), sep = "", remove = FALSE) %>% 
-  select(v1_full, v2_full)
-```
-
-# Religion Data 112th
-
-```{r}
-#importing the df 
-religion_112 <- import("/Users/naomiliftman/Desktop/GOV338/Final Project/112congress.xlsx") 
-
-#rename the last five names
-relig_112 <- religion_112 %>% 
-  rename_with(~ tolower(gsub(".", "", .x, fixed = TRUE))) %>% 
-  rename("member_name" = 2) %>% 
-  rename("religious_affiliation" = 4 ) %>% 
-  select("member_name", "religious_affiliation", "party")
-```
-
-# Fixing religious data for 112!!
-
-```{r}
-#how many religions origionally
-relig_112 %>% 
-  group_by(religious_affiliation) %>% 
-  summarize(n = n())
-
-rel_112 <- relig_112
-
-#fix all other
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Quaker', 'Other', rel_112$religious_affiliation)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Nazarene', 'Other', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Greek Orthodox', 'Other', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Mormon', 'Other', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Buddhist', 'Other', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Muslim', 'Other', rel_112$fix_relig)
-
-#fixing all catholic
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Anglican', 'Catholic', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Anglican Catholic', 'Catholic', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Roman Catholic', 'Catholic', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Unitarian', 'Catholic', rel_112$fix_relig)
-
-#fixing all protestant
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'African Methodist Episcopal', 'Protestant', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Evangelical Methodist', 'Protestant', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'United Methodist', 'Protestant', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Methodist', 'Protestant', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Christian', 'Protestant', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Christian non-denominational', 'Protestant', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Christian Reformed', 'Protestant', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Christian Scientist', 'Protestant', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Church of Christ', 'Protestant', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Antioch Orthodox Christian Church', 'Protestant', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Eastern Orthodox', 'Protestant', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Evangelical Christian', 'Protestant', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Southern Baptist', 'Protestant', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Baptist', 'Protestant', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Episcopalian', 'Protestant', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Presbyterian', 'Protestant', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Lutheran', 'Protestant', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Lutheran - Missouri Synod', 'Protestant', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Evangelical Lutheran', 'Protestant', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Seventh-day Adventist', 'Protestant', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Community of Christ', 'Protestant', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Congregationalist Baptist', 'Protestant', rel_112$fix_relig)
-
-#replace all NAs with unknown
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Unspecified', 'Unknown', rel_112$fix_relig)
-rel_112$fix_relig <- rel_112$fix_relig %>% replace_na('Unknown')
-
-#how many different religions there are now!
-rel_112 %>% 
-  group_by(fix_relig) %>% 
-  summarize(n = n())
-
-rel_112 <- rel_112 %>% 
-  select("member_name", "fix_relig")
-```
 
 # Merging the 112th full with the religion!!
 
 ```{r}
-#full 117th dataframe
-full_112_edge <- rbind(edge_112_house, edge_112_senate)
-
-#renaming to get in correct scheme
-full_112_edge <- full_112_edge %>% 
-  rename("member_i" = 1,
-         "member_j" = 2)
-
 #now we have something that has the first senators religion
 t_112_first <- full_join(rel_112, full_112_edge, by = c("member_name" = "member_i")) 
 
@@ -627,7 +647,7 @@ t_112_first <- t_112_first %>%
   select("member_i", "religion_i")
 
 #now we have something that has the second senators religion
-t_112_second <- full_join(relig_112, full_112_edge, by = c("member_name" = "member_j"))
+t_112_second <- full_join(rel_112, full_112_edge, by = c("member_name" = "member_j"))
 
 #remove all the NAs that were created
 t_112_second <- t_112_second %>% 
@@ -636,7 +656,7 @@ t_112_second <- t_112_second %>%
 #now we have the name j and religion j 
 #and only select the js
 t_112_second <- t_112_second %>% 
-  rename("religion_j" = "religious_affiliation",
+  rename("religion_j" = "fix_relig",
          "member_j" = "member_name") %>% 
   select("member_j", "religion_j")
 
@@ -662,11 +682,57 @@ all_112$similarity<- ifelse(all_112$religion_i == all_112$religion_j, 1, 0)
 
 #trying to remove the ones where the member is the same member!! 
 #all done!!
-all_112 <- all_112[all_112$member_i != all_112$member_j, ]      
+all_112 <- all_112[all_112$member_i != all_112$member_j, ]   
+
+#check how many unknowns we got
+#remove all the duplicates and check the number of unknowns
+all_112 %>% 
+  distinct(member_i, .keep_all = TRUE) %>% 
+  group_by(religion_j) %>% 
+  summarize(n = n())
+#currently missing 4 
+```
+# Summary Statistics of 112
+```{r}
+all_112 %>% 
+  group_by(member_i) %>% 
+  summarize(mean = mean())
+  
+spons_112 <- data.frame(table(all_112$member_j))
+
+cospons_112 <- data.frame(table(all_112$member_i))
+
+spons_112 %>% 
+  summarize(mean = mean(Freq),
+            sd = sd(Freq))
+
+cospons_112 %>% 
+  summarize(mean = mean(Freq),
+            sd = sd(Freq))
 ```
 
-# NOW THAT WE HAVE THE EDGE LISTS we need to make a MATRIX
 
+
+
+
+# NOW THAT WE HAVE THE EDGE LISTS we need to make a MATRIX of 112
+```{r}
+#now we just want the member names
+a_112 <- all_112 %>% 
+  select(member_i, member_j)
+
+#convert to a network
+net_112 <- graph.data.frame(a_112, directed=T)
+#convert to a matrix
+#now we are seeing that Juniors got recked in this, there are some that we are just going to have to hand do 
+mat_112 <- as.matrix(get.adjacency(net_112))
+```
+
+
+
+
+
+# fucking about
 ```{r}
 #making a number correlation for each lmao
 rel_112 <- rel_112 %>% 
@@ -682,13 +748,4 @@ s_112 <- all_112 %>%
   group_by(religion_i) %>% 
   summarize(n = n())
 
-
-s_112 %>% 
-  
-
-#convert to a network
-net_117 <- graph.data.frame(all_117, directed=T)
-#convert to a matrix
-#now we are seeing that Juniors got recked in this, there are some that we are just going to have to hand do 
-mat_117 <- as.matrix(get.adjacency(net_117))
 ```
