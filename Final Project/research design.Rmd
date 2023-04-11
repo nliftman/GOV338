@@ -2,6 +2,8 @@
 title: "Research Design"
 author: "Naomi Liftman and Natalie Dionne"
 date: "2023-04-07"
+header-includes:
+    - \usepackage{setspace}\doublespacing
 output: pdf_document
 urlcolor: blue
 ---
