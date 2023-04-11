@@ -1,0 +1,108 @@
+---
+title: "ERGM code"
+author: "Naomi Liftman"
+date: "2023-04-11"
+output: pdf_document
+---
+
+```{r}
+## making data for analysis
+library(rio)
+library(tidyverse)
+### matrices for analysis
+library(igraph)
+
+dyad_demo <- import("full_edgelist.csv")
+monad <- import("monad.csv")
+
+monad$std_pop <- (monad$population-mean(monad$population))/sd(monad$population)
+monad$std_inc <- (monad$med_inc-mean(monad$med_inc))/sd(monad$med_inc)
+
+# DV
+mygraph <- graph.data.frame(dyad_demo)
+
+
+elect_tie<- get.adjacency(mygraph, sparse = FALSE, attr='elect_tie')
+contig<- get.adjacency(mygraph, sparse = FALSE, attr='contig')
+census<- get.adjacency(mygraph, sparse = FALSE, attr='same_census')
+sim<- get.adjacency(mygraph, sparse = FALSE, attr='sim_score')
+
+
+
+### ERGM Approach
+detach(package:igraph)
+
+library(network)
+nv <- 50
+
+elect_net <- network.initialize(nv)
+
+network.vertex.names(elect_net) <- monad$state
+
+elect_el <- dyad_demo |>
+  filter(elect_tie==1) |>
+  select(state_01, state_02)
+
+elect_net[as.matrix(elect_el)] <- 1
+
+set.vertex.attribute(x=elect_net,attrname="Population",val=monad$std_pop) 
+set.vertex.attribute(x=elect_net,attrname="Initiative",val=monad$initiative) 
+set.vertex.attribute(x=elect_net,attrname="Leg Prof",val=monad$legp_squire) 
+set.vertex.attribute(x=elect_net,attrname="Med Inc",val=monad$med_inc) 
+set.vertex.attribute(x=elect_net,attrname="Perc White",val=monad$White) 
+set.vertex.attribute(x=elect_net,attrname="Perc Urban",val=monad$urban_index) 
+set.vertex.attribute(x=elect_net,attrname="Turnout",val=monad$vep) 
+set.vertex.attribute(x=elect_net,attrname="Dem Pres Vote",val=monad$demshare_pres) 
+set.vertex.attribute(x=elect_net,attrname="Policy Conservatism",val=monad$policy_updated) 
+set.vertex.attribute(x=elect_net,attrname="Election Performance Index",val=monad$std_index) 
+
+
+
+library(ergm)
+
+set.seed(12345)
+
+m1_elect<- ergm(elect_net~edges
+                +absdiff("Turnout")
+                +absdiff("Dem Pres Vote")
+                +absdiff("Policy Conservatism")
+                +absdiff("Population")
+                +absdiff("Leg Prof")
+                +absdiff("Med Inc")
+                +absdiff("Perc White")
+                +absdiff("Perc Urban")
+                +edgecov(contig)
+                +nodecov("Policy Conservatism")
+                +nodecov("Dem Pres Vote")
+                +nodecov("Initiative")
+                +nodecov("Election Performance Index")
+                +idegree1.5)
+
+
+summary(m1_elect)
+gof_elect <- gof(m1_elect)
+
+plot(gof_elect)
+
+### Predicted probs
+library(ergMargins)
+
+
+edge_prob <- edge.prob2(m1_elect)
+
+
+
+library(ggplot2)
+
+ggplot(edge_prob, aes(y=probability, x=`absdiff.Dem Pres Vote`)) +
+  geom_smooth(method="lm") +
+  labs(x ="Difference in Democratic  Presidential Vote 2020",
+       y = "Probability of a Latent Diffusion Tie")
+
+ggplot(edge_prob, aes(y=probability, x=`nodecov.Election Performance Index`)) +
+  geom_smooth(method="lm") +
+  labs(x ="Election Performance Index",
+       y = "Probability of a Latent Diffusion Tie")+ xlim(-2.5,3)
+
+```
+
