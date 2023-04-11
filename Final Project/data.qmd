@@ -386,7 +386,7 @@ all_117$religion_j <- all_117$religion_j %>%
 #create similarity score!! yay!!
 all_117$similarity<- ifelse(all_117$religion_i == all_117$religion_j, 1, 0)
 
-2#trying to remove the ones where the member is the same member!! 
+#trying to remove the ones where the member is the same member!! 
 #all done!!
 all_117 <- all_117[all_117$member_i != all_117$member_j, ]      
 ```
@@ -454,3 +454,128 @@ all_112$similarity<- ifelse(all_112$religion_i == all_112$religion_j, 1, 0)
 #all done!!
 all_112 <- all_112[all_112$member_i != all_112$member_j, ]      
 ```
+
+# NOW THAT WE HAVE THE EDGE LISTS we need to make a MATRIX
+
+```{r}
+#making a adjacency matrix for all of the 
+rel_112 <- rel_112 %>% 
+  mutate(religion = ifelse(rel_112$fix_relig == "Catholic", 1, fix_relig),
+         religion = ifelse(rel_112$fix_relig == "Jewish", 2, religion),
+         religion = ifelse(rel_112$fix_relig == "Other", 3, religion),
+         religion = ifelse(rel_112$fix_relig == "Protestant", 4, religion),
+         religion = ifelse(rel_112$fix_relig == "Unknown", 5, religion)) 
+
+#trying to figure out all the messed up members and fixing them
+s_112 <- all_112 %>% 
+  distinct(member_i, .keep_all = TRUE)
+
+
+all_112 <- all_112 %>% 
+  mutate(member_i = ifelse(all_112$member_i == "Wm. Lacy Clay", "William Lacy Clay", member_i),
+         member_j = ifelse(all_112$member_j == "Wm. Lacy Clay", "William Lacy Clay", member_j),
+         member_i = ifelse(all_112$member_i == "W. Todd Akin", "Todd Akin", member_i),
+         member_j = ifelse(all_112$member_j == "W. Todd Akin", "Todd Akin", member_j),
+         member_i = ifelse(all_112$member_i == "William R. Keating", "William Keating", member_i),
+         member_j = ifelse(all_112$member_j == "William R. Keating", "William Keating", member_j),
+         member_i = ifelse(all_112$member_i == "William L. Owens", "Bill  Owens", member_i),
+         member_j = ifelse(all_112$member_j == "William L. Owens", "Bill  Owens", member_j),
+         member_i = ifelse(all_112$member_i == "Thomas E. Petri", "Tom Petri", member_i),
+         member_j = ifelse(all_112$member_j == "Thomas E. Petri", "Tom Petri", member_j),
+         member_i = ifelse(all_112$member_i == "Theodore E. Deutch", "Ted Deutch", member_i),
+         member_j = ifelse(all_112$member_j == "Theodore E. Deutch", "Ted Deutch", member_j),
+         member_i = ifelse(all_112$member_i == "Thaddeus G. McCotter", "Thaddeus McCotter", member_i),
+         member_j = ifelse(all_112$member_j == "Thaddeus G. McCotter", "Thaddeus McCotter", member_j),
+         member_i = ifelse(all_112$member_i == "Susan M. Collins", "Susan Collins", member_i),
+         member_j = ifelse(all_112$member_j == "Susan M. Collins", "Susan Collins", member_j),
+         member_i = ifelse(all_112$member_i == "Sue Wilkins Myrick", "Sue Myrick", member_i),
+         member_j = ifelse(all_112$member_j == "Sue Wilkins Myrick", "Sue Myrick", member_j),
+         member_i = ifelse(all_112$member_i == "Steven M. Palazzo", "Steven Palazzo", member_i),
+         member_j = ifelse(all_112$member_j == "Steven M. Palazzo", "Steven Palazzo", member_j),
+         member_i = ifelse(all_112$member_i == "Steve II Southerland", "Steve Southerland", member_i),
+         member_j = ifelse(all_112$member_j == "Steve II Southerland", "Steve Southerland", member_j),
+         member_i = ifelse(all_112$member_i == "Stephen Lee Fincher", "Stephen Fincher", member_i),
+         member_j = ifelse(all_112$member_j == "Stephen Lee Fincher", "Stephen Fincher", member_j),
+         member_i = ifelse(all_112$member_i == "Scott  R. Tipton", "Scott Tipton", member_i),
+         member_j = ifelse(all_112$member_j == "Scott  R. Tipton", "Scott Tipton", member_j),
+         member_i = ifelse(all_112$member_i == "Rosa L. DeLauro", "Rosa DeLauro", member_i),
+         member_j = ifelse(all_112$member_j == "Rosa L. DeLauro", "Rosa DeLauro", member_j),
+         member_i = ifelse(all_112$member_i == "Rodney P. Frelinghuysen", "Rodney Frelinghuysen", member_i),
+         member_j = ifelse(all_112$member_j == "Rodney P. Frelinghuysen", "Rodney Frelinghuysen", member_j),
+         member_i = ifelse(all_112$member_i == "Robert T. Schilling", "Bobby Schilling", member_i),
+         member_j = ifelse(all_112$member_j == "Robert T. Schilling", "Bobby Schilling", member_j),
+         member_i = ifelse(all_112$member_i == "Robert J. Wittman", "Rob Wittman", member_i),
+         member_j = ifelse(all_112$member_j == "Robert J. Wittman", "Rob Wittman", member_j),
+         member_i = ifelse(all_112$member_i == "Robert J. Dold", "Robert Dold", member_i),
+         member_j = ifelse(all_112$member_j == "Robert J. Dold", "Robert Dold", member_j),
+         member_i = ifelse(all_112$member_i == "Robert E. Latta", "Bob Latta", member_i),
+         member_j = ifelse(all_112$member_j == "Robert E. Latta", "Bob Latta", member_j),
+         member_i = ifelse(all_112$member_i == "Robert C. \"Bobby\" Scott", "Robert C. Scott", member_i),
+         member_j = ifelse(all_112$member_j == "Robert C. \"Bobby\" Scott", "Robert C. Scott", member_j),
+         member_i = ifelse(all_112$member_i == "Richard L. Hanna", "Richard Hanna", member_i),
+         member_j = ifelse(all_112$member_j == "Richard L. Hanna", "Richard Hanna", member_j),
+         member_i = ifelse(all_112$member_i == "Richard B. Nugent", "Richard Nugent", member_i),
+         member_j = ifelse(all_112$member_j == "Richard B. Nugent", "Richard Nugent", member_j),
+         member_i = ifelse(all_112$member_i == "Renee L. Ellmers", "Renee Ellmers", member_i),
+         member_j = ifelse(all_112$member_j == "Renee L. Ellmers", "Renee Ellmers", member_j),
+         member_i = ifelse(all_112$member_i == "Reid J. Ribble", "Reid Ribble", member_i),
+         member_j = ifelse(all_112$member_j == "Reid J. Ribble", "Reid Ribble", member_j),
+         member_i = ifelse(all_112$member_i == "Raúl M. Grijalva", "Raul Grijalva", member_i),
+         member_j = ifelse(all_112$member_j == "Raúl M. Grijalva", "Raul Grijalva", member_j),
+         member_i = ifelse(all_112$member_i == "Peter J. Roskam", "Peter Roskam", member_i),
+         member_j = ifelse(all_112$member_j == "Peter J. Roskam", "Peter Roskam", member_j),
+         member_i = ifelse(all_112$member_i == "Paul C. Broun", "Paul Broun", member_i),
+         member_j = ifelse(all_112$member_j == "Paul C. Broun", "Paul Broun", member_j),
+         member_i = ifelse(all_112$member_i == "", "", member_i),
+         member_j = ifelse(all_112$member_j == "", "", member_j),
+         member_i = ifelse(all_112$member_i == "", "", member_i),
+         member_j = ifelse(all_112$member_j == "", "", member_j),
+         member_i = ifelse(all_112$member_i == "", "", member_i),
+         member_j = ifelse(all_112$member_j == "", "", member_j),
+         member_i = ifelse(all_112$member_i == "", "", member_i),
+         member_j = ifelse(all_112$member_j == "", "", member_j),
+         member_i = ifelse(all_112$member_i == "", "", member_i),
+         member_j = ifelse(all_112$member_j == "", "", member_j),
+         member_i = ifelse(all_112$member_i == "", "", member_i),
+         member_j = ifelse(all_112$member_j == "", "", member_j),
+         member_i = ifelse(all_112$member_i == "", "", member_i),
+         member_j = ifelse(all_112$member_j == "", "", member_j),
+         member_i = ifelse(all_112$member_i == "", "", member_i),
+         member_j = ifelse(all_112$member_j == "", "", member_j),
+         member_i = ifelse(all_112$member_i == "", "", member_i),
+         member_j = ifelse(all_112$member_j == "", "", member_j),
+         member_i = ifelse(all_112$member_i == "", "", member_i),
+         member_j = ifelse(all_112$member_j == "", "", member_j),
+         member_i = ifelse(all_112$member_i == "", "", member_i),
+         member_j = ifelse(all_112$member_j == "", "", member_j),
+         member_i = ifelse(all_112$member_i == "", "", member_i),
+         member_j = ifelse(all_112$member_j == "", "", member_j),
+         member_i = ifelse(all_112$member_i == "", "", member_i),
+         member_j = ifelse(all_112$member_j == "", "", member_j),
+         member_i = ifelse(all_112$member_i == "", "", member_i),
+         member_j = ifelse(all_112$member_j == "", "", member_j),
+         member_i = ifelse(all_112$member_i == "", "", member_i),
+         member_j = ifelse(all_112$member_j == "", "", member_j),
+         member_i = ifelse(all_112$member_i == "", "", member_i),
+         member_j = ifelse(all_112$member_j == "", "", member_j),
+         member_i = ifelse(all_112$member_i == "", "", member_i),
+         member_j = ifelse(all_112$member_j == "", "", member_j),
+         member_i = ifelse(all_112$member_i == "", "", member_i),
+         member_j = ifelse(all_112$member_j == "", "", member_j),
+         member_i = ifelse(all_112$member_i == "", "", member_i),
+         member_j = ifelse(all_112$member_j == "", "", member_j),
+         member_i = ifelse(all_112$member_i == "", "", member_i),
+         member_j = ifelse(all_112$member_j == "", "", member_j))
+
+s_112 %>% 
+  group_by(religion_i) %>% 
+  summarize(n = n())
+
+#convert to a network
+net_117 <- graph.data.frame(all_117, directed=T)
+#convert to a matrix
+#now we are seeing that Juniors got recked in this, there are some that we are just going to have to hand do 
+mat_117 <- as.matrix(get.adjacency(net_117))
+```
+
+
