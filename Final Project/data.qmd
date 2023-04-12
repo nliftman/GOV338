@@ -15,6 +15,7 @@ library(igraph)
 library(tidyverse)
 library(rio)
 library(tidyr)
+library(network)
 ```
 
 # Scott Code for Cosponsorship of 117th SENATE
@@ -107,7 +108,6 @@ full_117_edge <- full_117_edge %>%
   rename("member_i" = 1,
          "member_j" = 2)
 ```
-
 
 # RELIGION FOR 117th
 
@@ -243,8 +243,6 @@ all_117 <- all_117[all_117$member_i != all_117$member_j, ]
 
 ```
 
-
-
 # Scott Code for Cosponsorship of 112th SENATE
 
 ```{r warning = FALSE, message = FALSE, error = FALSE}
@@ -325,6 +323,7 @@ edge_112_house = el_112_house %>%
 ```
 
 # BUILDING FULL 112th
+
 ```{r}
 #full 117th dataframe
 full_112_edge <- rbind(edge_112_house, edge_112_senate)
@@ -335,7 +334,6 @@ full_112_edge <- full_112_edge %>%
          "member_j" = 2)
 
 ```
-
 
 # Religion Data 112th
 
@@ -688,7 +686,6 @@ full_112_edge <- full_112_edge %>%
          member_j = ifelse(full_112_edge$member_j == "Anthony D. Weiner", "Anthony Weiner", member_j))
 ```
 
-
 # Merging the 112th full with the religion!!
 
 ```{r}
@@ -756,7 +753,9 @@ all_112 %>%
   summarize(n = n())
 #currently missing 4 
 ```
+
 # Summary Statistics of 112
+
 ```{r}
 spons_112 <- data.frame(table(all_112$member_j))
 
@@ -771,11 +770,8 @@ cospons_112 %>%
             sd = sd(Freq))
 ```
 
-
-
-
-
 # NOW THAT WE HAVE THE EDGE LISTS we need to make a MATRIX of 112
+
 ```{r}
 #now we just want the member names
 a_112 <- all_112 %>% 
@@ -792,11 +788,8 @@ net_112_2 <- graph.data.frame(rel_112, directed = F)
 mat_112_2 <- as.matrix(get.adjacency(net_112_2, attr = rel_112$fix_relig))
 ```
 
-
-
-
-
 # fucking about
+
 ```{r}
 #making a number correlation for each lmao
 rel_112 <- rel_112 %>% 
@@ -813,3 +806,13 @@ s_112 <- all_112 %>%
   summarize(n = n())
 
 ```
+
+#network initialize 
+nv <- nrow()
+network.initialize()
+network.vertex.names() <- df$names
+
+filter--to only unique
+
+thingy[as.matrix()] <- 1
+
