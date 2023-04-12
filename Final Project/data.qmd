@@ -624,8 +624,68 @@ full_112_edge <- full_112_edge %>%
          member_j = ifelse(full_112_edge$member_j == "Christopher J. Lee", "Christopher Lee", member_j),
          member_i = ifelse(full_112_edge$member_i == "III Manchin", "Joe Manchin III", member_i),
          member_j = ifelse(full_112_edge$member_j == "III Manchin", "Joe Manchin III", member_j),
-         member_i = ifelse(full_112_edge$member_i == "", "", member_i),
-         member_j = ifelse(full_112_edge$member_j == "", "", member_j))
+         member_i = ifelse(full_112_edge$member_i == "Christopher Murphy", "Christopher S. Murphy", member_i),
+         member_j = ifelse(full_112_edge$member_j == "Christopher Murphy", "Christopher S. Murphy", member_j),
+         member_i = ifelse(full_112_edge$member_i == "Todd Russell Platts", "Todd R. Platts", member_i),
+         member_j = ifelse(full_112_edge$member_j == "Todd Russell Platts", "Todd R. Platts", member_j),
+         member_i = ifelse(full_112_edge$member_i == "Patrick Toomey", "Patrick J. Toomey", member_i),
+         member_j = ifelse(full_112_edge$member_j == "Patrick Toomey", "Patrick J. Toomey", member_j),
+         member_i = ifelse(full_112_edge$member_i == "Roger F. Wicker", "Roger Wicker", member_i),
+         member_j = ifelse(full_112_edge$member_j == "Roger F. Wicker", "Roger Wicker", member_j),
+         member_i = ifelse(full_112_edge$member_i == "Laura Richardson", "Laura  Richardson", member_i),
+         member_j = ifelse(full_112_edge$member_j == "Laura Richardson", "Laura  Richardson", member_j),
+         member_i = ifelse(full_112_edge$member_i == "Rush Holt", "Rush D. Holt", member_i),
+         member_j = ifelse(full_112_edge$member_j == "Rush Holt", "Rush D. Holt", member_j),
+         member_i = ifelse(full_112_edge$member_i == "Patrick Meehan", "Pat Meehan", member_i),
+         member_j = ifelse(full_112_edge$member_j == "Patrick Meehan", "Pat Meehan", member_j),
+         member_i = ifelse(full_112_edge$member_i == "Patrick Meehan", "Emanuel Cleaver II", member_i),
+         member_j = ifelse(full_112_edge$member_j == "Patrick Meehan", "Emanuel Cleaver II", member_j),
+         member_i = ifelse(full_112_edge$member_i == "David Loebsack", "Dave Loebsack", member_i),
+         member_j = ifelse(full_112_edge$member_j == "David Loebsack", "Dave Loebsack", member_j),
+         member_i = ifelse(full_112_edge$member_i == "Benjamin Quayle", "Ben Quayle", member_i),
+         member_j = ifelse(full_112_edge$member_j == "Benjamin Quayle", "Ben Quayle", member_j),
+         member_i = ifelse(full_112_edge$member_i == "Joe Barton", "Joe L. Barton", member_i),
+         member_j = ifelse(full_112_edge$member_j == "Joe Barton", "Joe L. Barton", member_j),
+         member_i = ifelse(full_112_edge$member_i == "Stevan Pearce", "Steve Pearce", member_i),
+         member_j = ifelse(full_112_edge$member_j == "Stevan Pearce", "Steve Pearce", member_j),
+         member_i = ifelse(full_112_edge$member_i == "Christopher Murphy", "Christopher S. Murphy", member_i),
+         member_j = ifelse(full_112_edge$member_j == "Christopher Murphy", "Christopher S. Murphy", member_j),
+         member_i = ifelse(full_112_edge$member_i == "Mac Thornberry", "William M. \"Mac\" Thornberry", member_i),
+         member_j = ifelse(full_112_edge$member_j == "Mac Thornberry", "William M. \"Mac\" Thornberry", member_j),
+         member_i = ifelse(full_112_edge$member_i == "Bob Goodlatte", "Robert W. Goodlatte", member_i),
+         member_j = ifelse(full_112_edge$member_j == "Bob Goodlatte", "Robert W. Goodlatte", member_j),
+         member_i = ifelse(full_112_edge$member_i == "Paul Ryan", "Paul D. Ryan", member_i),
+         member_j = ifelse(full_112_edge$member_j == "Paul Ryan", "Paul D. Ryan", member_j),
+         member_i = ifelse(full_112_edge$member_i == "Ed Whitfield", "Edward Whitfield", member_i),
+         member_j = ifelse(full_112_edge$member_j == "Ed Whitfield", "Edward Whitfield", member_j),
+         member_i = ifelse(full_112_edge$member_i == "Michael F. Bennet", "Michael Bennet", member_i),
+         member_j = ifelse(full_112_edge$member_j == "Michael F. Bennet", "Michael Bennet", member_j),
+         member_i = ifelse(full_112_edge$member_i == "Kirsten E. Gillibrand", "Kirsten Gillibrand", member_i),
+         member_j = ifelse(full_112_edge$member_j == "Kirsten E. Gillibrand", "Kirsten Gillibrand", member_j),
+         member_i = ifelse(full_112_edge$member_i == "Christopher A. Coons", "Chris Coons", member_i),
+         member_j = ifelse(full_112_edge$member_j == "Christopher A. Coons", "Chris Coons", member_j),
+         member_i = ifelse(full_112_edge$member_i == "John F. Kerry", "John Kerry", member_i),
+         member_j = ifelse(full_112_edge$member_j == "John F. Kerry", "John Kerry", member_j),
+         member_i = ifelse(full_112_edge$member_i == "Mike Crapo", "Michael D. Crapo", member_i),
+         member_j = ifelse(full_112_edge$member_j == "Mike Crapo", "Michael D. Crapo", member_j),
+         member_i = ifelse(full_112_edge$member_i == "IV Rockefeller", "John D. Rockefeller IV", member_i),
+         member_j = ifelse(full_112_edge$member_j == "IV Rockefeller", "John D. Rockefeller IV", member_j),
+         member_i = ifelse(full_112_edge$member_i == "Emanuel Cleaver", "Emanuel Cleaver II", member_i),
+         member_j = ifelse(full_112_edge$member_j == "Emanuel Cleaver", "Emanuel Cleaver II", member_j),
+         member_i = ifelse(full_112_edge$member_i == "James E. Risch", "Jim Risch", member_i),
+         member_j = ifelse(full_112_edge$member_j == "James E. Risch", "Jim Risch", member_j),
+         member_i = ifelse(full_112_edge$member_i == "Mark L. Pryor", "Mark Pryor", member_i),
+         member_j = ifelse(full_112_edge$member_j == "Mark L. Pryor", "Mark Pryor", member_j),
+         member_i = ifelse(full_112_edge$member_i == "Mark R. Warner", "Mark Warner", member_i),
+         member_j = ifelse(full_112_edge$member_j == "Mark R. Warner", "Mark Warner", member_j),
+         member_i = ifelse(full_112_edge$member_i == "Richard Burr", "Richard M. Burr", member_i),
+         member_j = ifelse(full_112_edge$member_j == "Richard Burr", "Richard M. Burr", member_j),
+         member_i = ifelse(full_112_edge$member_i == "Chuck Grassley", "Charles E. Grassley", member_i),
+         member_j = ifelse(full_112_edge$member_j == "Chuck Grassley", "Charles E. Grassley", member_j),
+         member_i = ifelse(full_112_edge$member_i == "Daniel Coats", "Dan Coats", member_i),
+         member_j = ifelse(full_112_edge$member_j == "Daniel Coats", "Dan Coats", member_j),
+         member_i = ifelse(full_112_edge$member_i == "Anthony D. Weiner", "Anthony Weiner", member_i),
+         member_j = ifelse(full_112_edge$member_j == "Anthony D. Weiner", "Anthony Weiner", member_j))
 ```
 
 
@@ -667,6 +727,10 @@ all_112 <- cbind(t_112_first, t_112_second)
 sum(is.na(all_112$religion_i))
 sum(is.na(all_112$religion_j))
 
+#checking which ones are NAs
+all_112 %>% 
+  distinct(member_i, .keep_all = TRUE)
+
 #now we want to make all the NAs be "Unknown"
 #for i
 all_112$religion_i <- all_112$religion_i %>%  
@@ -694,10 +758,6 @@ all_112 %>%
 ```
 # Summary Statistics of 112
 ```{r}
-all_112 %>% 
-  group_by(member_i) %>% 
-  summarize(mean = mean())
-  
 spons_112 <- data.frame(table(all_112$member_j))
 
 cospons_112 <- data.frame(table(all_112$member_i))
@@ -721,11 +781,15 @@ cospons_112 %>%
 a_112 <- all_112 %>% 
   select(member_i, member_j)
 
-#convert to a network
+#convert to a network FROM COSPONSORSHIP
 net_112 <- graph.data.frame(a_112, directed=T)
 #convert to a matrix
 #now we are seeing that Juniors got recked in this, there are some that we are just going to have to hand do 
-mat_112 <- as.matrix(get.adjacency(net_112))
+mat_112 <- as.matrix((net_112))
+
+#trying to make a network from religion?
+net_112_2 <- graph.data.frame(rel_112, directed = F)
+mat_112_2 <- as.matrix(get.adjacency(net_112_2, attr = rel_112$fix_relig))
 ```
 
 
