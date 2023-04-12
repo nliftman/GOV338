@@ -6,7 +6,7 @@ output: pdf_document
 ---
 # Lab 4
 
-I will be using the `civil_rights.csv` data, as the data we are using for our project is around 35,000 edges. 
+I will be using the `civil_rights.csv` data, as the data we are using for our project is two datasets each with around 35,000 edges. 
 
 Part 1- loading data and summary statistics
 
