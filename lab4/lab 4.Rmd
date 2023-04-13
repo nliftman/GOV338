@@ -27,7 +27,7 @@ civ <- import("/Users/naomiliftman/Desktop/GOV338/lab4/civil_rights.csv")
 civ_net <- graph.data.frame(civ, directed=T)
 #plot
 plot(civ_net, edge.width=.3,  edge.arrow.size=.3,
-     vertex.color="green")
+     vertex.color="#11876f", vertex.label.color = "black")
 ```
 
 
@@ -93,17 +93,30 @@ I was surprised by the seperation of the top four highest degrees in the network
 ```{r}
 library(sna)
 library(network)
-
+ec<-equiv.clust(civ_mat, method="euclidean")
+plot(ec, labels=ec$glabels, main="", xlab="", ylab="Height", sub="")
 ```
 
 
-You can now load SNA and network. Use the equiv.clust command to calculate structurally equivalent nodes in your matrix. Plot the results.
-
 ### Question 9 
-Partition your data (rect.hclust command) by the number of blocks you believe best divide the plot produced in 8. Re-make the plot with the partitions overlaid.
+I think that 4 blocks would best divide the data, so I will reproduce the plot with four blocks. 
+
+```{r}
+plot(ec, labels=ec$glabels, main="", xlab="", ylab="Height", sub="")
+rect.hclust(ec$cluster,k=4,border="#11876f")
+```
+
 
 ### Question 10 
-Estimate the blockmodel (blockmodel) with the specified number of divisions you felt was the best fit for 9. Plot the collapsed version of the block model (see gplot sample code).
+
+```{r}
+bm<-blockmodel(civ_mat,ec, k=4)
+gplot(bm$block.model > gden(civ_mat), diag=T,edge.lwd=bm$block.model*3,  main ="", displaylabels=TRUE)
+```
+
 
 ### Question 11
+
+
+
 Lastly, look at the nodes that are assigned to the same blocks. Can you identify any similar between these nodes, either in how they appear in the visualized network, or based on some characteristics of the nodes? For example, are states grouped by ideology/region, etc?
