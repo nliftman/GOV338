@@ -117,6 +117,6 @@ gplot(bm$block.model > gden(civ_mat), diag=T,edge.lwd=bm$block.model*3,  main ="
 
 ### Question 11
 
+The first block appears to be many of the wealthier, liberal states such as California, Massachusetts, Oregon, ect. These states are grouped together clearly for ideological reasons, as they all have very similar politics. They do not fall into the same region. Minnesota is the only state in the second block. The third block appears to be mainly part of the Midwest, and a little bit of a hodge-podge of states. The last group is mostly southern right leaning states. 
 
 
-Lastly, look at the nodes that are assigned to the same blocks. Can you identify any similar between these nodes, either in how they appear in the visualized network, or based on some characteristics of the nodes? For example, are states grouped by ideology/region, etc?
