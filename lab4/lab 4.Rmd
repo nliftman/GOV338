@@ -37,20 +37,53 @@ plot(civ_net, edge.width=.3,  edge.arrow.size=.3,
 gsize(civ_net)
 vcount(civ_net)
 summary(degree(civ_net))
+edge_density(civ_net)
 ```
-There are 50 nodes and 263 edges. The minimum is 3 maximum is 21 and mean is 10.52. 
+There are 50 nodes and 263 edges. The minimum is 3, maximum is 21, and mean is 10.52. The density of the network is .107. 
 
-Provide the following descriptive of the network: number of edges, number of nodes, density, and report the minimum, maximum, and mean degree in our network.
 
-Identify and list the 3 nodes with the highest degree in the data.
+### Question 3 
+```{r}
+degree(civ_net)
+```
+The three nodes with the highest degrees in the data are MN (Minnesota) with 21, UT (Utah) with 17, and then CT (Connecticut) and CA (California) are tied for the third highest degree with 16 each. 
 
-Part 2- Role Analysis
-Load concoR and construct a correlation of ties between your nodes. Look at the first column of the correlation matrix, which reflects the correlations between that node and all others in the data. Which node is most strongly correlated with the first node? Hint you need to first extract an adjacency matrix from your igraph object.
 
-Use Concor’s hierarhcical clustering algorithm (concor_hca) to partition you matrix. How many blocks are produced?
+## Part 2
+### Question 4 
+```{r}
+library(concoR)
+#turn into a matrix
+civ_mat <- as.matrix(get.adjacency(civ_net))
+#correlation of ties
+civ_cor <- data.frame(cor(civ_mat)) 
+civ_cor <- civ_cor[-c(1:1), ]
+civ_cor %>% 
+  summarize(max = max(VA))
+```
 
-Assign the blocks to your nodes in the network and plot the network with node color being determined by block membership.
+The node that is most strongly correlated with the first node (VA) is Virginia, as they are the same node and thus have a correlation of 1. Other than that the other node that is most strongly correlated with the first is MI (Minnesota). 
 
+### Question 5
+```{r}
+blocks <- concor_hca(list(civ_mat)) 
+blocks %>% 
+  summarize(m = max(block))
+```
+
+Using Concor's hierarchical clustering algorithm we produced two blocks.
+
+### Question 6
+
+```{r}
+V(civ_net)$blocks <- blocks$block
+
+plot.igraph(civ_net, vertex.color=V(civ_net)$blocks, edge.width=.5, edge.arrow.size=.3,      vertex.label.color="black")
+
+```
+
+
+### Question 7
 Look at the plot, the correlation matrix, and your calculations for node degree. Were you surprised by which groups were put in the same block?
 
 Part 3- Dendograms and collapsed block graphs
