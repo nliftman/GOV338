@@ -8,7 +8,6 @@ output: pdf_document
 
 I will be using the `civil_rights.csv` data, as the data we are using for our project is two datasets each with around 35,000 edges. 
 
-Part 1- loading data and summary statistics
 
 ## Part 1
 ### Question 1
@@ -90,7 +89,7 @@ I was surprised by the seperation of the top four highest degrees in the network
 
 ## Part 3 
 ### Question 8
-```{r}
+```{r warning = FALSE, message = FALSE, error = FALSE}
 library(sna)
 library(network)
 ec<-equiv.clust(civ_mat, method="euclidean")
