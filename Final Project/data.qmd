@@ -407,6 +407,7 @@ rel_112 %>%
   group_by(fix_relig) %>% 
   summarize(n = n())
 
+#remove NAs
 rel_112 <- rel_112 %>% 
   select("member_name", "fix_relig") %>%
   drop_na(member_name)
@@ -835,17 +836,58 @@ a_112 = rbind(a_112, newrow_5)
 
 ```
 
-# FINAL EDGE LIST TURNED TO MATRIX 
+# FINAL EDGE LIST TURNED TO MATRIX 112 
 ```{r}
 #now we need to turn our edge list into a weighted edge list
 #turn edge list into matrix
 el=as.matrix(a_112)
+
 #turn into graph object
 g=graph.data.frame(el)
+
 #get adjacency matrix
 d = get.adjacency(g,sparse=FALSE)
+d <- d[-c(537), -c(537)]
+
 #export it for easier work!
 write.csv(d, "adjacency_cospons_112", row.names=FALSE)
+```
+
+
+# Religion 112th congress
+```{r}
+#make matrix of religions
+#making a number correlation for each lmao
+re_112 <- rel_112 %>% 
+  mutate(fix_relig = ifelse(rel_112$fix_relig == "Catholic", 1, fix_relig),
+         fix_relig = ifelse(rel_112$fix_relig == "Jewish", 2, fix_relig),
+         fix_relig = ifelse(rel_112$fix_relig == "Other", 3, fix_relig),
+         fix_relig = ifelse(rel_112$fix_relig == "Protestant", 4, fix_relig),
+         fix_relig = ifelse(rel_112$fix_relig == "Unknown", 5, fix_relig))  
+
+#making an i and j 
+re_112 <- re_112 %>% 
+  mutate(member_i=member_name) %>% 
+  rename(member_j = member_name) %>% 
+  mutate(religion_i = fix_relig) %>% 
+  rename(religion_j = fix_relig)
+
+#creating all the possible combinations
+combos_112 <- re_112 |>
+  expand(member_i, member_j) |>
+  filter(member_i != member_j)
+
+#turn edge list into matrix
+el_112 =as.matrix(combos_112)
+
+#turn into graph object
+g_112=graph.data.frame(el_112)
+
+#get adjacency matrix
+d_112 = get.adjacency(g_112,sparse=FALSE)
+
+#export it for easier work!
+write.csv(d_112, "religion_112", row.names=FALSE)
 ```
 
 
@@ -854,20 +896,11 @@ write.csv(d, "adjacency_cospons_112", row.names=FALSE)
 # fucking about
 
 ```{r}
-#making a number correlation for each lmao
-rel_112 <- rel_112 %>% 
-  mutate(fix_relig = ifelse(rel_112$fix_relig == "Catholic", 1, fix_relig),
-         fix_relig = ifelse(rel_112$fix_relig == "Jewish", 2, fix_relig),
-         fix_relig = ifelse(rel_112$fix_relig == "Other", 3, fix_relig),
-         fix_relig = ifelse(rel_112$fix_relig == "Protestant", 4, fix_relig),
-         fix_relig = ifelse(rel_112$fix_relig == "Unknown", 5, fix_relig))  
-
 #trying to figure out all the messed up members and fixing them
 s_112 <- all_112 %>% 
   distinct(member_i, .keep_all = TRUE) %>% 
   group_by(religion_i) %>% 
   summarize(n = n())
-
 ```
 
 #network initialize nv \<- nrow() network.initialize() network.vertex.names() \<- df\$names
