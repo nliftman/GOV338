@@ -5,7 +5,9 @@ format: pdf
 editor: visual
 ---
 
+
 # Packages
+
 
 ```{r warning = FALSE, error = FALSE, message = FALSE}
 library(incidentally)
@@ -19,7 +21,9 @@ library(network)
 library(gdata)
 ```
 
+
 # Scott Code for Cosponsorship of 117th SENATE
+
 
 ```{r warning = FALSE, message = FALSE, error = FALSE}
 #pull the 117 senators connections 
@@ -34,7 +38,9 @@ el_mat_117_senate <- as_edgelist(network_117_senate)
 el_117_senate <- as.data.frame(as_edgelist(network_117_senate))
 ```
 
+
 # Mutating Cosponsorship of 117th SENATE
+
 
 ```{r}
 #remove the senator title from both columns
@@ -58,7 +64,9 @@ edge_117_senate = el_117_senate %>%
   select(v1_full, v2_full)
 ```
 
+
 # Scott Code for Cosponsorship in 117th HOUSE
+
 
 ```{r warning = FALSE, message = FALSE, error = FALSE}
 #pull the 117 senators connections 
@@ -74,7 +82,9 @@ el_mat_117_house <- as_edgelist(network_117_house)
 el_117_house <- as.data.frame(as_edgelist(network_117_house))
 ```
 
+
 # Mutating Cosponsorship of 117th HOUSE
+
 
 ```{r}
 #remove the house title from both columns
@@ -98,7 +108,9 @@ edge_117_house = el_117_house %>%
   select(v1_full, v2_full)
 ```
 
+
 # MAKING THE FULL EDGE LIST 117th!
+
 
 ```{r}
 #full 117th dataframe
@@ -110,7 +122,9 @@ full_117_edge <- full_117_edge %>%
          "member_j" = 2)
 ```
 
+
 # RELIGION FOR 117th
+
 
 ```{r}
 #importing the df 
@@ -136,7 +150,9 @@ relig_117 <- relig_117 %>%
   select("name", "religion", "party")
 ```
 
+
 # Fixing religious data for 117th!
+
 
 ```{r}
 #having a look at the origional breakdowns
@@ -187,7 +203,9 @@ rel_117 <- rel_117 %>%
   drop_na("name")
 ```
 
+
 # Merging the 117th full with the religion!!
+
 
 ```{r}
 #now we have something that has the first senators religion
@@ -240,7 +258,9 @@ all_117 <- all_117[all_117$member_i != all_117$member_j, ]
 
 ```
 
+
 # Scott Code for Cosponsorship of 112th SENATE
+
 
 ```{r warning = FALSE, message = FALSE, error = FALSE}
 #pull the 117 congress connections 
@@ -255,7 +275,9 @@ el_mat_112_senate <- as_edgelist(network_112_senate)
 el_112_senate <- as.data.frame(as_edgelist(network_112_senate))
 ```
 
+
 # Mutating Cosponsorship of 112th SENATE
+
 
 ```{r}
 #remove the senator title from both columns
@@ -279,7 +301,9 @@ edge_112_senate = el_112_senate %>%
   select(v1_full, v2_full)
 ```
 
+
 # Scott Code for Cosponsorship in the 112th HOUSE
+
 
 ```{r warning = FALSE, message = FALSE, error = FALSE}
 #pull the 117 senators connections 
@@ -295,7 +319,9 @@ el_mat_112_house <- as_edgelist(network_112_house)
 el_112_house <- as.data.frame(as_edgelist(network_112_house))
 ```
 
+
 # Mutating Cosponsorship of 112th HOUSE
+
 
 ```{r}
 #remove the house title from both columns
@@ -319,7 +345,9 @@ edge_112_house = el_112_house %>%
   select(v1_full, v2_full)
 ```
 
+
 # BUILDING FULL 112th
+
 
 ```{r}
 #full 117th dataframe
@@ -332,7 +360,9 @@ full_112_edge <- full_112_edge %>%
 
 ```
 
+
 # Religion Data 112th
+
 
 ```{r}
 #importing the df 
@@ -346,7 +376,9 @@ relig_112 <- religion_112 %>%
   select("member_name", "religious_affiliation", "party")
 ```
 
+
 # Fixing religious data for 112!!
+
 
 ```{r}
 #how many religions origionally
@@ -409,7 +441,9 @@ rel_112 <- rel_112 %>%
   drop_na(member_name)
 ```
 
+
 # Fixing all the Incorrect Missmaches 112!
+
 
 ```{r}
 full_112_edge <- full_112_edge %>% 
@@ -701,7 +735,9 @@ full_112_edge <- full_112_edge %>%
          member_j = ifelse(full_112_edge$member_j == "Kay R. Hagan", "Kay Hagan", member_j))
 ```
 
+
 # Merging the 112th full with the religion!!
+
 
 ```{r}
 #now we have something that has the first senators religion
@@ -763,7 +799,9 @@ all_112 <- all_112 %>%
   drop_na(religion_j)
 ```
 
+
 # Exporting the data as csv's so that we may actually use it!
+
 ```{r}
 #export 112th 
 write.csv(all_112, "all_112.csv", row.names=FALSE)
@@ -775,7 +813,9 @@ noDup <- all_112 %>%
 
 
 
+
 # Summary Statistics of 112
+
 
 ```{r}
 spons_112 <- data.frame(table(all_112$member_j))
@@ -791,7 +831,9 @@ cospons_112 %>%
             sd = sd(Freq))
 ```
 
+
 # NOW THAT WE HAVE THE EDGE LISTS we need to make a MATRIX of 112
+
 
 ```{r}
 #now we just want the member names
@@ -809,7 +851,9 @@ noDup_j <- a_112 %>%
   distinct(member_j, .keep_all = TRUE)
 ```
 
+
 # check my isos n stuff
+
 ```{r}
 #checking isolates that need to be added back to 112th
 i <- anti_join(rel_112, noDup_i, by = c("member_name" = "member_i"))
@@ -832,7 +876,9 @@ a_112 = rbind(a_112, newrow_5)
 
 ```
 
+
 # FINAL EDGE LIST TURNED TO MATRIX 112 
+
 ```{r}
 #now we need to turn our edge list into a weighted edge list
 #turn edge list into matrix
@@ -850,7 +896,9 @@ write.csv(d, "adjacency_cospons_112", row.names=FALSE)
 ```
 
 
+
 # Religion 112th congress
+
 ```{r}
 #make matrix of religions
 #making a number correlation for each lmao
@@ -920,7 +968,9 @@ write.csv(d_112, "religion_112", row.names=FALSE)
 
 
 
+
 # fucking about
+
 
 ```{r}
 #trying to figure out all the messed up members and fixing them
@@ -930,8 +980,10 @@ s_112 <- all_112 %>%
   summarize(n = n())
 ```
 
+
 #network initialize nv \<- nrow() network.initialize() network.vertex.names() \<- df\$names
 
 #filter--to only unique
 
 #thingy\[as.matrix()\] \<- 1
+
