@@ -16,6 +16,7 @@ library(tidyverse)
 library(rio)
 library(tidyr)
 library(network)
+library(gdata)
 ```
 
 # Scott Code for Cosponsorship of 117th SENATE
@@ -407,7 +408,8 @@ rel_112 %>%
   summarize(n = n())
 
 rel_112 <- rel_112 %>% 
-  select("member_name", "fix_relig")
+  select("member_name", "fix_relig") %>%
+  drop_na(member_name)
 ```
 
 # Fixing all the Incorrect Missmaches 112!
@@ -683,7 +685,23 @@ full_112_edge <- full_112_edge %>%
          member_i = ifelse(full_112_edge$member_i == "Daniel Coats", "Dan Coats", member_i),
          member_j = ifelse(full_112_edge$member_j == "Daniel Coats", "Dan Coats", member_j),
          member_i = ifelse(full_112_edge$member_i == "Anthony D. Weiner", "Anthony Weiner", member_i),
-         member_j = ifelse(full_112_edge$member_j == "Anthony D. Weiner", "Anthony Weiner", member_j))
+         member_j = ifelse(full_112_edge$member_j == "Anthony D. Weiner", "Anthony Weiner", member_j),
+         member_i = ifelse(full_112_edge$member_i == "Jr. Jones", "Walter B. Jones", member_i),
+         member_j = ifelse(full_112_edge$member_j == "Jr. Jones", "Walter B. Jones", member_j),
+         member_i = ifelse(full_112_edge$member_i == "Olympia J. Sen. Snowe", "Olympia J. Snowe", member_i),
+         member_j = ifelse(full_112_edge$member_j == "Olympia J. Sen. Snowe", "Olympia J. Snowe", member_j),
+         member_i = ifelse(full_112_edge$member_i == "Richard Sen. Blumenthal", "Richard Blumenthal", member_i),
+         member_j = ifelse(full_112_edge$member_j == "Richard Sen. Blumenthal", "Richard Blumenthal", member_j),
+         member_i = ifelse(full_112_edge$member_i == "Robert Sen. Menendez", "Robert Menendez", member_i),
+         member_j = ifelse(full_112_edge$member_j == "Robert Sen. Menendez", "Robert Menendez", member_j),
+         member_i = ifelse(full_112_edge$member_i == "Michael F. Sen. Bennet", "Michael Bennet", member_i),
+         member_j = ifelse(full_112_edge$member_j == "Michael F. Sen. Bennet", "Michael Bennet", member_j),
+         member_i = ifelse(full_112_edge$member_i == "Amy Sen. Klobuchar", "Amy Klobuchar", member_i),
+         member_j = ifelse(full_112_edge$member_j == "Amy Sen. Klobuchar", "Amy Klobuchar", member_j),
+         member_i = ifelse(full_112_edge$member_i == "Susan M. Sen. Collins", "Susan Collins", member_i),
+         member_j = ifelse(full_112_edge$member_j == "Susan M. Sen. Collins", "Susan Collins", member_j),
+         member_i = ifelse(full_112_edge$member_i == "Kay R. Hagan", "Kay Hagan", member_i),
+         member_j = ifelse(full_112_edge$member_j == "Kay R. Hagan", "Kay Hagan", member_j))
 ```
 
 # Merging the 112th full with the religion!!
@@ -692,9 +710,9 @@ full_112_edge <- full_112_edge %>%
 #now we have something that has the first senators religion
 t_112_first <- full_join(rel_112, full_112_edge, by = c("member_name" = "member_i")) 
 
-#remove all the NAs that were created
+#remove all the NAs that were created but keep isos
 t_112_first <- t_112_first %>% 
-  drop_na(member_j)
+  drop_na(member_name, fix_relig)
 
 #rename so we have a name i and a religion i 
 #and only select the i's
@@ -706,9 +724,8 @@ t_112_first <- t_112_first %>%
 #now we have something that has the second senators religion
 t_112_second <- full_join(rel_112, full_112_edge, by = c("member_name" = "member_j"))
 
-#remove all the NAs that were created
 t_112_second <- t_112_second %>% 
-  drop_na(member_i)
+  drop_na(member_name, fix_relig)
 
 #now we have the name j and religion j 
 #and only select the js
@@ -718,7 +735,7 @@ t_112_second <- t_112_second %>%
   select("member_j", "religion_j")
 
 #now we just need them all together!!!
-all_112 <- cbind(t_112_first, t_112_second)
+all_112 <- cbindX(t_112_first, t_112_second)
 
 #count the number of NAs
 sum(is.na(all_112$religion_i))
@@ -726,17 +743,7 @@ sum(is.na(all_112$religion_j))
 
 #checking which ones are NAs
 all_112 %>% 
-  distinct(member_i, .keep_all = TRUE)
-
-#now we want to make all the NAs be "Unknown"
-#for i
-all_112$religion_i <- all_112$religion_i %>%  
-  replace_na("Unknown")
-
-#for j
-all_112$religion_j <- all_112$religion_j %>%  
-  replace_na("Unknown")
-#YAYAYYAYAYAY
+  distinct(member_j, .keep_all = TRUE)
 
 #create similarity score!! yay!!
 all_112$similarity<- ifelse(all_112$religion_i == all_112$religion_j, 1, 0)
@@ -751,8 +758,25 @@ all_112 %>%
   distinct(member_i, .keep_all = TRUE) %>% 
   group_by(religion_j) %>% 
   summarize(n = n())
-#currently missing 4 
+
+#currently have 6 people without any religious information, we are going to remove them
+#also remove all the ones where they are duplicated
+all_112 <- all_112 %>%
+  drop_na(religion_i) %>% 
+  drop_na(religion_j)
 ```
+
+# Exporting the data as csv's so that we may actually use it!
+```{r}
+#export 112th 
+write.csv(all_112, "all_112.csv", row.names=FALSE)
+
+#no duplicate connections:
+noDup <- all_112 %>% 
+  distinct(member_j, member_i, .keep_all = TRUE)
+```
+
+
 
 # Summary Statistics of 112
 
@@ -776,17 +800,56 @@ cospons_112 %>%
 #now we just want the member names
 a_112 <- all_112 %>% 
   select(member_i, member_j)
+#now we need to add in isolates since our adjacency only includes 535 members and our religion includes 538
+#the no duplicates of i
+noDup_i <- a_112 %>% 
+  select(member_i) %>% 
+  distinct(member_i, .keep_all = TRUE)
 
-#convert to a network FROM COSPONSORSHIP
-net_112 <- graph.data.frame(a_112, directed=T)
-#convert to a matrix
-#now we are seeing that Juniors got recked in this, there are some that we are just going to have to hand do 
-mat_112 <- as.matrix((net_112))
-
-#trying to make a network from religion?
-net_112_2 <- graph.data.frame(rel_112, directed = F)
-mat_112_2 <- as.matrix(get.adjacency(net_112_2, attr = rel_112$fix_relig))
+#the no duplicates of j
+noDup_j <- a_112 %>% 
+  select(member_j) %>% 
+  distinct(member_j, .keep_all = TRUE)
 ```
+
+# check my isos n stuff
+```{r}
+#checking isolates that need to be added back to 112th
+i <- anti_join(rel_112, noDup_i, by = c("member_name" = "member_i"))
+#checking isolates that need to be added back
+j <- anti_join(rel_112, noDup_j, by = c("member_name" = "member_j"))
+
+#adding the new isos:
+newrow_1 = c(member_i = "Robert B. Aderholt", member_j = NA)
+newrow_2 = c(member_i = "Cynthia M. Lummis", member_j = NA)
+newrow_3 = c(member_i = "Michael B. Enzi", member_j = NA)
+newrow_4 = c(member_i = NA, member_j = "Michael H. Michaud")
+newrow_5 = c(member_i = NA, member_j = "Richard C. Shelby")
+
+#adding them
+a_112 = rbind(a_112, newrow_1)
+a_112 = rbind(a_112, newrow_2)
+a_112 = rbind(a_112, newrow_3)
+a_112 = rbind(a_112, newrow_4)
+a_112 = rbind(a_112, newrow_5)
+
+```
+
+# FINAL EDGE LIST TURNED TO MATRIX 
+```{r}
+#now we need to turn our edge list into a weighted edge list
+#turn edge list into matrix
+el=as.matrix(a_112)
+#turn into graph object
+g=graph.data.frame(el)
+#get adjacency matrix
+d = get.adjacency(g,sparse=FALSE)
+#export it for easier work!
+write.csv(d, "adjacency_cospons_112", row.names=FALSE)
+```
+
+
+
 
 # fucking about
 
@@ -807,12 +870,8 @@ s_112 <- all_112 %>%
 
 ```
 
-#network initialize 
-nv <- nrow()
-network.initialize()
-network.vertex.names() <- df$names
+#network initialize nv \<- nrow() network.initialize() network.vertex.names() \<- df\$names
 
-filter--to only unique
+#filter--to only unique
 
-thingy[as.matrix()] <- 1
-
+#thingy\[as.matrix()\] \<- 1
