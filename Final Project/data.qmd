@@ -37,6 +37,10 @@ el_117_senate <- as.data.frame(as_edgelist(network_117_senate))
 # Mutating Cosponsorship of 117th SENATE
 
 ```{r}
+#remove all of the ending initials:
+el_117_senate$V1 <- gsub("(.*)\\s+[A-Z]\\.?$", "\\1", el_117_senate$V1)
+el_117_senate$V2 <- gsub("(.*)\\s+[A-Z]\\.?$", "\\1", el_117_senate$V2)
+
 #remove the senator title from both columns
 el_117_senate$V1 <- sub("Sen. ", "", el_117_senate$V1)
 el_117_senate$V2 <- sub("Sen. ", "", el_117_senate$V2)
@@ -91,6 +95,10 @@ el_117_house$v1_last <- gsub("\\,.*","", el_117_house$V1)
 el_117_house$v2_first <- gsub(".*\\, ", "", el_117_house$V2)   
 el_117_house$v2_last <- gsub("\\,.*","", el_117_house$V2) 
 
+#remove all middle initials :( but doesnt work :(
+el_117_house$v2_first <- gsub("(.*)\\s+[A-Z]\\.?$", "", el_117_house$v2_first)
+el_117_house$v1_first <- gsub("(.*)\\s+[A-Z]\\.?$", "", el_117_house$v1_first)
+
 #adding them together!
 edge_117_house = el_117_house %>% 
   unite(v1_full, c(v1_first, v1_last), sep = "", remove = FALSE) %>% 
@@ -105,9 +113,11 @@ edge_117_house = el_117_house %>%
 full_117_edge <- rbind(edge_117_house, edge_117_senate)
 
 #renaming to get in correct scheme
+#dont remove NAs so we can have isolates!
+#wait there arnt any NAS naomi you idiot
 full_117_edge <- full_117_edge %>% 
   rename("member_i" = 1,
-         "member_j" = 2)
+         "member_j" = 2) 
 ```
 
 # RELIGION FOR 117th
@@ -187,21 +197,338 @@ rel_117 <- rel_117 %>%
   drop_na("name")
 ```
 
+
+
+# Fixing all the Incorrect Merges
+```{r}
+#people who dont exist
+# Raphael G. Warnock
+# Jon Ossoff
+# Alex Padilla
+# Shontel M. Brown
+#Sheila Cherfilus-McCormick
+# Melanie Ann Stansbury
+# Brad Finstad
+# Mike Flood
+# Mike Carey
+#Julia Letlow
+#Jake Ellzey
+#Claudia Tenney
+#Brad Finstad
+#Alex Padilla
+
+#renaming all of the people who were incorrect
+full_117_edge <- full_117_edge %>% 
+  mutate(member_i = ifelse(full_117_edge$member_i == "John W. Hickenlooper", "John Hickenlooper", member_i),
+         member_j = ifelse(full_117_edge$member_j == "John W. Hickenlooper", "John Hickenlooper", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Mark R. Warner", "Mark Warner", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Mark R. Warner", "Mark Warner", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Chuck Grassley", "Charles E. Grassley", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Chuck Grassley", "Charles E. Grassley", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Richard Burr", "Richard M. Burr", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Richard Burr", "Richard M. Burr", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Thomas Tillis", "Thom Tillis", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Thomas Tillis", "Thom Tillis", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Roger F. Wicker", "Roger Wicker", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Roger F. Wicker", "Roger Wicker", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Jr. King", "Angus King", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Jr. King", "Angus King", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Mike Crapo", "Michael D. Crapo", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Mike Crapo", "Michael D. Crapo", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Gary C. Peters", "Gary Peters", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Gary C. Peters", "Gary Peters", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Michael F. Bennet", "Michael Bennet", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Michael F. Bennet", "Michael Bennet", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Christopher Murphy", "Christopher S. Murphy", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Christopher Murphy", "Christopher S. Murphy", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Robert Menendez", "Bob Menendez", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Robert Menendez", "Bob Menendez", member_j),
+         member_i = ifelse(full_117_edge$member_i == "James E. Risch", "Jim Risch", member_i),
+         member_j = ifelse(full_117_edge$member_j == "James E. Risch", "Jim Risch", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Kirsten E. Gillibrand", "Kirsten Gillibrand", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Kirsten E. Gillibrand", "Kirsten Gillibrand", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Jr. Casey", "Bob Casey", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Jr. Casey", "Bob Casey", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Christopher A. Coons", "Chris Coons", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Christopher A. Coons", "Chris Coons", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Cory A. Booker", "Cory Booker", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Cory A. Booker", "Cory Booker", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Cynthia M. Lummis", "Cynthia Lummis", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Cynthia M. Lummis", "Cynthia Lummis", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Bernard Sanders", "Bernie Sanders", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Bernard Sanders", "Bernie Sanders", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Susan M. Collins", "Susan Collins", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Susan M. Collins", "Susan Collins", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Margaret Wood Hassan", "Maggie Hassan", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Margaret Wood Hassan", "Maggie Hassan", member_j),
+         member_i = ifelse(full_117_edge$member_i == "John Sen. Barrasso", "John Barrasso", member_i),
+         member_j = ifelse(full_117_edge$member_j == "John Sen. Barrasso", "John Barrasso", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Deb Sen. Fischer", "Deb Fischer", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Deb Sen. Fischer", "Deb Fischer", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Ted Sen. Cruz", "Ted Cruz", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Ted Sen. Cruz", "Ted Cruz", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Roger Sen. Marshall", "Roger Marshall", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Roger Sen. Marshall", "Roger Marshall", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Richard Burr", "Richard M. Burr", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Richard Burr", "Richard M. Burr", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Patrick Toomey", "Patrick J. Toomey", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Patrick Toomey", "Patrick J. Toomey", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Eric A. \"Rick\" Crawford", "Rick Crawford", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Eric A. \"Rick\" Crawford", "Rick Crawford", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Roger F. Wicker", "Roger Wicker", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Roger F. Wicker", "Roger Wicker", member_j),
+         member_i = ifelse(full_117_edge$member_i == "William R. Keating", "William Keating", member_i),
+         member_j = ifelse(full_117_edge$member_j == "William R. Keating", "William Keating", member_j),
+         member_i = ifelse(full_117_edge$member_i == "William R. IV Timmons", "William R. Timmons IV", member_i),
+         member_j = ifelse(full_117_edge$member_j == "William R. IV Timmons", "William R. Timmons IV", member_j),
+         member_i = ifelse(full_117_edge$member_i == "W. Gregory Steube", "Greg Steube", member_i),
+         member_j = ifelse(full_117_edge$member_j == "W. Gregory Steube", "Greg Steube", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Val Butler Demings", "Val B. Demings", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Val Butler Demings", "Val B. Demings", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Troy E. Nehls", "Troy Nehls", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Troy E. Nehls", "Troy Nehls", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Tony Cárdenas", "Tony Cardenas", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Tony Cárdenas", "Tony Cardenas", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Thomas R. Suozzi", "Tom Suozzi", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Thomas R. Suozzi", "Tom Suozzi", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Thomas P. Tiffany", "Tom Tiffany", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Thomas P. Tiffany", "Tom Tiffany", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Theodore E. Deutch", "Ted Deutch", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Theodore E. Deutch", "Ted Deutch", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Suzan K. DelBene", "Suzan DelBene", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Suzan K. DelBene", "Suzan DelBene", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Stephanie N. Murphy", "Stephanie Murphy", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Stephanie N. Murphy", "Stephanie Murphy", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Stephanie I. Bice", "Stephanie Bice", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Stephanie I. Bice", "Stephanie Bice", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Sr. Weber", "Randy Weber", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Sr. Weber", "Randy Weber", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Scott H. Peters", "Scott Peters", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Scott H. Peters", "Scott Peters", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Salud O. Carbajal", "Salud Carbajal", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Salud O. Carbajal", "Salud Carbajal", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Rosa L. DeLauro", "Rosa DeLauro", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Rosa L. DeLauro", "Rosa DeLauro", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Robin L. Kelly", "Robin Kelly", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Robin L. Kelly", "Robin Kelly", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Robert J. Wittman", "Rob Wittman", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Robert J. Wittman", "Rob Wittman", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Robert E. Latta", "Bob Latta", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Robert E. Latta", "Bob Latta", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Robert C. \"Bobby\" Scott", "Robert C. Scott", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Robert C. \"Bobby\" Scott", "Robert C. Scott", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Raúl M. Grijalva", "Raul M. Grijalva", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Raúl M. Grijalva", "Raul M. Grijalva", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Paul A. Gosar", "Paul Gosar", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Paul A. Gosar", "Paul Gosar", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Neal P. Dunn", "Neal Dunn", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Neal P. Dunn", "Neal Dunn", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Nanette Diaz Barragan", "Nanette Barragan", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Nanette Diaz Barragan", "Nanette Barragan", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Michael T. McCaul", "Michael McCaul", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Michael T. McCaul", "Michael McCaul", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Michael K. Simpson", "Mike Simpson", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Michael K. Simpson", "Mike Simpson", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Michael F. Doyle", "Mike Doyle", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Michael F. Doyle", "Mike Doyle", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Matthew M. Rosendale Sr.", "Matt Rosendale", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Matthew M. Rosendale Sr.", "Matt Rosendale", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Mary E. Miller", "Mary Miller", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Mary E. Miller", "Mary Miller", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Mark E. Amodei", "Mark Amodei", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Mark E. Amodei", "Mark Amodei", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Marc A. Veasey", "Marc Veasey", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Marc A. Veasey", "Marc Veasey", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Lloyd Smucker", "Lloyd K. Smucker", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Lloyd Smucker", "Lloyd K. Smucker", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Lisa C. McClain", "Lisa McClain", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Lisa C. McClain", "Lisa McClain", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Linda T. Sánchez", "Linda T. Sanchez", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Linda T. Sánchez", "Linda T. Sanchez", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Lee M. Zeldin", "Lee Zeldin", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Lee M. Zeldin", "Lee Zeldin", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Kathy E. Manning", "Kathy Manning", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Kathy E. Manning", "Kathy Manning", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Kathleen M. Rice", "Kathleen Rice", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Kathleen M. Rice", "Kathleen Rice", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Kaiali'i Kahele", "Kai Kahele", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Kaiali'i Kahele", "Kai Kahele", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Juan Vargas", "Juan C. Vargas", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Juan Vargas", "Juan C. Vargas", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Jr. Payne", "Donald M. Payne Jr.", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Jr. Payne", "Donald M. Payne Jr.", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Jr. Pascrell", "Bill Pascrell Jr.", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Jr. Pascrell", "Bill Pascrell Jr.", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Jr. Pallone", "Frank Pallone Jr.", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Jr. Pallone", "Frank Pallone Jr.", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Jr. Lawson", "Al Lawson", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Jr. Lawson", "Al Lawson", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Jr. Bishop", "Sanford D. Bishop Jr.", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Jr. Bishop", "Sanford D. Bishop Jr.", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Jr. Beyer", "Donald S. Beyer Jr.", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Jr. Beyer", "Donald S. Beyer Jr.", member_j),
+         member_i = ifelse(full_117_edge$member_i == "John R. Moolenaar", "John Moolenaar", member_i),
+         member_j = ifelse(full_117_edge$member_j == "John R. Moolenaar", "John Moolenaar", member_j),
+         member_i = ifelse(full_117_edge$member_i == "John R. Curtis", "John Curtis", member_i),
+         member_j = ifelse(full_117_edge$member_j == "John R. Curtis", "John Curtis", member_j),
+         member_i = ifelse(full_117_edge$member_i == "John R. Curtis", "John Carter", member_i),
+         member_j = ifelse(full_117_edge$member_j == "John R. Curtis", "John Carter", member_j),
+         member_i = ifelse(full_117_edge$member_i == "John P. Sarbanes", "John Sarbanes", member_i),
+         member_j = ifelse(full_117_edge$member_j == "John P. Sarbanes", "John Sarbanes", member_j),
+         member_i = ifelse(full_117_edge$member_i == "John H. Rutherford", "John Rutherford", member_i),
+         member_j = ifelse(full_117_edge$member_j == "John H. Rutherford", "John Rutherford", member_j),
+         member_i = ifelse(full_117_edge$member_i == "John A. Yarmuth", "John Yarmuth", member_i),
+         member_j = ifelse(full_117_edge$member_j == "John A. Yarmuth", "John Yarmuth", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Jesus G. \"Chuy\" Garcia", "Jesus \"Chuy\" Garcia", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Jesus G. \"Chuy\" Garcia", "Jesus \"Chuy\" Garcia", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Jerry L. Carl", "Jerry Carl", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Jerry L. Carl", "Jerry Carl", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Jefferson Van Drew", "Jeff Van Drew", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Jefferson Van Drew", "Jeff Van Drew", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Jared F. Golden", "Jared Golden", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Jared F. Golden", "Jared Golden", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Janice D. Schakowsky", "Jan Schakowsky", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Janice D. Schakowsky", "Jan Schakowsky", member_j),
+         member_i = ifelse(full_117_edge$member_i == "James R. Langevin", "Jim Langevin", member_i),
+         member_j = ifelse(full_117_edge$member_j == "James R. Langevin", "Jim Langevin", member_j),
+         member_i = ifelse(full_117_edge$member_i == "James R. Baird", "Jim Baird", member_i),
+         member_j = ifelse(full_117_edge$member_j == "James R. Baird", "Jim Baird", member_j),
+         member_i = ifelse(full_117_edge$member_i == "James P. McGovern", "Jim McGovern", member_i),
+         member_j = ifelse(full_117_edge$member_j == "James P. McGovern", "Jim McGovern", member_j),
+         member_i = ifelse(full_117_edge$member_i == "James Comer", "James R. Comer", member_i),
+         member_j = ifelse(full_117_edge$member_j == "James Comer", "James R. Comer", member_j),
+         member_i = ifelse(full_117_edge$member_i == "James A. Himes", "Jim Himes", member_i),
+         member_j = ifelse(full_117_edge$member_j == "James A. Himes", "Jim Himes", member_j),
+         member_i = ifelse(full_117_edge$member_i == "J. Luis Correa", "Lou Correa", member_i),
+         member_j = ifelse(full_117_edge$member_j == "J. Luis Correa", "Lou Correa", member_j),
+         member_i = ifelse(full_117_edge$member_i == "J. French Hill", "French Hill", member_i),
+         member_j = ifelse(full_117_edge$member_j == "J. French Hill", "French Hill", member_j),
+         member_i = ifelse(full_117_edge$member_i == "IV Ferguson", "Drew Ferguson", member_i),
+         member_j = ifelse(full_117_edge$member_j == "IV Ferguson", "Drew Ferguson", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Henry C. \"Hank,\" Jr. Johnson", "Hank Johnson", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Henry C. \"Hank,\" Jr. Johnson", "Hank Johnson", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Haley M. Stevens", "Haley Stevens", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Haley M. Stevens", "Haley Stevens", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Hakeem S. Jeffries", "Hakeem Jeffries", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Hakeem S. Jeffries", "Hakeem Jeffries", member_j),
+         member_i = ifelse(full_117_edge$member_i == "H. Morgan Griffith", "Morgan Griffith", member_i),
+         member_j = ifelse(full_117_edge$member_j == "H. Morgan Griffith", "Morgan Griffith", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Gus M. Bilirakis", "Gus Bilirakis", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Gus M. Bilirakis", "Gus Bilirakis", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Gregory Murphy", "Greg Murphy", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Gregory Murphy", "Greg Murphy", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Glenn Thompson", "Glenn \"GT\" Thompson", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Glenn Thompson", "Glenn \"GT\" Thompson", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Gary J. Palmer", "Gary Palmer", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Gary J. Palmer", "Gary Palmer", member_j),
+         member_i = ifelse(full_117_edge$member_i == "G. K. Butterfield", "G.K. Butterfield", member_i),
+         member_j = ifelse(full_117_edge$member_j == "G. K. Butterfield", "G.K. Butterfield", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Emanuel Cleaver", "Emanuel Cleaver II", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Emanuel Cleaver", "Emanuel Cleaver II", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Elise M. Stefanik", "Elise Stefanik", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Elise M. Stefanik", "Elise Stefanik", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Elaine G. Luria", "Elaine Luria", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Elaine G. Luria", "Elaine Luria", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Doris O. Matsui", "Doris Matsui", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Doris O. Matsui", "Doris Matsui", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Debra A. Haaland", "Deb Haaland", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Debra A. Haaland", "Deb Haaland", member_j),
+         member_i = ifelse(full_117_edge$member_i == "David P. Joyce", "David Joyce", member_i),
+         member_j = ifelse(full_117_edge$member_j == "David P. Joyce", "David Joyce", member_j),
+         member_i = ifelse(full_117_edge$member_i == "David N. Cicilline", "David Cicilline", member_i),
+         member_j = ifelse(full_117_edge$member_j == "David N. Cicilline", "David Cicilline", member_j),
+         member_i = ifelse(full_117_edge$member_i == "David J. Trone", "David Trone", member_i),
+         member_j = ifelse(full_117_edge$member_j == "David J. Trone", "David Trone", member_j),
+         member_i = ifelse(full_117_edge$member_i == "David G. Valadao", "David Valadao", member_i),
+         member_j = ifelse(full_117_edge$member_j == "David G. Valadao", "David Valadao", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Darrell E. Issa", "Darrell Issa", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Darrell E. Issa", "Darrell Issa", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Daniel T. Kildee", "Dan Kildee", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Daniel T. Kildee", "Dan Kildee", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Daniel Meuser", "Dan Meuser", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Daniel Meuser", "Dan Meuser", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Dan Crenshaw", "Daniel Crenshaw", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Dan Crenshaw", "Daniel Crenshaw", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Cynthia Axne", "Cindy Axne", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Cynthia Axne", "Cindy Axne", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Colin Z. Allred", "Colin Allred", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Colin Z. Allred", "Colin Allred", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Chuck Grassley", "Charles E. Grassley", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Chuck Grassley", "Charles E. Grassley", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Charles J. \"Chuck\" Fleischmann", "Chuck Fleischmann", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Charles J. \"Chuck\" Fleischmann", "Chuck Fleischmann", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Carol D. Miller", "Carol Miller", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Carol D. Miller", "Carol Miller", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Carlos A. Gimenez", "Carlos Gimenez", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Carlos A. Gimenez", "Carlos Gimenez", member_i),
+         member_j = ifelse(full_117_edge$member_j == "C. Scott Franklin", "Scott Franklin", member_j),
+         member_i = ifelse(full_117_edge$member_i == "C. Scott Franklin", "Scott Franklin", member_i),
+         member_j = ifelse(full_117_edge$member_j == "C. A. Dutch Ruppersberger", "C.A. Dutch Ruppersberger", member_j),
+         member_i = ifelse(full_117_edge$member_i == "C. A. Dutch Ruppersberger", "C.A. Dutch Ruppersberger", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Brian K. Fitzpatrick", "Brian Fitzpatrick", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Brian K. Fitzpatrick", "Brian Fitzpatrick", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Brian J. Mast", "Brian Mast", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Brian J. Mast", "Brian Mast", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Brenda L. Lawrence", "Brenda Lawrence", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Brenda L. Lawrence", "Brenda Lawrence", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Bradley Scott Schneider", "Brad Schneider", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Bradley Scott Schneider", "Brad Schneider", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Brad R. Wenstrup", "Brad Wenstrup", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Brad R. Wenstrup", "Brad Wenstrup", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Bennie G. Thompson", "Bennie Thompson", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Bennie G. Thompson", "Bennie Thompson", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Ayanna Pressley", "Ayanna S. Pressley", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Ayanna Pressley", "Ayanna S. Pressley", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Ann M. Kuster", "Ann McLane Kuster", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Ann M. Kuster", "Ann McLane Kuster", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Andrew S. Clyde", "Andrew Clyde", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Andrew S. Clyde", "Andrew Clyde", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Andrew R. Garbarino", "Andrew Garbarino", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Andrew R. Garbarino", "Andrew Garbarino", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Alma S. Adams", "Alma Adams", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Alma S. Adams", "Alma Adams", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Alexander X. Mooney", "Alex X. Mooney", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Alexander X. Mooney", "Alex X. Mooney", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Alan S. Lowenthal", "Alan Lowenthal", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Alan S. Lowenthal", "Alan Lowenthal", member_i),
+         member_j = ifelse(full_117_edge$member_j == "Abigail Davis Spanberger", "Abigail Spanberger", member_j),
+         member_i = ifelse(full_117_edge$member_i == "Abigail Davis Spanberger", "Abigail Spanberger", member_i),)
+
+
+```
+
+#okay so we have the 117th edge list and religion list
+```{r}
+member_i_117 <- full_join(full_117_edge, rel_117, by = c())
+```
+
+
 # Merging the 117th full with the religion!!
 
 ```{r}
 #now we have something that has the first senators religion
 t_117_first <- full_join(rel_117, full_117_edge, by = c("name" = "member_i")) 
 
+#remove ones where the first and second person are the same
+t_117_first <- t_117_first[t_117_first$name != t_117_first$member_j, ] 
+
+
 #rename so we have a name i and a religion i 
 #and only select the i's
 t_117_first <- t_117_first %>% 
   rename("religion_i" = "fix_relig",
          "member_i" = "name") %>% 
-  select("member_i", "religion_i")
+  select("member_i", "religion_i", "member_j") 
+
+#check where the NAs are 
+t_117_first %>% 
+  group_by(religion_i) %>% 
+  distinct(member_i)  #:( a lot 
 
 #now we have something that has the second senators religion
 t_117_second <- full_join(rel_117, full_117_edge, by = c("name" = "member_j"))
+
+t_117_second <- t_117_second[t_117_second$name != t_117_second$member_i, ] 
 
 #now we have the name j and religion j 
 #and only select the js
@@ -210,35 +537,69 @@ t_117_second <- t_117_second %>%
          "member_j" = "name") %>% 
   select("member_j", "religion_j")
 
+#last thingie didnt work so now trying to combine differently 
+#lets find out how many of each 
+pp_first <- t_117_first %>% 
+  group_by(member_j) %>% 
+  summarize(n = n())
+
+pp_second <- t_117_second %>% 
+  group_by(member_j) %>% 
+  summarize(n=n())
+
 #now we just need them all together!!!
-all_117 <- cbind(t_117_first, t_117_second)
+#all_117_2 <- merge(t_117_first, t_117_second, by.x = "member_i", by.y = "member_j")
+
+#not true goddamn
+#all_117_slay <- all_117_2 %>% 
+  distinct(member_i, member_j, .keep_all = TRUE) 
 
 #need to make the NAs of the religions but we dont want NAs of the ties
 #there were 37662 ties before running this
 #THEY are the same!! this is slay
 #this is just a gut check we did it correctly
-all_117[!is.na(all_117$member_i),]
-all_117[!is.na(all_117$member_j),]
+all_117_slay[!is.na(all_117_slay$member_i),]
+all_117_slay[!is.na(all_117_slay$member_j),]
 
-#count the number of NAs
-sum(is.na(all_117$religion_i))
-sum(is.na(all_117$religion_j))
 
 #now we want to make all the NAs be "Unknown
 #for i
-all_117$religion_i <- all_117$religion_i %>%  
-  replace_na("Unknown")
+#all_117_slay$religion_i <- all_117_slay$religion_i %>%  
+  #replace_na("Unknown")
 
 #for j
-all_117$religion_j <- all_117$religion_j %>%  
-  replace_na("Unknown")
+#all_117_slay$religion_j <- all_117_slay$religion_j %>%  
+ # replace_na("Unknown")
 #YAYAYYAYAYAY
 
 #trying to remove the ones where the member is the same member!! 
 #all done!!
-all_117 <- all_117[all_117$member_i != all_117$member_j, ]      
+all_117_slay <- all_117_slay[all_117_slay$member_i != all_117_slay$member_j, ]     
 
+all_117 <- all_117_slay %>% 
+  drop_na(religion_i, religion_j)
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # Scott Code for Cosponsorship of 112th SENATE
 
