@@ -544,7 +544,7 @@ write.csv(d_117, "matrix_religion_117", row.names=FALSE)
 # This doesnt include isos reee
 ```{r}
 #export 117th 
-#write.csv(all_117, "all_117.csv", row.names=TRUE)
+write.csv(a_117, "edge_all_117.csv", row.names=TRUE)
 ```
 
 
