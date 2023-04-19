@@ -397,13 +397,6 @@ member_i_and_j_117 <- member_i_and_j_117 %>%
 
 # YAY! Now we wanna turn it into a matrix that we can create a CSV for!!!
 
-# Exporting the data as csv's so that we may actually use it!
-```{r}
-#export 112th 
-#write.csv(all_117, "all_117.csv", row.names=TRUE)
-```
-
-
 # NOW THAT WE HAVE THE EDGE LISTS we need to make a MATRIX of 117
 
 ```{r}
@@ -427,11 +420,11 @@ noDup_j <- a_117 %>%
 ```{r}
 #checking isolates that need to be added back to 112th
 i <- anti_join(rel_117, noDup_i, by = c("name" = "member_i"))
-#there are 14 isolates of the i column
+#there are 7 isolates of the i column
 
 #checking isolates that need to be added back
 j <- anti_join(rel_117, noDup_j, by = c("name" = "member_j"))
-#there are 14 isolates of the j column as well 
+#there are 7 isolates of the j column as well 
 ```
 
 ```{r}
@@ -443,132 +436,116 @@ newrow_4 = c(member_i = "Cedric L. Richmond", member_j = NA)
 newrow_5 = c(member_i = "Sam Graves", member_j = NA)
 newrow_6 = c(member_i = "Joe Manchin III", member_j = NA)
 newrow_7 = c(member_i = "Lisa Murkowski", member_j = NA)
-newrow_8 = c(member_i = "", member_j = NA)
-newrow_9 = c(member_i = "", member_j = NA)
-newrow_10 = c(member_i = "", member_j = NA)
-newrow_11 = c(member_i = "", member_j = NA)
-newrow_12 = c(member_i = "", member_j = NA)
-newrow_13 = c(member_i = "", member_j = NA)
-newrow_14 = c(member_i = "", member_j = NA)
 
 #adding all the isos of J
-newrow_15 = c(member_i = NA, member_j = "")
-newrow_16 = c(member_i = NA, member_j = "")
-newrow_17 = c(member_i = NA, member_j = "")
-newrow_18 = c(member_i = NA, member_j = "")
-newrow_19 = c(member_i = NA, member_j = "")
-newrow_20 = c(member_i = NA, member_j = "")
-newrow_21 = c(member_i = NA, member_j = "")
-newrow_22 = c(member_i = NA, member_j = "")
-newrow_23 = c(member_i = NA, member_j = "")
-newrow_24 = c(member_i = NA, member_j = "")
-newrow_25 = c(member_i = NA, member_j = "")
-newrow_26 = c(member_i = NA, member_j = "")
-newrow_27 = c(member_i = NA, member_j = "")
-newrow_28 = c(member_i = NA, member_j = "")
+newrow_8 = c(member_i = NA, member_j = "Ted Lieu")
+newrow_9 = c(member_i = NA, member_j = "Kamala Harris")
+newrow_10 = c(member_i = NA, member_j = "Jody B. Hice")
+newrow_11 = c(member_i = NA, member_j = "Todd Young")
+newrow_12 = c(member_i = NA, member_j = "Cedric L. Richmond")
+newrow_13 = c(member_i = NA, member_j = "Maggie Hassan")
+newrow_14 = c(member_i = NA, member_j = "Charles E. Schumer")
+
 
 #adding them
-a_112 = rbind(a_112, newrow_1)
-a_112 = rbind(a_112, newrow_2)
-a_112 = rbind(a_112, newrow_3)
-a_112 = rbind(a_112, newrow_4)
-a_112 = rbind(a_112, newrow_5)
+a_117 = rbind(a_117, newrow_1)
+a_117 = rbind(a_117, newrow_2)
+a_117 = rbind(a_117, newrow_3)
+a_117 = rbind(a_117, newrow_4)
+a_117 = rbind(a_117, newrow_5)
+a_117 = rbind(a_117, newrow_6)
+a_117 = rbind(a_117, newrow_7)
+a_117 = rbind(a_117, newrow_8)
+a_117 = rbind(a_117, newrow_9)
+a_117 = rbind(a_117, newrow_10)
+a_117 = rbind(a_117, newrow_11)
+a_117 = rbind(a_117, newrow_12)
+a_117 = rbind(a_117, newrow_13)
+a_117 = rbind(a_117, newrow_14)
+
 
 ```
 
-# FINAL EDGE LIST TURNED TO MATRIX 112 
+# FINAL EDGE LIST TURNED TO MATRIX 117 
 ```{r}
 #now we need to turn our edge list into a weighted edge list
 #turn edge list into matrix
-el=as.matrix(a_112)
+el_117=as.matrix(a_117)
 
 #turn into graph object
-g=graph.data.frame(el)
+g_117=graph.data.frame(el_117)
 
 #get adjacency matrix
-d = get.adjacency(g,sparse=FALSE)
-d <- d[-c(537), -c(537)]
+d_117 = get.adjacency(g_117,sparse=FALSE)
+d_117 <- d[-c(532), -c(532)]
 
 #export it for easier work!
-write.csv(d, "adjacency_cospons_112", row.names=FALSE)
+write.csv(d_117, "adjacency_cospons_117", row.names=FALSE)
 ```
 
 
-# Religion 112th congress
+# Religion 117th congress
 ```{r}
 #make matrix of religions
 #making a number correlation for each lmao
-re_112 <- rel_112 %>% 
-  mutate(fix_relig = ifelse(rel_112$fix_relig == "Catholic", 1, fix_relig),
-         fix_relig = ifelse(rel_112$fix_relig == "Jewish", 2, fix_relig),
-         fix_relig = ifelse(rel_112$fix_relig == "Other", 3, fix_relig),
-         fix_relig = ifelse(rel_112$fix_relig == "Protestant", 4, fix_relig),
-         fix_relig = ifelse(rel_112$fix_relig == "Unknown", 5, fix_relig))  
+re_117 <- rel_117 %>% 
+  mutate(fix_relig = ifelse(rel_117$fix_relig == "Catholic", 1, fix_relig),
+         fix_relig = ifelse(rel_117$fix_relig == "Jewish", 2, fix_relig),
+         fix_relig = ifelse(rel_117$fix_relig == "Other", 3, fix_relig),
+         fix_relig = ifelse(rel_117$fix_relig == "Protestant", 4, fix_relig),
+         fix_relig = ifelse(rel_117$fix_relig == "Unknown", 5, fix_relig))  
 
 #making an i and j 
-re_112 <- re_112 %>% 
-  mutate(member_i=member_name) %>% 
-  rename(member_j = member_name) %>% 
+re_117 <- re_117 %>% 
+  mutate(member_i = name) %>% 
+  rename(member_j = name ) %>% 
   mutate(religion_i = fix_relig) %>% 
   rename(religion_j = fix_relig)
 
 #creating all the possible combinations
-combos <- re_112 |>
+combos_117 <- re_117 |>
   expand(member_i, member_j) |>
   filter(member_i != member_j) 
 
 #merge back in religion
-combos_rel <- combos %>% 
-  right_join(re_112, by = c("member_i" = "member_i")) %>% 
+combos_rel_117 <- combos_117 %>% 
+  right_join(re_117, by = c("member_i" = "member_i")) %>% 
   select(member_i, member_j.x, religion_i)
 
 #merge religion of j
-combos_rel <- combos_rel %>% 
-  right_join(re_112, by = c("member_j.x" = "member_j")) 
+combos_rel_117 <- combos_rel_117 %>% 
+  right_join(re_117, by = c("member_j.x" = "member_j")) 
 
 #select the correct ones
-combos_112 <- combos_rel %>% 
+combos_117_part_two_electric_boogaloo <- combos_rel_117 %>% 
   select(member_i.x, member_j.x, religion_i.x, religion_j) %>% 
   rename(member_i =member_i.x,
          member_j = member_j.x,
          religion_i = religion_i.x)
 
 #create similarity score
-combos_112 <- combos_112 %>% 
+combos_117_part_two_electric_boogaloo <- combos_117_part_two_electric_boogaloo %>% 
   mutate(similarity = ifelse(religion_i == religion_j, 1, 0 )) %>% 
   select(-religion_i, -religion_j)
 
 #now we only want to include the ones that include the same? 
-sim_combos <-combos_112[!combos_112$similarity==0 ,]
-
-
-#turn edge list into matrix
-el_112 =as.matrix(combos_112)
+sim_combos_117 <-combos_117_part_two_electric_boogaloo[!combos_117_part_two_electric_boogaloo$similarity==0 ,]
 
 #turn into graph object
-g_112=graph.data.frame(sim_combos)
+g_117=graph.data.frame(sim_combos_117)
 
 #get adjacency matrix
-d_112 = get.adjacency(g_112,sparse=FALSE) 
- 
-#changing it so all of them are zeros
-
-
-#only keep the ones
-d_112[as.matrix(sim_combos)] <- 1
+d_117 = get.adjacency(g_117,sparse=FALSE) 
 
 #export it for easier work!
-write.csv(d_112, "religion_112", row.names=FALSE)
+write.csv(d_117, "matrix_religion_117", row.names=FALSE)
+```
 
-
-
-
-
-
-
-
-
-
+# This doesnt include isos reee
+```{r}
+#export 117th 
+#write.csv(all_117, "all_117.csv", row.names=TRUE)
+```
 
 
 
