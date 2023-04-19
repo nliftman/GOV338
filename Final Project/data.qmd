@@ -356,101 +356,32 @@ full_117_edge[full_117_edge == "Alan S. Lowenthal"] <- "Alan Lowenthal"
 full_117_edge[full_117_edge == "Abigail Davis Spanberger"] <- "Abigail Spanberger"
 ```
 
-#okay so we have the 117th edge list and religion list
+#okay so we have the 117th edge list and the religion list
 ```{r}
-member_i_117 <- full_join(full_117_edge, rel_117, by = c())
+#okay there should be no NAs
+full_117_edge <- full_117_edge %>% 
+  drop_na(member_i, member_j)
+
+#merge so now we have religion of member_i
+member_i_117 <- full_join(rel_117, full_117_edge, by = c("name" = "member_i"))
+
+#rename them
+member_i_117 <- member_i_117 %>% 
+  rename("member_i" = "name",
+         "religion_i" = "fix_relig")
+
+#now we merge to have religion of member_j
+member_i_and_j_117 <- full_join(rel_117, member_i_117, by = c("name" = "member_j"))
+
+#rename them again and remove NAs of religion
+member_i_and_j_117 <- member_i_and_j_117 %>% 
+  rename("member_j" = "name",
+         "religion_j" = "fix_relig") %>% 
+  drop_na(religion_j, religion_i)
+
 ```
 
-
-# Merging the 117th full with the religion!!
-
-```{r}
-#now we have something that has the first senators religion
-t_117_first <- full_join(rel_117, full_117_edge, by = c("name" = "member_i")) 
-
-#remove ones where the first and second person are the same
-t_117_first <- t_117_first[t_117_first$name != t_117_first$member_j, ] 
-
-
-#rename so we have a name i and a religion i 
-#and only select the i's
-t_117_first <- t_117_first %>% 
-  rename("religion_i" = "fix_relig",
-         "member_i" = "name") %>% 
-  select("member_i", "religion_i", "member_j") 
-
-#check where the NAs are 
-t_117_first %>% 
-  group_by(religion_i) %>% 
-  distinct(member_i)  #:( a lot 
-
-#now we have something that has the second senators religion
-t_117_second <- full_join(rel_117, full_117_edge, by = c("name" = "member_j"))
-
-t_117_second <- t_117_second[t_117_second$name != t_117_second$member_i, ] 
-
-#now we have the name j and religion j 
-#and only select the js
-t_117_second <- t_117_second %>% 
-  rename("religion_j" = "fix_relig",
-         "member_j" = "name") %>% 
-  select("member_j", "religion_j")
-
-#last thingie didnt work so now trying to combine differently 
-#lets find out how many of each 
-pp_first <- t_117_first %>% 
-  group_by(member_j) %>% 
-  summarize(n = n())
-
-pp_second <- t_117_second %>% 
-  group_by(member_j) %>% 
-  summarize(n=n())
-
-#now we just need them all together!!!
-#all_117_2 <- merge(t_117_first, t_117_second, by.x = "member_i", by.y = "member_j")
-
-#not true goddamn
-#all_117_slay <- all_117_2 %>% 
-  distinct(member_i, member_j, .keep_all = TRUE) 
-
-#need to make the NAs of the religions but we dont want NAs of the ties
-#there were 37662 ties before running this
-#THEY are the same!! this is slay
-#this is just a gut check we did it correctly
-all_117_slay[!is.na(all_117_slay$member_i),]
-all_117_slay[!is.na(all_117_slay$member_j),]
-
-
-#now we want to make all the NAs be "Unknown
-#for i
-#all_117_slay$religion_i <- all_117_slay$religion_i %>%  
-  #replace_na("Unknown")
-
-#for j
-#all_117_slay$religion_j <- all_117_slay$religion_j %>%  
- # replace_na("Unknown")
-#YAYAYYAYAYAY
-
-#trying to remove the ones where the member is the same member!! 
-#all done!!
-all_117_slay <- all_117_slay[all_117_slay$member_i != all_117_slay$member_j, ]     
-
-all_117 <- all_117_slay %>% 
-  drop_na(religion_i, religion_j)
-```
-
-
-
-
-
-
-
-
-
-
-
-
-
+# YAY! Now we wanna turn it into a matrix that we can create a CSV for!!!
 
 
 
