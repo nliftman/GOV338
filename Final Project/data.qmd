@@ -1073,33 +1073,6 @@ all_112 <- all_112 %>%
   drop_na(religion_j)
 ```
 
-# Exporting the data as csv's so that we may actually use it!
-```{r}
-#export 112th 
-write.csv(all_112, "all_112.csv", row.names=FALSE)
-
-#no duplicate connections:
-noDup <- all_112 %>% 
-  distinct(member_j, member_i, .keep_all = TRUE)
-```
-
-
-
-# Summary Statistics of 112
-
-```{r}
-spons_112 <- data.frame(table(all_112$member_j))
-
-cospons_112 <- data.frame(table(all_112$member_i))
-
-spons_112 %>% 
-  summarize(mean = mean(Freq),
-            sd = sd(Freq))
-
-cospons_112 %>% 
-  summarize(mean = mean(Freq),
-            sd = sd(Freq))
-```
 
 # NOW THAT WE HAVE THE EDGE LISTS we need to make a MATRIX of 112
 
@@ -1158,6 +1131,17 @@ d <- d[-c(537), -c(537)]
 #export it for easier work!
 write.csv(d, "adjacency_cospons_112", row.names=FALSE)
 ```
+
+# Exporting the data as csv's so that we may actually use it!
+```{r}
+#export 112th 
+write.csv(a_112, "edge_listall_112.csv", row.names=FALSE)
+
+#no duplicate connections:
+noDup <- all_112 %>% 
+  distinct(member_j, member_i, .keep_all = TRUE)
+```
+
 
 
 # Religion 112th congress
