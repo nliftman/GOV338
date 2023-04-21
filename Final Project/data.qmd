@@ -367,7 +367,6 @@ full_117_edge[full_117_edge == "Jesus \"Chuy\" Garcia"] <- "Jesus Garcia"
 rel_117[rel_117 == "Jesus \"Chuy\" Garcia"] <- "Jesus Garcia"
 full_117_edge[full_117_edge == "Tommy Sen. Tuberville"] <- "Tommy Tuberville"
 full_117_edge[full_117_edge == "esus \"Chuy\" Garcia"] <- "Jesus Garcia"
-full_117_edge[full_117_edge == ""] <- ""
 ```
 
 #okay so we have the 117th edge list and the religion list
@@ -480,7 +479,7 @@ d_117 = get.adjacency(g_117,sparse=FALSE)
 d_117 <- d[-c(532), -c(532)]
 
 #export it for easier work!
-write.csv(d_117, "adjacency_cospons_117", row.names=FALSE)
+write.csv(d_117, "adjacency_cospons_117.csv", row.names=FALSE)
 ```
 
 
@@ -546,6 +545,74 @@ write.csv(d_117, "matrix_religion_117", row.names=FALSE)
 #export 117th 
 write.csv(a_117, "edge_all_117.csv", row.names=TRUE)
 ```
+
+
+# Matrix for Party 117th
+```{r}
+#selecting only name and party
+party_117 <- relig_117 %>% 
+  drop_na(religion) %>% 
+  select(name, party)
+
+#mutating so rep = 1 and dem = 0 with the independents being lowkey democrats of 
+#angus king and bernie so yeah
+party_117 <- party_117 %>% 
+  mutate(party = ifelse(party == "R", 1, 0))
+
+#making an i and j 
+p_117 <- party_117 %>% 
+  mutate(member_i=name) %>% 
+  rename(member_j = name) %>% 
+  mutate(party_i = party) %>% 
+  rename(party_j = party)
+
+#creating all the possible combinations
+pcombos <- p_117 |>
+  expand(member_i, member_j) |>
+  filter(member_i != member_j) 
+
+#merge back in religion
+pcombos_117 <- pcombos %>% 
+  right_join(p_117, by = c("member_i" = "member_i")) %>% 
+  select(member_i, member_j.x, party)
+
+#merge religion of j
+pcombos_117 <- pcombos_117 %>% 
+  right_join(p_117, by = c("member_j.x" = "member_j")) 
+
+#select the correct ones
+pcombos_117 <- pcombos_117 %>% 
+  select(member_i.x, member_j.x, party_i.x, party_j) %>% 
+  rename(member_i =member_i.x,
+         member_j = member_j.x,
+         party_i = party_i.x)
+
+#create similarity score
+pcombos_117 <- pcombos_117 %>% 
+  mutate(similarity = ifelse(party_i == party_j, 1, 0 )) %>% 
+  select(-party_i, -party_j)
+
+#now we only want to include the ones that include the same? 
+p_sim_combos_117 <-pcombos_117[!pcombos_117$similarity==0 ,]
+
+#turn into graph object
+p_g_117=graph.data.frame(p_sim_combos_117)
+
+#get adjacency matrix
+pd_117 = get.adjacency(p_g_117,sparse=FALSE) 
+
+
+#only keep the ones
+d_112[as.matrix(p_sim_combos_117)] <- 1
+
+#export it for easier work!
+write.csv(d_112, "religion_112.csv", row.names=FALSE)
+
+
+```
+
+
+
 
 
 
@@ -654,17 +721,32 @@ relig_112 <- religion_112 %>%
   rename("member_name" = 2) %>% 
   rename("religious_affiliation" = 4 ) %>% 
   select("member_name", "religious_affiliation", "party")
+
+#now need to add the senate! 
+religion_112_senate <- import("/Users/naomiliftman/Desktop/GOV338/Final Project/112congress_senators.xlsx")
+
+#rename the ones we are gonna use
+relig_112_sen <- religion_112_senate %>% 
+  rename("member_name" = 2) %>% 
+  rename("religious_affiliation" = 3,
+         "party" = 4) %>% 
+  select("member_name", "religious_affiliation", "party")
+
 ```
 
 # Fixing religious data for 112!!
 
 ```{r}
+#now making just one religion 
+relig_112_all <- rbind(relig_112_sen, relig_112) %>% 
+  drop_na(religious_affiliation)
+
 #how many religions origionally
-relig_112 %>% 
+relig_112_all %>% 
   group_by(religious_affiliation) %>% 
   summarize(n = n())
 
-rel_112 <- relig_112
+rel_112 <- relig_112_all
 
 #fix all other
 rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Quaker', 'Other', rel_112$religious_affiliation)
@@ -703,6 +785,11 @@ rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Evangelical Luther
 rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Seventh-day Adventist', 'Protestant', rel_112$fix_relig)
 rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Community of Christ', 'Protestant', rel_112$fix_relig)
 rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Congregationalist Baptist', 'Protestant', rel_112$fix_relig)
+
+rel_112[rel_112 == "Christian Reformed Church"] <- "Protestant"
+rel_112[rel_112 == "Church of God"] <- "Protestant"
+rel_112[rel_112 == "Congregationalist"] <- "Protestant"
+
 
 #replace all NAs with unknown
 rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Unspecified', 'Unknown', rel_112$fix_relig)
@@ -1009,68 +1096,75 @@ full_112_edge <- full_112_edge %>%
          member_j = ifelse(full_112_edge$member_j == "Susan M. Sen. Collins", "Susan Collins", member_j),
          member_i = ifelse(full_112_edge$member_i == "Kay R. Hagan", "Kay Hagan", member_i),
          member_j = ifelse(full_112_edge$member_j == "Kay R. Hagan", "Kay Hagan", member_j))
+
+full_112_edge[full_112_edge == "Congregationalist"] <- "Protestant"
+
+
 ```
 
 # Merging the 112th full with the religion!!
+THERE ARE 535 PEOPLE in the 112th religion dataset so we need that many
 
 ```{r}
 #now we have something that has the first senators religion
 t_112_first <- full_join(rel_112, full_112_edge, by = c("member_name" = "member_i")) 
 
-#remove all the NAs that were created but keep isos
+#remove all the NAs
 t_112_first <- t_112_first %>% 
-  drop_na(member_name, fix_relig)
+  drop_na(fix_relig)
 
 #rename so we have a name i and a religion i 
 #and only select the i's
 t_112_first <- t_112_first %>% 
   rename("religion_i" = "fix_relig",
          "member_i" = "member_name") %>% 
-  select("member_i", "religion_i")
+  select("member_i", "religion_i", "member_j")
 
 #now we have something that has the second senators religion
-t_112_second <- full_join(rel_112, full_112_edge, by = c("member_name" = "member_j"))
+t_112_all <- full_join(rel_112, t_112_first, by = c("member_name" = "member_j"))
 
-t_112_second <- t_112_second %>% 
-  drop_na(member_name, fix_relig)
+#this should include isolates? but now want to remove them?
+t_112_all <- t_112_all %>% 
+  rename("member_j" = 1,
+         "religion_j" = 2,
+         "member_i" = 3,
+         "religion_i" = 4)
 
-#now we have the name j and religion j 
-#and only select the js
-t_112_second <- t_112_second %>% 
-  rename("religion_j" = "fix_relig",
-         "member_j" = "member_name") %>% 
-  select("member_j", "religion_j")
-
-#now we just need them all together!!!
-all_112 <- cbindX(t_112_first, t_112_second)
+t_112_all <- t_112_all %>% 
+  drop_na(religion_j)
 
 #count the number of NAs
-sum(is.na(all_112$religion_i))
-sum(is.na(all_112$religion_j))
+#sum(is.na(all_112$religion_i))
+#sum(is.na(all_112$religion_j))
 
 #checking which ones are NAs
-all_112 %>% 
-  distinct(member_j, .keep_all = TRUE)
+#all_112 %>% 
+  #distinct(member_j, .keep_all = TRUE)
 
 #create similarity score!! yay!!
-all_112$similarity<- ifelse(all_112$religion_i == all_112$religion_j, 1, 0)
+t_112_all$similarity<- ifelse(t_112_all$religion_i == t_112_all$religion_j, 1, 0)
 
 #trying to remove the ones where the member is the same member!! 
 #all done!!
-all_112 <- all_112[all_112$member_i != all_112$member_j, ]   
+#all_112 <- all_112[all_112$member_i != all_112$member_j, ]   
+t_112_all <- t_112_all[t_112_all$member_i != t_112_all$member_j, ]   
+
+t_112_all <- t_112_all %>% 
+  drop_na(religion_i)
+
 
 #check how many unknowns we got
 #remove all the duplicates and check the number of unknowns
-all_112 %>% 
-  distinct(member_i, .keep_all = TRUE) %>% 
-  group_by(religion_j) %>% 
-  summarize(n = n())
+#all_112 %>% 
+ # distinct(member_i, .keep_all = TRUE) %>% 
+  #group_by(religion_j) %>% 
+  #summarize(n = n())
 
 #currently have 6 people without any religious information, we are going to remove them
 #also remove all the ones where they are duplicated
-all_112 <- all_112 %>%
-  drop_na(religion_i) %>% 
-  drop_na(religion_j)
+#all_112 <- all_112 %>%
+#  drop_na(religion_i) %>% 
+#  drop_na(religion_j)
 ```
 
 
@@ -1078,16 +1172,16 @@ all_112 <- all_112 %>%
 
 ```{r}
 #now we just want the member names
-a_112 <- all_112 %>% 
+t_112 <- t_112_all %>% 
   select(member_i, member_j)
 #now we need to add in isolates since our adjacency only includes 535 members and our religion includes 538
 #the no duplicates of i
-noDup_i <- a_112 %>% 
+noDup_i <- t_112 %>% 
   select(member_i) %>% 
   distinct(member_i, .keep_all = TRUE)
 
 #the no duplicates of j
-noDup_j <- a_112 %>% 
+noDup_j <- t_112 %>% 
   select(member_j) %>% 
   distinct(member_j, .keep_all = TRUE)
 ```
@@ -1100,36 +1194,110 @@ i <- anti_join(rel_112, noDup_i, by = c("member_name" = "member_i"))
 j <- anti_join(rel_112, noDup_j, by = c("member_name" = "member_j"))
 
 #adding the new isos:
-newrow_1 = c(member_i = "Robert B. Aderholt", member_j = NA)
-newrow_2 = c(member_i = "Cynthia M. Lummis", member_j = NA)
-newrow_3 = c(member_i = "Michael B. Enzi", member_j = NA)
-newrow_4 = c(member_i = NA, member_j = "Michael H. Michaud")
-newrow_5 = c(member_i = NA, member_j = "Richard C. Shelby")
+newrow_9 = c(member_i = "John Ensign", member_j = NA)
+newrow_10 = c(member_i = "Kelly Ayotte", member_j = NA)
+newrow_11 = c(member_i = "Robert Menendez", member_j = NA)
+newrow_12 = c(member_i = "Charles E. Schumer", member_j = NA)
+newrow_13 = c(member_i = "Kay Hagan", member_j = NA)
+newrow_14 = c(member_i = "Kent Conrad", member_j = NA)
+newrow_15 = c(member_i = "Bob Casey", member_j = NA)
+newrow_16 = c(member_i = "Jim Webb", member_j = NA)
+newrow_17 = c(member_i = "Joe Manchin III", member_j = NA)
+newrow_18 = c(member_i = "Herb Kohl", member_j = NA)
+newrow_19 = c(member_i = "Robert B. Aderholt", member_j = NA)
+newrow_20 = c(member_i = "Gabrielle Giffords", member_j = NA)
+newrow_21 = c(member_i = "David Dreier", member_j = NA)
+newrow_22 = c(member_i = "Jane Harman", member_j = NA)
+newrow_23 = c(member_i = "Nancy Pelosi", member_j = NA)
+newrow_24 = c(member_i = "Peter J. Visclosky", member_j = NA)
+newrow_25 = c(member_i = "Dave Camp", member_j = NA)
+newrow_26 = c(member_i = "Christopher Lee", member_j = NA)
+newrow_27 = c(member_i = "Anthony Weiner", member_j = NA)
+newrow_28 = c(member_i = "John A. Boehner", member_j = NA)
+newrow_29 = c(member_i = "Pat Meehan", member_j = NA)
+newrow_30 = c(member_i = "Charlie Gonzalez", member_j = NA)
+newrow_31 = c(member_i = "Eric Cantor", member_j = NA)
+newrow_32 = c(member_i = "Doc Hastings", member_j = NA)
+
+newrow_33 = c(member_i = NA, member_j = "Richard J. Durbin")
+newrow_34 = c(member_i = NA, member_j = "John Ensign")
+newrow_35 = c(member_i = NA, member_j = "Harry Reid")
+newrow_36 = c(member_i = NA, member_j = "Bob Casey")
+newrow_37 = c(member_i = NA, member_j = "Lindsey Graham")
+newrow_38 = c(member_i = NA, member_j = "John D. Rockefeller IV")
+newrow_39 = c(member_i = NA, member_j = "Gabrielle Giffords")
+newrow_40 = c(member_i = NA, member_j = "Jim Costa")
+newrow_41 = c(member_i = NA, member_j = "Jane Harman")
+newrow_42 = c(member_i = NA, member_j = "Justin Amash")
+newrow_43 = c(member_i = NA, member_j = "Chris Gibson")
+newrow_44 = c(member_i = NA, member_j = "John A. Boehner")
+newrow_45 = c(member_i = NA, member_j = "Pat Meehan")
+newrow_46 = c(member_i = NA, member_j = "Ron Paul")
+newrow_47 = c(member_i = NA, member_j = "Eric Cantor")
 
 #adding them
-a_112 = rbind(a_112, newrow_1)
-a_112 = rbind(a_112, newrow_2)
-a_112 = rbind(a_112, newrow_3)
-a_112 = rbind(a_112, newrow_4)
-a_112 = rbind(a_112, newrow_5)
+t_112 = rbind(t_112, newrow_9, newrow_10, newrow_11, newrow_12, newrow_13, newrow_14, newrow_15, newrow_16, newrow_17, newrow_18, newrow_19, newrow_20, newrow_21, newrow_22, newrow_23, newrow_24, newrow_25, newrow_26, newrow_27, newrow_28, newrow_29, newrow_30, newrow_31, newrow_32, newrow_33, newrow_34, newrow_35, newrow_36, newrow_37, newrow_38, newrow_39, newrow_40, newrow_41, newrow_42, newrow_43, newrow_44, newrow_45, newrow_46, newrow_47)
+
+yee_112 <- t_112
+
+#now we need to see how many distinct there are bc we have too many somehow
+#there are 536
+noDup_i <- yee_112 %>% 
+  select(member_i) %>% 
+  distinct(member_i, .keep_all = TRUE) %>% 
+  drop_na(member_i)
+
+#okay there is a correct number here 535
+noDup_j <- yee_112 %>% 
+  select(member_j) %>% 
+  distinct(member_j, .keep_all = TRUE) %>% 
+  drop_na(member_j)
+
+#now joining them all and getting 540 observations
+reeeee<- full_join(noDup_i, noDup_j, by = c("member_i" = "member_j"))
+
+#now merge again with religion to see what is missing
+#wait this has 535?
+ahhhhh <- full_join(reeeee, rel_112, by = c("member_i" = "member_name"))
+```
+
+# Now using thse to figure out whats missing:
+
+```{r}
+#remove: Mark E. Amodei
+#	Janice Hahn
+# Suzanne Bonamici
+#Robert L. Turner
+#Kathleen C. Hochul
+
+#okay this ones okay doenst fuck anything up 
+yee_112 <- yee_112[yee_112$member_i != "Mark E. Amodei", ]   
+yee_112 <- yee_112[yee_112$member_i != "Janice Hahn", ]
+yee_112 <- yee_112[yee_112$member_i != "Suzanne Bonamici", ]
+yee_112 <- yee_112[yee_112$member_i != "Robert L. Turner", ]
+yee_112 <- yee_112[yee_112$member_i != "Kathleen C. Hochul", ]
 
 ```
+
+
 
 # FINAL EDGE LIST TURNED TO MATRIX 112 
 ```{r}
 #now we need to turn our edge list into a weighted edge list
 #turn edge list into matrix
-el=as.matrix(a_112)
+el_12=as.matrix(yee_112)
 
 #turn into graph object
-g=graph.data.frame(el)
+g_12=graph.data.frame(el_12)
 
+#it should be 535 but its 541
+#fuck we removed some and it fucked everything up now were down to 529?? what
 #get adjacency matrix
-d = get.adjacency(g,sparse=FALSE)
-d <- d[-c(537), -c(537)]
+d = get.adjacency(g_12,sparse=FALSE)
+d <- d[-c(532), -c(53)]
 
 #export it for easier work!
-write.csv(d, "adjacency_cospons_112", row.names=FALSE)
+write.csv(d, "adjacency_cospons_112.csv", row.names=FALSE)
 ```
 
 # Exporting the data as csv's so that we may actually use it!
@@ -1204,13 +1372,17 @@ d_112 = get.adjacency(g_112,sparse=FALSE)
 #changing it so all of them are zeros
 
 
-#only keep the ones
-d_112[as.matrix(sim_combos)] <- 1
-
 #export it for easier work!
-write.csv(d_112, "religion_112", row.names=FALSE)
+write.csv(d_112, "religion_112.csv", row.names=FALSE)
 ```
 
+# Matrix for party 112
+```{r}
+#realizing that the last three pages didnt go through
+#fixed yay!
+pa_112 <- relig_112 %>% 
+  select(member_name, party)
+```
 
 
 
@@ -1224,8 +1396,3 @@ s_112 <- all_112 %>%
   summarize(n = n())
 ```
 
-#network initialize nv \<- nrow() network.initialize() network.vertex.names() \<- df\$names
-
-#filter--to only unique
-
-#thingy\[as.matrix()\] \<- 1
