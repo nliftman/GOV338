@@ -1374,8 +1374,14 @@ write.csv(d_112, "religion_112.csv", row.names=FALSE)
 ```{r}
 #realizing that the last three pages didnt go through
 #fixed yay!
-pa_112 <- relig_112 %>% 
+pa_112 <- relig_112_all %>% 
   select(member_name, party)
+
+#independents are 
+#Joseph I. Lieberman
+#and bernie so changing to democrat
+pa_112 <- pa_112 %>% 
+  mutate(party = ifelse(party == "R", 1, 0))
 
 #making an i and j 
 pa_112 <- pa_112 %>% 
@@ -1385,37 +1391,37 @@ pa_112 <- pa_112 %>%
   rename(party_j = party)
 
 #creating all the possible combinations
-combos <- re_112 |>
+combos <- pa_112 |>
   expand(member_i, member_j) |>
   filter(member_i != member_j) 
 
 #merge back in religion
-combos_rel <- combos %>% 
-  right_join(re_112, by = c("member_i" = "member_i")) %>% 
-  select(member_i, member_j.x, religion_i)
+combos_rel_112 <- combos %>% 
+  right_join(pa_112, by = c("member_i" = "member_i"))  %>% 
+  select(member_i, member_j.x, party_i)
 
 #merge religion of j
-combos_rel <- combos_rel %>% 
-  right_join(re_112, by = c("member_j.x" = "member_j")) 
+combos_rel <- combos_rel_112 %>% 
+  right_join(pa_112, by = c("member_j.x" = "member_j")) 
 
 #select the correct ones
 combos_112 <- combos_rel %>% 
-  select(member_i.x, member_j.x, religion_i.x, religion_j) %>% 
+  select(member_i.x, member_j.x, party_i.x, party_j) %>% 
   rename(member_i =member_i.x,
          member_j = member_j.x,
-         religion_i = religion_i.x)
+         party_i = party_i.x)
 
 #create similarity score
 combos_112 <- combos_112 %>% 
-  mutate(similarity = ifelse(religion_i == religion_j, 1, 0 )) %>% 
-  select(-religion_i, -religion_j)
+  mutate(similarity = ifelse(party_i == party_j, 1, 0 )) %>% 
+  select(-party_i, -party_j)
 
 #now we only want to include the ones that include the same? 
 sim_combos <-combos_112[!combos_112$similarity==0 ,]
 
 
 #turn edge list into matrix
-el_112 =as.matrix(combos_112)
+el_112 =as.matrix(sim_combos)
 
 #turn into graph object
 g_112=graph.data.frame(sim_combos)
@@ -1427,10 +1433,8 @@ d_112 = get.adjacency(g_112,sparse=FALSE)
 
 
 #export it for easier work!
-write.csv(d_112, "religion_112.csv", row.names=FALSE)
+write.csv(d_112, "matrix_party_112.csv", row.names=FALSE)
 
 
 ```
-
-
 
