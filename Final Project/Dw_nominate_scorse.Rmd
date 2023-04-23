@@ -45,8 +45,8 @@ dw_117_mutating$lastname <- stri_trans_totitle(dw_117_mutating$lastname)
 
 #combining them to get their full names!
 full_117_names = dw_117_mutating %>% 
-  unite(fullname, c(firstname, lastname), sep = " ", remove = FALSE) %>% 
-  select(chamber:fullname, -bioname)
+  unite(name, c(firstname, lastname), sep = " ", remove = FALSE) %>% 
+  select(chamber:name, -bioname)
 
 ```
 
@@ -113,9 +113,132 @@ rel_117 <- rel_117 %>%
   drop_na("name")
 ```
 
+# Fixing the names that didnt merge correctly
+```{r}
+full_117_names[full_117_names == "Iii Manchin"] <- "Joe Manchin III"
+full_117_names[full_117_names == "Donald Edwin Young"] <- "Don Young"
+full_117_names[full_117_names == "Daniel Scott Sullivan"] <- "Dan Sullivan"
+full_117_names[full_117_names == "Mike Dennis Rogers"] <- "Mike D. Rogers"
+full_117_names[full_117_names == "Robert Aderholt"] <- "Robert B. Aderholt"
+full_117_names[full_117_names == "Gary James Palmer"] <- "Gary Palmer"
+full_117_names[full_117_names == "Terri Sewell"] <- "Terri A. Sewell"
+full_117_names[full_117_names == "Richard Shelby"] <- "Richard C. Shelby"
+full_117_names[full_117_names == "Thomas Hawley (Tommy) Tuberville"] <- "Tommy Tuberville"
+full_117_names[full_117_names == "Bruce Eugene Westerman"] <- "Bruce Westerman"
+full_117_names[full_117_names == "Thomas O'halleran"] <- "Tom O'halleran"
+full_117_names[full_117_names == "Raúl Grijalva"] <- "Raul M. Grijalva"
+full_117_names[full_117_names == "Andrew Biggs"] <- "Andy Biggs"
+full_117_names[full_117_names == "Mark Edward Kelly"] <- "Mark Kelly"
+full_117_names[full_117_names == "Doug Lamalfa"] <- "Doug LaMalfa"
+full_117_names[full_117_names == "Tom Mcclintock"] <- "Tom McClintock"
+full_117_names[full_117_names == "Michael Thompson"] <- "Mike Thompson"
+full_117_names[full_117_names == "Jerry Mcnerney"] <- "Jerry McNerney"
+full_117_names[full_117_names == "Mark James Desaulnier"] <- "Mark DeSaulnier"
+full_117_names[full_117_names == "Karen Lorraine Jacqueline (Jackie) Speier"] <- "Jackie Speir"
+full_117_names[full_117_names == "Rohit Khanna"] <- "Ro Khanna"
+full_117_names[full_117_names == "Anna Georges Eshoo"] <- "Anna G. Eshoo"
+full_117_names[full_117_names == "James Varni Panetta"] <- "Jimmy Panetta"
+full_117_names[full_117_names == "Kevin Mccarthy"] <- "Kevin McCarthy"
+full_117_names[full_117_names == "Adam Schiff"] <- "Adam B. Schiff"
+full_117_names[full_117_names == "Tony Cárdenas"] <- "Tony Cardenas"
+full_117_names[full_117_names == "Peter Rey Aguilar"] <- "Pete Aguilar"
+full_117_names[full_117_names == "Grace Flores Napolitano"] <- "Grace F. Napolitano"
+full_117_names[full_117_names == "Norma Judith Torres"] <- "Norma J. Torres"
+full_117_names[full_117_names == "Linda Sánchez"] <- "Linda T. Sanchez"
+full_117_names[full_117_names == "Nanette Diaz Barragán"] <- "Nanette Barragan"
+full_117_names[full_117_names == "Jose Luis Correa"] <- "Lou Correa"
+full_117_names[full_117_names == "Juan Vargas"] <- "Juan C. Vargas"
+full_117_names[full_117_names == "Kamala Devi Harris"] <- "Kamala Harris"
+full_117_names[full_117_names == "Diana Degette"] <- "Diana DeGette"
+full_117_names[full_117_names == "Joseph Neguse"] <- "Joe Neguse"
+full_117_names[full_117_names == "Kenneth Robert Buck"] <- "Ken Buck"
+full_117_names[full_117_names == "John Wright Hickenlooper"] <- "John Hickenlooper"
+full_117_names[full_117_names == "John Larson"] <- "John B. Larson"
+full_117_names[full_117_names == "Rosa Delauro"] <- "Rosa DeLauro"
+full_117_names[full_117_names == "James Himes"] <- "Jim Himes"
+full_117_names[full_117_names == "Christopher Murphy"] <- "Christopher S. Murphy"
+full_117_names[full_117_names == "Thomas Richard Carper"] <- "Thomas R. Carper"
+full_117_names[full_117_names == "Christopher Coons"] <- "Chris Coons"
+full_117_names[full_117_names == "Matthew L. Ii Gaetz"] <- "Matt Gaetz"
+full_117_names[full_117_names == "Neal Patrick Dunn"] <- "Neal Dunn"
+full_117_names[full_117_names == "John Henry Rutherford"] <- "John Rutherford"
+full_117_names[full_117_names == "Alfred Jr. Lawson"] <- "Al Lawson"
+full_117_names[full_117_names == "Darren Michael Soto"] <- "Darren Soto"
+full_117_names[full_117_names == "Valdez Butler Demings"] <- "Val B. Demings"
+full_117_names[full_117_names == "Charlie Joseph Jr. Crist"] <- "Charlie Crist"
+full_117_names[full_117_names == "C. Scott Franklin"] <- "Scott Franklin"
+full_117_names[full_117_names == "Vernon Buchanan"] <- "Vern Buchanan"
+full_117_names[full_117_names == "William Steube"] <- "Greg Steube"
+full_117_names[full_117_names == "Brian Jeffery Mast"] <- "Brian Mast"
+full_117_names[full_117_names == "Alcee Lamar Hastings"] <- "Alcee L. Hastings"
+full_117_names[full_117_names == "Theodore E. (Ted) Deutch"] <- "Ted Deutch"
+full_117_names[full_117_names == "Frederica Wilson"] <- "Frederica S. Wilson"
+full_117_names[full_117_names == "Richard Lynn (Rick) Scott"] <- "Rick Scott"
+full_117_names[full_117_names == "Buddy Carter"] <- "Earl L. \"Buddy\" Carter"
+full_117_names[full_117_names == ""] <- ""
+full_117_names[full_117_names == ""] <- ""
+full_117_names[full_117_names == ""] <- ""
+full_117_names[full_117_names == ""] <- ""
+full_117_names[full_117_names == ""] <- ""
+full_117_names[full_117_names == ""] <- ""
+full_117_names[full_117_names == ""] <- ""
+full_117_names[full_117_names == ""] <- ""
+full_117_names[full_117_names == ""] <- ""
+full_117_names[full_117_names == ""] <- ""
+full_117_names[full_117_names == ""] <- ""
+full_117_names[full_117_names == ""] <- ""
+full_117_names[full_117_names == ""] <- ""
+full_117_names[full_117_names == ""] <- ""
+full_117_names[full_117_names == ""] <- ""
+full_117_names[full_117_names == ""] <- ""
+full_117_names[full_117_names == ""] <- ""
+full_117_names[full_117_names == ""] <- ""
+full_117_names[full_117_names == ""] <- ""
+full_117_names[full_117_names == ""] <- ""
+full_117_names[full_117_names == ""] <- ""
+full_117_names[full_117_names == ""] <- ""
+full_117_names[full_117_names == ""] <- ""
+full_117_names[full_117_names == ""] <- ""
+full_117_names[full_117_names == ""] <- ""
+full_117_names[full_117_names == ""] <- ""
+full_117_names[full_117_names == ""] <- ""
+full_117_names[full_117_names == ""] <- ""
+full_117_names[full_117_names == ""] <- ""
+full_117_names[full_117_names == ""] <- ""
+full_117_names[full_117_names == ""] <- ""
+full_117_names[full_117_names == ""] <- ""
+full_117_names[full_117_names == ""] <- ""
+full_117_names[full_117_names == ""] <- ""
+full_117_names[full_117_names == ""] <- ""
+full_117_names[full_117_names == ""] <- ""
+full_117_names[full_117_names == ""] <- ""
+full_117_names[full_117_names == ""] <- ""
+full_117_names[full_117_names == ""] <- ""
+full_117_names[full_117_names == ""] <- ""
+full_117_names[full_117_names == ""] <- ""
+full_117_names[full_117_names == ""] <- ""
+full_117_names[full_117_names == ""] <- ""
+full_117_names[full_117_names == ""] <- ""
+full_117_names[full_117_names == ""] <- ""
+full_117_names[full_117_names == ""] <- ""
+full_117_names[full_117_names == ""] <- ""
+full_117_names[full_117_names == ""] <- ""
+full_117_names[full_117_names == ""] <- ""
+full_117_names[full_117_names == ""] <- ""
+full_117_names[full_117_names == ""] <- ""
+full_117_names[full_117_names == ""] <- ""
+```
+
+
+
 # Merge 117th Relgion and DW nominate
 ```{r}
-hope_and_prayer <- 
+#initial merge so we can see which ones are mismatched
+hopes_and_prayers <- rel_117 %>% 
+  full_join(full_117_names, rel_117, by = "name")
+
+pp <- hopes_and_prayers %>% 
+  filter(is.na(chamber))
 ```
 
 
