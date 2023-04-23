@@ -207,7 +207,7 @@ full_117_names[full_117_names == "Jake Laturner"] <- "Jake LaTurner"
 full_117_names[full_117_names == "Roger Wayne Marshall"] <- "Roger Marshall"
 full_117_names[full_117_names == "James Comer"] <- "James R. Comer"
 full_117_names[full_117_names == "Harold Dallas (Hal) Rogers"] <- "Harold Rogers"
-full_117_names[full_117_names == "Garland H. (Andy) Iv Barr"] <- "Andy Bar"
+full_117_names[full_117_names == "Garland H. (Andy) Iv Barr"] <- "Andy Barr"
 full_117_names[full_117_names == "Addison Mitchell (Mitch) Mcconnel"] <- "Mitch McConnel"
 full_117_names[full_117_names == "Cedric Richmond"] <- "Cedric L. Richmond"
 full_117_names[full_117_names == "John Neely Kennedy"] <- "John Kennedy"
@@ -248,11 +248,11 @@ full_117_names[full_117_names == "Theodore Paul Budd"] <- "Ted Budd"
 full_117_names[full_117_names == "Thomas Roland (Thom) Tillis"] <- "Thom Tillis"
 full_117_names[full_117_names == "Richard Burr"] <- "Richard M. Burr"
 full_117_names[full_117_names == "Donald Bacon"] <- "Don Bacon"
-full_117_names[full_117_names == "Debra (Deb) Fischer"] <- "Deb Fisher"
+full_117_names[full_117_names == "Debra (Deb) Fischer"] <- "Deb Fischer"
 full_117_names[full_117_names == "Benjamin Eric Sasse"] <- "Ben Sasse"
 full_117_names[full_117_names == "Ann Mclane Kuster"] <- "Ann McLane Kuster"
 full_117_names[full_117_names == "Margaret (Maggie) Hassan"] <- "Maggie Hassan"
-full_117_names[full_117_names == "Jefferson Van Drew"] <- "Jef Van Drew"
+full_117_names[full_117_names == "Jefferson Van Drew"] <- "Jeff Van Drew"
 full_117_names[full_117_names == "Christopher Henry Smith"] <- "Christopher H. Smith"
 full_117_names[full_117_names == "Jr. Pallone"] <- "Frank Pallone Jr."
 full_117_names[full_117_names == "Tomaz Malinowski"] <- "Tom Malinowski"
@@ -265,7 +265,7 @@ full_117_names[full_117_names == "Ben Ray Luján"] <- "Ben Ray Lujan"
 full_117_names[full_117_names == "Alice (Dina) Titus"] <- "Dina Titus"
 full_117_names[full_117_names == "Catherine Marie Cortez Masto"] <- "Catherine Cortez Masto"
 full_117_names[full_117_names == "Jacklyn Sheryl Rosen"] <- "Jacky Rosen"
-full_117_names[full_117_names == "Tom Suozzi"] <- "Thomas Suozzi"
+full_117_names[full_117_names == "Thomas Suozzi"] <- "Tom Suozzi"
 full_117_names[full_117_names == "Kathleen Maura Rice"] <- "Kathleen Rice"
 full_117_names[full_117_names == "Gregory Meeks"] <- "Gregory W. Meeks"
 full_117_names[full_117_names == "Nydia Velázquez"] <- "Nydia M. Velazquez"
@@ -338,7 +338,12 @@ full_117_names[full_117_names == "Thomas Tiffany"] <- "Tom Tiffany"
 full_117_names[full_117_names == "Michael Gallagher"] <- "Mike Gallagher"
 full_117_names[full_117_names == "David Mckinley"] <- "David B. Mckinley"
 full_117_names[full_117_names == "Alex Mooney"] <- "Alex X. Mooney"
-full_117_names[full_117_names == ""] <- ""
+full_117_names[full_117_names == "Tom O'halleran"] <- "Tom O'Halleran"
+full_117_names[full_117_names == "Jackie Speir"] <- "Jackie Speier"
+full_117_names[full_117_names == "Jim Mcgovern"] <- "Jim McGovern"
+full_117_names[full_117_names == "A. Donald Mceachin"] <- "A. Donald McEachin"
+full_117_names[full_117_names == "David B. Mckinley"] <- "David B. McKinley"
+full_117_names[full_117_names == "Addison Mitchell (Mitch) Mcconnell"] <- "Mitch McConnell"
 ```
 
 
@@ -348,6 +353,8 @@ full_117_names[full_117_names == ""] <- ""
 hopes_and_prayers <- rel_117 %>% 
   full_join(full_117_names, rel_117, by = "name")
 
+#still some issues so heading back!
+
 #there are 567 observations so lets remove the ones without religion!
 #YAYAYYAY now we have only 531 slayyyy
 hopes <- hopes_and_prayers %>%
@@ -356,6 +363,68 @@ hopes <- hopes_and_prayers %>%
 
 # Now we want to build weighted ties
 ```{r}
+hopes <- hopes %>% 
+  select(name, nominate_dim1) 
+
+#making an i and j 
+hopes_117 <- hopes %>% 
+  mutate(name_i =name) %>% 
+  rename(name_j = name) %>% 
+  mutate(dw_i = nominate_dim1) %>% 
+  rename(dw_j = nominate_dim1)
+
+#creating all the possible combinations
+#but it fucking stupidly gets rid of the scores
+combos_117 <- hopes_117 |>
+  expand(name_i, name_j) |>
+  filter(name_i != name_j) 
+
+#merge back in scores goddamn
+combos_of_117_start <- combos_117 %>% 
+  right_join(hopes_117, by = c("name_i" = "name_j"))%>% 
+  select(name_i, name_j, dw_i)
+
+#merge dw of j
+combos_dw_117 <- combos_of_117_start %>% 
+  right_join(hopes_117, by = c("name_j" = "name_j")) 
+
+#select the correct ones
+combos_dw_117 <- combos_dw_117 %>% 
+  select(name_i.x, name_j, dw_i.x, dw_j) %>% 
+  rename(name_i =name_i.x,
+         dw_i = dw_i.x)
+
+#gut check make sure it doesnt lose any rows! yay!
+yay_117 <- combos_dw_117 %>% 
+  drop_na(dw_i, dw_j)
+
+#yayyyy 
+#now we have all of the combinations
+```
+
+
+# Creating Similarity Score
+```{r}
+#create similarity score
+combos_112 <- combos_112 %>% 
+  mutate(similarity = ifelse(party_i == party_j, 1, 0 )) %>% 
+  select(-party_i, -party_j)
+
+#now we only want to include the ones that include the same? 
+sim_combos <-combos_112[!combos_112$similarity==0 ,]
+
+
+#turn edge list into matrix
+el_112 =as.matrix(sim_combos)
+
+#turn into graph object
+g_112=graph.data.frame(sim_combos)
+
+#get adjacency matrix
+d_112 = get.adjacency(g_112,sparse=FALSE) 
+ 
+#changing it so all of them are zeros
+
 
 ```
 
