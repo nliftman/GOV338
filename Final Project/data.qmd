@@ -537,7 +537,7 @@ g_117=graph.data.frame(sim_combos_117)
 d_117 = get.adjacency(g_117,sparse=FALSE) 
 
 #export it for easier work!
-write.csv(d_117, "matrix_religion_117", row.names=FALSE)
+write.csv(d_117, "matrix_religion_117.csv", row.names=FALSE)
 ```
 
 # This doesnt include isos reee
