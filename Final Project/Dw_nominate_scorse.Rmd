@@ -1,0 +1,124 @@
+---
+title: "DW-NOMINATE scores"
+author: "Naomi Liftman"
+date: "2023-04-21"
+output: pdf_document
+---
+# Load Pacakges
+```{r warning = FALSE, error = FALSE, message = FALSE}
+library(tidyverse)
+library(rio)
+library(stringi)                               
+```
+
+# 117th 
+```{r}
+#import the data
+dw_117 <- import("/Users/naomiliftman/Desktop/GOV338/Final Project/HS117_members.csv")
+
+#select only the ones we want
+dw_117 <- dw_117 %>% 
+  select(chamber, icpsr, state_abbrev, party_code, bioname, nominate_dim1, )
+
+#remove presidents 
+dw_117 <- dw_117[dw_117$chamber != "President", ] 
+```
+
+# God so much mutating and fixing the names
+```{r}
+#making a dataset to fuck around with 
+dw_117_mutating <- dw_117
+
+#removing all the ending intials 
+dw_117_mutating$bioname <- gsub("(.*)\\s+[A-Z]\\.?$", "\\1", dw_117_mutating$bioname)
+
+#making it all lower case
+dw_117_mutating$bioname <- tolower(dw_117_mutating$bioname)
+
+#add new columns with the first and last names
+dw_117_mutating$firstname <- gsub(".*\\, ", "", dw_117_mutating$bioname)   
+dw_117_mutating$lastname <- gsub("\\,.*","", dw_117_mutating$bioname)
+
+#now making the names caps of first name and last
+dw_117_mutating$firstname <- stri_trans_totitle(dw_117_mutating$firstname) 
+dw_117_mutating$lastname <- stri_trans_totitle(dw_117_mutating$lastname)                      
+
+#combining them to get their full names!
+full_117_names = dw_117_mutating %>% 
+  unite(fullname, c(firstname, lastname), sep = " ", remove = FALSE) %>% 
+  select(chamber:fullname, -bioname)
+
+```
+
+# Religion 117th
+```{r}
+#doing this so that we can have the correct numbers and they are all the same
+#there are 531
+#importing the df 
+religion_117 <- import("/Users/naomiliftman/Desktop/GOV338/Final Project/117congress.xlsx")
+
+#rename the last five names
+relig_117 <- religion_117 %>% 
+    rename_with(~ tolower(gsub(".", "", .x, fixed = TRUE))) %>%
+  rename("type" = 2) %>% 
+  rename("name" = 3) %>% 
+  rename("party" = 4 ) %>% 
+  rename("cont" = 5) %>% 
+  rename("religion" = 6)
+
+#remove first row
+relig_117 <- relig_117[-c(1:1), ]
+
+#only want name and religion
+relig_117 <- relig_117 %>% 
+  select("name", "religion")
+
+#creating a new 117
+rel_117 <- relig_117 %>% 
+  drop_na(name)
+
+#fix all protestant:
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Adventist', 'Protestant', rel_117$religion)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Baptist', 'Protestant', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Congregationalist', 'Protestant', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Episcopalian', 'Protestant', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Lutheran', 'Protestant', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Methodist', 'Protestant', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Pentecostal', 'Protestant', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Pietist', 'Protestant', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Presbyterian', 'Protestant', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Protestant unspecified', 'Protestant', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Reformed', 'Protestant', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Restorationist', 'Protestant', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Unitarian Universalist', 'Protestant', rel_117$fix_relig)
+
+#fix all general catholic
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Orthodox', 'Catholic', rel_117$fix_relig)
+
+#fixing all other
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Unaffiliated', 'Other', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Buddhist', 'Other', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Hindu', 'Other', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Mormon', 'Other', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Muslim', 'Other', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Nondenominational', 'Other', rel_117$fix_relig)
+
+#replacing all of the NAs with Unknown along with the dont know
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Don\'t know/refused', 'Unknown', rel_117$fix_relig)
+rel_117$fix_relig <- rel_117$fix_relig %>% replace_na('Unknown')
+
+
+rel_117 <- rel_117 %>% 
+  select("name", "fix_relig") %>% 
+  drop_na("name")
+```
+
+# Merge 117th Relgion and DW nominate
+```{r}
+hope_and_prayer <- 
+```
+
+
+
+
+
