@@ -402,6 +402,19 @@ yay_117 <- combos_dw_117 %>%
 #now we have all of the combinations
 ```
 
+# Create Similarity Score
+
+```{r}
+#check absolute value -- if the absolute value is the same then it is positive if not its negative, then if both negative ect
+
+#this checks if one is negative or positive
+yay_117 <- yay_117 %>% 
+  mutate(pn_i = ifelse(abs(dw_i) == dw_i, "Positive", "Negative"),
+         pn_j = ifelse(abs(dw_j) == dw_j, "Positive", "Negative"))
+
+```
+
+
 
 # Creating Similarity Score
 ```{r}
