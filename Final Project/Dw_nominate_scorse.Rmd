@@ -439,6 +439,12 @@ write.csv(d_117, "matrix_DW_117.csv", row.names=FALSE)
 ```
 
 
+
+
+
+
+
+
 # 112th 
 ```{r}
 #import the data
@@ -971,14 +977,113 @@ full_112_names[full_112_names == "James H. (Jim) Webb"] <- "Jim Webb"
 full_112_names[full_112_names == "John Davison Iv (Jay) Rockefeller"] <- "John D. Rockefeller IV"
 full_112_names[full_112_names == "Herbert Kohl"] <- "Herb Kohl"
 full_112_names[full_112_names == "Michael Enzi"] <- "Michael B. Enzi"
+full_112_names[full_112_names == "Thomas Latham"] <- "Tom Latham"
+full_112_names[full_112_names == "Stevan Pearce"] <- "Steve Pearce"
+full_112_names[full_112_names == "Mike Mcintyre"] <- "Mike McIntyre"
+full_112_names[full_112_names == "Steven Latourette"] <- "Steven C. LaTourette"
+full_112_names[full_112_names == "James Demint"] <- "Jim DeMint"
+full_112_names[full_112_names == ""] <- ""
 full_112_names[full_112_names == ""] <- ""
 ```
 
 # Combining Religion and DW Scores 112th
 ```{r}
-hopes_and_prayers_112 <- rel_112 %>% 
-  full_join(full_112_names, rel_112, by = "name") %>% 
-  filter(is.na(fix_relig))
+#there are 547 ties we want 535
+pp <- full_112_names %>% 
+  full_join(rel_112, full_112_names, by = "name") 
+
+#now we need to drop the ones that have no religion
+#there are 357??? frick????
+#we need this to be 535??? i have no fucking idea how there are 537?? 
+hopes_112 <- pp %>% 
+  drop_na(fix_relig)
+
+#this checks which are duplicates
+duplicated(hopes_112$name)
+#so need to remove 
+# 246
+# there are two Donald M. Paynes 
+#there are two Dean Hellers 
+#drop 239
+
+#YAYYAYYAYYA ALL FIXED!!!
+hopes_112 <- hopes_112[-c(246, 239),]
+```
+
+# Now we want to build weighted ties
+```{r}
+hopes <- hopes_112 %>% 
+  select(name, nominate_dim1) 
+
+#making an i and j 
+hope_112 <- hopes %>% 
+  mutate(name_i =name) %>% 
+  rename(name_j = name) %>% 
+  mutate(dw_i = nominate_dim1) %>% 
+  rename(dw_j = nominate_dim1)
+
+#creating all the possible combinations
+#but it fucking stupidly gets rid of the scores
+combos_112 <- hope_112 |>
+  expand(name_i, name_j) |>
+  filter(name_i != name_j) 
+
+#merge back in scores goddamn
+combos_of_112_start <- combos_112 %>% 
+  full_join(hope_112, combos_112, by = c("name_i" = "name_j")) %>% 
+  select(name_i, name_j, dw_i)
+
+#merge dw of j
+combos_dw_112 <- combos_of_112_start %>% 
+  right_join(hope_112, by = c("name_j" = "name_j")) 
+
+#select the correct ones
+combos_dw_112 <- combos_dw_112 %>% 
+  select(name_i.x, name_j, dw_i.x, dw_j) %>% 
+  rename(name_i =name_i.x,
+         dw_i = dw_i.x)
+
+#gut check make sure it doesnt lose any rows! yay!
+yay_112 <- combos_dw_112 %>% 
+  drop_na(dw_i, dw_j)
+
+#yayyyy 
+#now we have all of the combinations
+```
+
+# Create Similarity Score
+
+```{r}
+#check absolute value -- if the absolute value is the same then it is positive if not its negative, then if both negative ect
+
+#this checks if one is negative or positive
+yay_112 <- yay_112 %>% 
+  mutate(pn_i = ifelse(abs(dw_i) == dw_i, "Positive", "Negative"),
+         pn_j = ifelse(abs(dw_j) == dw_j, "Positive", "Negative"))
+
+#now if they are both positive then subtract and find the absolute value 
+yay <- yay_112 %>% 
+  mutate(similarity = ifelse(pn_i == "Positive" & pn_j == "Positive", abs(dw_i - dw_j), 0),
+         similarity = ifelse(pn_i == "Negative" & pn_j == "Negative", abs(abs(dw_i) - abs(dw_j)), similarity),
+         similarity = ifelse(pn_i == "Positive" & pn_j == "Negative", abs(dw_i + abs(dw_j)), similarity),
+         similarity = ifelse(pn_i == "Negative" & pn_j == "Positive", abs(abs(dw_i) + dw_j), similarity))
+#YYYAYAYAYAY created it!! hot hot hot 
+```
+
+# Creating Similarity Score for 117th
+```{r}
+#reduce to just names and similarity
+yay <- yay %>% 
+  select(name_i, name_j, similarity)
+
+#create graph object
+mygraph_112 <- graph.data.frame(yay)
+
+#create adjacency matrix
+d_112 <- get.adjacency(mygraph_112, sparse = FALSE, attr='similarity')
+
+#export the dataset 
+write.csv(d_112, "matrix_DW_112.csv", row.names=FALSE)
 ```
 
 
