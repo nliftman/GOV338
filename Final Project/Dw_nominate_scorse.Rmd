@@ -442,17 +442,127 @@ write.csv(d_117, "matrix_DW_117.csv", row.names=FALSE)
 # 112th 
 ```{r}
 #import the data
-dw_112 <- import("/Users/naomiliftman/Desktop/GOV338/Final Project/HS117_members.csv")
+dw_112 <- import("/Users/naomiliftman/Desktop/GOV338/Final Project/HS112_members.csv")
 
 #select only the ones we want
-dw_117 <- dw_117 %>% 
+dw_112 <- dw_112 %>% 
   select(chamber, icpsr, state_abbrev, party_code, bioname, nominate_dim1, )
 
 #remove presidents 
-dw_117 <- dw_117[dw_117$chamber != "President", ] 
+dw_112 <- dw_112[dw_112$chamber != "President", ] 
 ```
 
+# God so much mutating and fixing the names
+```{r}
+#making a dataset to fuck around with 
+dw_112_mutating <- dw_112
 
+#removing all the ending intials 
+dw_112_mutating$bioname <- gsub("(.*)\\s+[A-Z]\\.?$", "\\1", dw_112_mutating$bioname)
+
+#making it all lower case
+dw_112_mutating$bioname <- tolower(dw_112_mutating$bioname)
+
+#add new columns with the first and last names
+dw_112_mutating$firstname <- gsub(".*\\, ", "", dw_112_mutating$bioname)   
+dw_112_mutating$lastname <- gsub("\\,.*","", dw_112_mutating$bioname)
+
+#now making the names caps of first name and last
+dw_112_mutating$firstname <- stri_trans_totitle(dw_112_mutating$firstname) 
+dw_112_mutating$lastname <- stri_trans_totitle(dw_112_mutating$lastname)                      
+
+#combining them to get their full names!
+full_112_names = dw_112_mutating %>% 
+  unite(name, c(firstname, lastname), sep = " ", remove = FALSE) %>% 
+  select(chamber:name, -bioname)
+
+```
+
+# Religion 112th
+```{r}
+#importing the df 
+religion_112 <- import("/Users/naomiliftman/Desktop/GOV338/Final Project/112congress.xlsx") 
+
+#rename the last five names
+relig_112 <- religion_112 %>% 
+  rename_with(~ tolower(gsub(".", "", .x, fixed = TRUE))) %>% 
+  rename("member_name" = 2) %>% 
+  rename("religious_affiliation" = 4 ) %>% 
+  select("member_name", "religious_affiliation", "party")
+
+#now need to add the senate! 
+religion_112_senate <- import("/Users/naomiliftman/Desktop/GOV338/Final Project/112congress_senators.xlsx")
+
+#rename the ones we are gonna use
+relig_112_sen <- religion_112_senate %>% 
+  rename("member_name" = 2) %>% 
+  rename("religious_affiliation" = 3,
+         "party" = 4) %>% 
+  select("member_name", "religious_affiliation", "party")
+
+#now making just one religion 
+relig_112_all <- rbind(relig_112_sen, relig_112) %>% 
+  drop_na(religious_affiliation)
+
+#how many religions origionally
+relig_112_all %>% 
+  group_by(religious_affiliation) %>% 
+  summarize(n = n())
+
+rel_112 <- relig_112_all
+
+#fix all other
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Quaker', 'Other', rel_112$religious_affiliation)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Nazarene', 'Other', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Greek Orthodox', 'Other', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Mormon', 'Other', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Buddhist', 'Other', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Muslim', 'Other', rel_112$fix_relig)
+
+#fixing all catholic
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Anglican', 'Catholic', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Anglican Catholic', 'Catholic', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Roman Catholic', 'Catholic', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Unitarian', 'Catholic', rel_112$fix_relig)
+
+#fixing all protestant
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'African Methodist Episcopal', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Evangelical Methodist', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'United Methodist', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Methodist', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Christian', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Christian non-denominational', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Christian Reformed', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Christian Scientist', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Church of Christ', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Antioch Orthodox Christian Church', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Eastern Orthodox', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Evangelical Christian', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Southern Baptist', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Baptist', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Episcopalian', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Presbyterian', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Lutheran', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Lutheran - Missouri Synod', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Evangelical Lutheran', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Seventh-day Adventist', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Community of Christ', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Congregationalist Baptist', 'Protestant', rel_112$fix_relig)
+
+rel_112[rel_112 == "Christian Reformed Church"] <- "Protestant"
+rel_112[rel_112 == "Church of God"] <- "Protestant"
+rel_112[rel_112 == "Congregationalist"] <- "Protestant"
+
+
+#replace all NAs with unknown
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Unspecified', 'Unknown', rel_112$fix_relig)
+rel_112$fix_relig <- rel_112$fix_relig %>% replace_na('Unknown')
+
+#remove NAs
+rel_112 <- rel_112 %>% 
+  select("member_name", "fix_relig") %>%
+  drop_na(member_name)
+```
 
 
 
