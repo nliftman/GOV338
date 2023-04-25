@@ -8,7 +8,8 @@ output: pdf_document
 ```{r warning = FALSE, error = FALSE, message = FALSE}
 library(tidyverse)
 library(rio)
-library(stringi)                               
+library(stringi)  
+library(igraph)
 ```
 
 # 117th 
@@ -421,27 +422,43 @@ yay <- yay_117 %>%
 #YYYAYAYAYAY created it!! hot hot hot 
 ```
 
-
-
-# Creating Similarity Score
+# Creating Similarity Score for 117th
 ```{r}
+#reduce to just names and similarity
 yay <- yay %>% 
   select(name_i, name_j, similarity)
 
+#create graph object
+mygraph_117 <- graph.data.frame(yay)
 
-#turn edge list into matrix
-el_112 =as.matrix(sim_combos)
+#create adjacency matrix
+d_117 <- get.adjacency(mygraph_117, sparse = FALSE, attr='similarity')
 
-#turn into graph object
-g_112=graph.data.frame(sim_combos)
-
-#get adjacency matrix
-d_112 = get.adjacency(g_112,sparse=FALSE) 
- 
-#changing it so all of them are zeros
-
-
+#export the dataset 
+write.csv(d_117, "matrix_DW_117.csv", row.names=FALSE)
 ```
+
+
+# 112th 
+```{r}
+#import the data
+dw_112 <- import("/Users/naomiliftman/Desktop/GOV338/Final Project/HS117_members.csv")
+
+#select only the ones we want
+dw_117 <- dw_117 %>% 
+  select(chamber, icpsr, state_abbrev, party_code, bioname, nominate_dim1, )
+
+#remove presidents 
+dw_117 <- dw_117[dw_117$chamber != "President", ] 
+```
+
+
+
+
+
+
+
+
 
 
 
