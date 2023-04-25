@@ -198,9 +198,8 @@ rel_117 <- rel_117 %>%
   drop_na("name")
 ```
 
-
-
 # Fixing all the Incorrect Merges
+
 ```{r}
 #people who dont exist
 # Raphael G. Warnock
@@ -370,6 +369,7 @@ full_117_edge[full_117_edge == "esus \"Chuy\" Garcia"] <- "Jesus Garcia"
 ```
 
 #okay so we have the 117th edge list and the religion list
+
 ```{r}
 #okay there should be no NAs
 full_117_edge <- full_117_edge %>% 
@@ -416,6 +416,7 @@ noDup_j <- a_117 %>%
 ```
 
 # check my isos n stuff
+
 ```{r}
 #checking isolates that need to be added back to 112th
 i <- anti_join(rel_117, noDup_i, by = c("name" = "member_i"))
@@ -465,7 +466,8 @@ a_117 = rbind(a_117, newrow_14)
 
 ```
 
-# FINAL EDGE LIST TURNED TO MATRIX 117 
+# FINAL EDGE LIST TURNED TO MATRIX 117
+
 ```{r}
 #now we need to turn our edge list into a weighted edge list
 #turn edge list into matrix
@@ -482,8 +484,8 @@ d_117 <- d[-c(532), -c(532)]
 write.csv(d_117, "adjacency_cospons_117.csv", row.names=FALSE)
 ```
 
-
 # Religion 117th congress
+
 ```{r}
 #make matrix of religions
 #making a number correlation for each lmao
@@ -541,13 +543,14 @@ write.csv(d_117, "matrix_religion_117.csv", row.names=FALSE)
 ```
 
 # This doesnt include isos reee
+
 ```{r}
 #export 117th 
 write.csv(a_117, "edge_all_117.csv", row.names=TRUE)
 ```
 
-
 # Matrix for Party 117th
+
 ```{r}
 #selecting only name and party
 party_117 <- relig_117 %>% 
@@ -604,12 +607,6 @@ pd_117 = get.adjacency(p_g_117,sparse=FALSE)
 #export it for easier work!
 write.csv(pd_117, "matrix_party_117.csv", row.names=FALSE)
 ```
-
-
-
-
-
-
 
 # Scott Code for Cosponsorship of 112th SENATE
 
@@ -1097,6 +1094,7 @@ full_112_edge[full_112_edge == "Congregationalist"] <- "Protestant"
 ```
 
 # Merging the 112th full with the religion!!
+
 THERE ARE 535 PEOPLE in the 112th religion dataset so we need that many
 
 ```{r}
@@ -1161,7 +1159,6 @@ t_112_all <- t_112_all %>%
 #  drop_na(religion_j)
 ```
 
-
 # NOW THAT WE HAVE THE EDGE LISTS we need to make a MATRIX of 112
 
 ```{r}
@@ -1181,6 +1178,7 @@ noDup_j <- t_112 %>%
 ```
 
 # check my isos n stuff
+
 ```{r}
 #checking isolates that need to be added back to 112th
 i <- anti_join(rel_112, noDup_i, by = c("member_name" = "member_i"))
@@ -1273,9 +1271,8 @@ yee_112 <- yee_112[yee_112$member_i != "Kathleen C. Hochul", ]
 
 ```
 
+# FINAL EDGE LIST TURNED TO MATRIX 112
 
-
-# FINAL EDGE LIST TURNED TO MATRIX 112 
 ```{r}
 #now we need to turn our edge list into a weighted edge list
 #turn edge list into matrix
@@ -1295,6 +1292,7 @@ write.csv(d, "adjacency_cospons_112.csv", row.names=FALSE)
 ```
 
 # Exporting the data as csv's so that we may actually use it!
+
 ```{r}
 #export 112th 
 write.csv(a_112, "edge_listall_112.csv", row.names=FALSE)
@@ -1304,9 +1302,8 @@ noDup <- all_112 %>%
   distinct(member_j, member_i, .keep_all = TRUE)
 ```
 
-
-
 # Religion 112th congress
+
 ```{r}
 #make matrix of religions
 #making a number correlation for each lmao
@@ -1371,6 +1368,7 @@ write.csv(d_112, "religion_112.csv", row.names=FALSE)
 ```
 
 # Matrix for party 112
+
 ```{r}
 #realizing that the last three pages didnt go through
 #fixed yay!
@@ -1437,4 +1435,3 @@ write.csv(d_112, "matrix_party_112.csv", row.names=FALSE)
 
 
 ```
-

@@ -425,6 +425,10 @@ yay <- yay_117 %>%
 
 # Creating Similarity Score
 ```{r}
+yay <- yay %>% 
+  select(name_i, name_j, similarity)
+
+
 #turn edge list into matrix
 el_112 =as.matrix(sim_combos)
 
