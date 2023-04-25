@@ -412,21 +412,19 @@ yay_117 <- yay_117 %>%
   mutate(pn_i = ifelse(abs(dw_i) == dw_i, "Positive", "Negative"),
          pn_j = ifelse(abs(dw_j) == dw_j, "Positive", "Negative"))
 
+#now if they are both positive then subtract and find the absolute value 
+yay <- yay_117 %>% 
+  mutate(similarity = ifelse(pn_i == "Positive" & pn_j == "Positive", abs(dw_i - dw_j), 0),
+         similarity = ifelse(pn_i == "Negative" & pn_j == "Negative", abs(abs(dw_i) - abs(dw_j)), similarity),
+         similarity = ifelse(pn_i == "Positive" & pn_j == "Negative", abs(dw_i + abs(dw_j)), similarity),
+         similarity = ifelse(pn_i == "Negative" & pn_j == "Positive", abs(abs(dw_i) + dw_j), similarity))
+#YYYAYAYAYAY created it!! hot hot hot 
 ```
 
 
 
 # Creating Similarity Score
 ```{r}
-#create similarity score
-combos_112 <- combos_112 %>% 
-  mutate(similarity = ifelse(party_i == party_j, 1, 0 )) %>% 
-  select(-party_i, -party_j)
-
-#now we only want to include the ones that include the same? 
-sim_combos <-combos_112[!combos_112$similarity==0 ,]
-
-
 #turn edge list into matrix
 el_112 =as.matrix(sim_combos)
 
