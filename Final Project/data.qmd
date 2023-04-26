@@ -158,6 +158,10 @@ relig_117 %>%
 rel_117 <- relig_117 %>% 
   drop_na(name)
 
+pp <- rel_117 %>% 
+  group_by(religion) %>% 
+  summarize(n = n())
+
 #fix all protestant:
 rel_117$fix_relig <- ifelse(rel_117$religion == 'Adventist', 'Protestant', rel_117$religion)
 rel_117$fix_relig <- ifelse(rel_117$religion == 'Baptist', 'Protestant', rel_117$fix_relig)
@@ -177,7 +181,7 @@ rel_117$fix_relig <- ifelse(rel_117$religion == 'Unitarian Universalist', 'Prote
 rel_117$fix_relig <- ifelse(rel_117$religion == 'Orthodox', 'Catholic', rel_117$fix_relig)
 
 #fixing all other
-rel_117$fix_relig <- ifelse(rel_117$religion == 'Unaffiliated', 'Other', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Unaftfiliated', 'Other', rel_117$fix_relig)
 rel_117$fix_relig <- ifelse(rel_117$religion == 'Buddhist', 'Other', rel_117$fix_relig)
 rel_117$fix_relig <- ifelse(rel_117$religion == 'Hindu', 'Other', rel_117$fix_relig)
 rel_117$fix_relig <- ifelse(rel_117$religion == 'Mormon', 'Other', rel_117$fix_relig)
