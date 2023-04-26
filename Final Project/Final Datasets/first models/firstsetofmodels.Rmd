@@ -1,0 +1,115 @@
+---
+title: "Final 112th"
+author: "Naomi Liftman"
+date: "2023-04-18"
+output: pdf_document
+---
+# Load Packages
+```{r, warning=F, message=F, echo=F}
+library(rio)
+library(statnet)
+library(tidyverse)
+```
+
+# Load Matrices for 117th
+```{r}
+# Independent variables
+religion <- as.matrix(import("matrix_religion_117.csv"))  #religion matrix
+party <- as.matrix(import("matrix_party_117.csv")) #party matrix
+dw <- as.matrix(import("matrix_DW_117.csv")) #DW nominate scores
+
+### DV- cosponsorship
+cosponsorship <- as.matrix(import("adjacency_cospons_117.csv")) #cosponsorship
+```
+
+# Scott Code
+
+```{r}
+### Stacking IVs into 3 dimensional matrix
+#three for the number of variables, and length needs to be the size of one of the matrices
+#all matrices should be the same dimensions
+state_matrices <- array(NA, c(3, length(religion[1,]),length(religion[1,]))) 
+
+#independent variable one is religion 
+state_matrices[1,,] <- religion
+#same for party
+state_matrices[2,,] <- party
+#same for dw
+state_matrices[3,,] <- dw
+
+
+### Now the Linear Model
+### can specify number of simulations
+### F-stat tells us if the model significant predicts ties
+### P<B gives us the p-value  for the probability of observing our coefficient if the true population parameter is not-negative
+### P<B gives us the p-value  for the probability of observing our coefficient if the true population parameter is not-positive
+### P<B gives us the p-value  for the probability of observing our coefficient if the true population parameter is not zero
+
+
+```
+
+## Estimating model- assigning coefficient names
+
+```{r}
+#network lm
+#similarity is the dependent and the array is the independent variables
+state_sim_lm<- netlm(cosponsorship, state_matrices, reps=100)
+
+#lets label the variables! 
+#create a new list thats a summary of the model and label each of the variables
+state_model <- list()
+state_model <- summary(state_sim_lm)
+#need to make sure you label in the order you read them into R
+state_model$names <- c("Intercept", "Religion Ties", "Party", "DW Nominate Scores")
+
+#round the coefficients so that they are not too bad 
+state_model$coefficients = round(state_model$coefficients, 2)
+state_model
+```
+
+Catholic, Jewish, Protesetant, Unknown and Other 
+
+We could check other and other or Jewish and Jewish 
+
+
+## Print results
+
+```{r}
+state_model
+```
+
+
+# 112th 
+```{r}
+# Independent variables
+religion <- as.matrix(import("matrix_religion_112.csv"))  #religion matrix
+party <- as.matrix(import("matrix_party_112.csv")) #party matrix
+dw <- as.matrix(import("matrix_DW_112.csv")) #DW nominate scores
+
+### DV- cosponsorship
+cosponsorship <- as.matrix(import("adjacency_cospons_112.csv")) #cosponsorship
+
+#all matrices should be the same dimensions
+state_matrices <- array(NA, c(3, length(religion[1,]),length(religion[1,]))) 
+
+#independent variable one is religion 
+state_matrices[1,,] <- religion
+#same for party
+state_matrices[2,,] <- party
+#same for dw
+state_matrices[3,,] <- dw
+
+state_sim_lm<- netlm(cosponsorship, state_matrices, reps=100)
+
+#lets label the variables! 
+#create a new list thats a summary of the model and label each of the variables
+state_model <- list()
+state_model <- summary(state_sim_lm)
+#need to make sure you label in the order you read them into R
+state_model$names <- c("Intercept", "Religion Ties", "Party", "DW Nominate Scores")
+
+#round the coefficients so that they are not too bad 
+state_model$coefficients = round(state_model$coefficients, 2)
+state_model
+```
+
