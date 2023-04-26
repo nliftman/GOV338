@@ -5,11 +5,14 @@ date: "2023-04-26"
 output: pdf_document
 ---
 # load packages
-```{r}
+```{r messgae = FALSE, warning = FALSE, error = FALSE}
 library(rio)
 library(tidyverse)
 library(ggplot2)
 library(gdata)
+library(smnet)
+library(network)
+library(igraph)
 ```
 
 # 112th religion
@@ -253,6 +256,131 @@ ggplot(data = full_perc, aes(x = fix_relig, y= perc, fill = party)) +
   scale_fill_manual(values = c("#C61C1C", "#1A36B8")) + 
   theme_linedraw()
 ```
+
+# 112th Build SEPERATE RELIGIONS MATRICES
+#CATHOLICS
+```{r}
+#make matrix of religions
+#making a number correlation for each lmao
+re_112 <- rel_112 %>% 
+  mutate(fix_relig = ifelse(rel_112$fix_relig == "Catholic", 1, fix_relig),
+         fix_relig = ifelse(rel_112$fix_relig == "Jewish", 2, fix_relig),
+         fix_relig = ifelse(rel_112$fix_relig == "Other", 3, fix_relig),
+         fix_relig = ifelse(rel_112$fix_relig == "Protestant", 4, fix_relig),
+         fix_relig = ifelse(rel_112$fix_relig == "Unknown", 5, fix_relig))  
+
+#making an i and j 
+re_112 <- re_112 %>% 
+  mutate(member_i=member_name) %>% 
+  rename(member_j = member_name) %>% 
+  mutate(religion_i = fix_relig) %>% 
+  rename(religion_j = fix_relig)
+
+#creating all the possible combinations
+combos <- re_112 |>
+  expand(member_i, member_j) |>
+  filter(member_i != member_j) 
+
+#merge back in religion
+combos_rel <- combos %>% 
+  right_join(re_112, by = c("member_i" = "member_i")) %>% 
+  select(member_i, member_j.x, religion_i)
+
+#merge religion of j
+combos_rel <- combos_rel %>% 
+  right_join(re_112, by = c("member_j.x" = "member_j")) 
+
+#select the correct ones
+combos_112 <- combos_rel %>% 
+  select(member_i.x, member_j.x, religion_i.x, religion_j) %>% 
+  rename(member_i =member_i.x,
+         member_j = member_j.x,
+         religion_i = religion_i.x)
+
+#create similarity score
+combos_112 <- combos_112 %>% 
+  mutate(similarity = ifelse(religion_i == 1 & religion_j == 1, 1, 0 )) %>% 
+  select(-religion_i, -religion_j)
+
+#now we only want to include the ones that include the same? 
+sim_combos <-combos_112[!combos_112$similarity==0 ,]
+
+
+#turn edge list into matrix
+el_112 =as.matrix(combos_112)
+
+#turn into graph object
+g_112=graph.data.frame(sim_combos)
+
+#get adjacency matrix
+d_112 = get.adjacency(g_112,sparse=FALSE) 
+ 
+#changing it so all of them are zeros
+
+
+#export it for easier work!
+write.csv(d_112, "religion_112.csv", row.names=FALSE)
+```
+
+```{r}
+#make matrix of religions
+#making a number correlation for each lmao
+re_117 <- rel_117 %>% 
+  mutate(fix_relig = ifelse(rel_117$fix_relig == "Catholic", 1, fix_relig),
+         fix_relig = ifelse(rel_117$fix_relig == "Jewish", 2, fix_relig),
+         fix_relig = ifelse(rel_117$fix_relig == "Other", 3, fix_relig),
+         fix_relig = ifelse(rel_117$fix_relig == "Protestant", 4, fix_relig),
+         fix_relig = ifelse(rel_117$fix_relig == "Unknown", 5, fix_relig))  
+
+#making an i and j 
+re_117 <- re_117 %>% 
+  mutate(member_i = name) %>% 
+  rename(member_j = name ) %>% 
+  mutate(religion_i = fix_relig) %>% 
+  rename(religion_j = fix_relig)
+
+#creating all the possible combinations
+combos_117 <- re_117 |>
+  expand(member_i, member_j) |>
+  filter(member_i != member_j) 
+
+#merge back in religion
+combos_rel_117 <- combos_117 %>% 
+  right_join(re_117, by = c("member_i" = "member_i")) %>% 
+  select(member_i, member_j.x, religion_i)
+
+#merge religion of j
+combos_rel_117 <- combos_rel_117 %>% 
+  right_join(re_117, by = c("member_j.x" = "member_j")) 
+
+#select the correct ones
+combos_117_part_two_electric_boogaloo <- combos_rel_117 %>% 
+  select(member_i.x, member_j.x, religion_i.x, religion_j) %>% 
+  rename(member_i =member_i.x,
+         member_j = member_j.x,
+         religion_i = religion_i.x)
+
+#create similarity score
+combos_117_part_two_electric_boogaloo <- combos_117_part_two_electric_boogaloo %>% 
+  mutate(similarity = ifelse(religion_i == 1 & religion_j == 1, 1, 0 )) %>% 
+  select(-religion_i, -religion_j)
+
+#now we only want to include the ones that include the same? 
+sim_combos_117 <-combos_117_part_two_electric_boogaloo[!combos_117_part_two_electric_boogaloo$similarity==0 ,]
+
+#turn into graph object
+g_117=graph.data.frame(sim_combos_117)
+
+#get adjacency matrix
+d_117 = get.adjacency(g_117,sparse=FALSE) 
+
+#export it for easier work!
+write.csv(d_117, "matrix_religion_117.csv", row.names=FALSE)
+```
+
+
+
+
 
 
 
