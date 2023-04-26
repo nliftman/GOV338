@@ -1,0 +1,94 @@
+---
+title: "secondmodel"
+author: "Naomi Liftman"
+date: "2023-04-26"
+output: pdf_document
+---
+# load packages
+```{r message = FALSE, warning = FALSE, error = FALSE}
+library(rio)
+library(statnet)
+library(tidyverse)
+```
+
+#load the matrices for the 112th
+```{r}
+#different matrices for the religions!
+catholic <- as.matrix(import("catholic_112.csv"))
+jew <- as.matrix(import("jewish_112.csv"))
+other <- as.matrix(import("other_112.csv"))
+protestant <- as.matrix(import("protestant_112.csv"))
+unknown <- as.matrix(import("unknown_112.csv"))
+
+#load cosponsorship
+cosponsorship <- as.matrix(import("/Users/naomiliftman/Desktop/GOV338/Final Project/Final Datasets/first models/adjacency_cospons_112.csv")) 
+```
+
+# Three dimensional matrix 112th
+```{r}
+#stack em baby
+state_matrices <- array(NA, c(5, length(catholic[1,]),length(catholic[1,]))) 
+
+#independent variables
+state_matrices[1,,] <- catholic
+state_matrices[2,,] <- jew
+state_matrices[3,,] <- other
+state_matrices[4,,] <- protestant
+state_matrices[5,,] <- unknown
+```
+
+# Network regression 112th! 
+```{r}
+religion_112 <- netlm(cosponsorship, state_matrices, reps=100)
+
+#lets label the variables! 
+#create a new list thats a summary of the model and label each of the variables
+religions <- list()
+religions <- summary(religion_112)
+#need to make sure you label in the order you read them into R
+religion_112$names <- c("Intercept", "Catholic", "Jewish", "Other", "Protestant", "Unknown")
+
+#round the coefficients so that they are not too bad 
+religion_112$coefficients = round(religion_112$coefficients, 2)
+religion_112
+```
+NOTHING IS STASITICALLY SIGNIFICATN WHICH IS SOOOOOO GOOOOOD
+
+```{r}
+#different matrices for the religions!
+catholic <- as.matrix(import("catholic_117.csv"))
+jew <- as.matrix(import("jew_117.csv"))
+other <- as.matrix(import("other_117.csv"))
+protestant <- as.matrix(import("protestant_117.csv"))
+unknown <- as.matrix(import("unknown_117.csv"))
+
+#load cosponsorship
+cosponsorship <- as.matrix(import("/Users/naomiliftman/Desktop/GOV338/Final Project/Final Datasets/first models/adjacency_cospons_117.csv"))
+
+#stack em baby
+state_matrices <- array(NA, c(5, length(catholic[1,]),length(catholic[1,]))) 
+
+#independent variables
+state_matrices[1,,] <- catholic
+state_matrices[2,,] <- jew
+state_matrices[3,,] <- other
+state_matrices[4,,] <- protestant
+state_matrices[5,,] <- unknown
+
+religion_117 <- netlm(cosponsorship, state_matrices, reps=100)
+
+#lets label the variables! 
+#create a new list thats a summary of the model and label each of the variables
+religions <- list()
+religions <- summary(religion_117)
+#need to make sure you label in the order you read them into R
+religion_117$names <- c("Intercept", "Catholic", "Jewish", "Other", "Protestant", "Unknown")
+
+#round the coefficients so that they are not too bad 
+religion_117$coefficients = round(religion_117$coefficients, 2)
+religion_117
+```
+
+
+
+
