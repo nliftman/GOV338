@@ -1,0 +1,6 @@
+---
+title: "religion"
+author: "Naomi Liftman"
+date: "2023-04-26"
+output: pdf_document
+---
