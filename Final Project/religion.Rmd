@@ -4,3 +4,182 @@ author: "Naomi Liftman"
 date: "2023-04-26"
 output: pdf_document
 ---
+# load packages
+```{r}
+library(rio)
+library(tidyverse)
+```
+
+# 112th religion
+```{r}
+#importing the df 
+religion_112 <- import("/Users/naomiliftman/Desktop/GOV338/Final Project/112congress.xlsx") 
+
+#rename the last five names
+relig_112 <- religion_112 %>% 
+  rename_with(~ tolower(gsub(".", "", .x, fixed = TRUE))) %>% 
+  rename("member_name" = 2) %>% 
+  rename("religious_affiliation" = 4 ) %>% 
+  select("member_name", "religious_affiliation", "party")
+
+#now need to add the senate! 
+religion_112_senate <- import("/Users/naomiliftman/Desktop/GOV338/Final Project/112congress_senators.xlsx")
+
+#rename the ones we are gonna use
+relig_112_sen <- religion_112_senate %>% 
+  rename("member_name" = 2) %>% 
+  rename("religious_affiliation" = 3,
+         "party" = 4) %>% 
+  select("member_name", "religious_affiliation", "party")
+
+#now making just one religion 
+relig_112_all <- rbind(relig_112_sen, relig_112) %>% 
+  drop_na(religious_affiliation)
+
+#how many religions origionally
+relig_112_all %>% 
+  group_by(religious_affiliation) %>% 
+  summarize(n = n())
+
+rel_112 <- relig_112_all
+
+#fix all other
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Quaker', 'Other', rel_112$religious_affiliation)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Nazarene', 'Other', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Greek Orthodox', 'Other', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Mormon', 'Other', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Buddhist', 'Other', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Muslim', 'Other', rel_112$fix_relig)
+
+#fixing all catholic
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Anglican', 'Catholic', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Anglican Catholic', 'Catholic', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Roman Catholic', 'Catholic', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Unitarian', 'Catholic', rel_112$fix_relig)
+
+#fixing all protestant
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'African Methodist Episcopal', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Evangelical Methodist', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'United Methodist', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Methodist', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Christian', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Christian non-denominational', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Christian Reformed', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Christian Scientist', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Church of Christ', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Antioch Orthodox Christian Church', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Eastern Orthodox', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Evangelical Christian', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Southern Baptist', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Baptist', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Episcopalian', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Presbyterian', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Lutheran', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Lutheran - Missouri Synod', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Evangelical Lutheran', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Seventh-day Adventist', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Community of Christ', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Congregationalist Baptist', 'Protestant', rel_112$fix_relig)
+
+rel_112[rel_112 == "Christian Reformed Church"] <- "Protestant"
+rel_112[rel_112 == "Church of God"] <- "Protestant"
+rel_112[rel_112 == "Congregationalist"] <- "Protestant"
+
+
+#replace all NAs with unknown
+rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Unspecified', 'Unknown', rel_112$fix_relig)
+rel_112$fix_relig <- rel_112$fix_relig %>% replace_na('Unknown')
+
+#how many different religions there are now!
+rel_112 %>% 
+  group_by(fix_relig) %>% 
+  summarize(n = n())
+
+#remove NAs
+rel_112 <- rel_112 %>% 
+  select("member_name", "fix_relig") %>%
+  drop_na(member_name)
+```
+
+
+
+
+
+
+# 117th religion
+```{r}
+#importing the df 
+religion_117 <- import("/Users/naomiliftman/Desktop/GOV338/Final Project/117congress.xlsx")
+
+#rename the last five names
+relig_117 <- religion_117 %>% 
+    rename_with(~ tolower(gsub(".", "", .x, fixed = TRUE))) %>%
+  rename("type" = 2) %>% 
+  rename("name" = 3) %>% 
+  rename("party" = 4 ) %>% 
+  rename("cont" = 5) %>% 
+  rename("religion" = 6)
+
+#rename the state
+names(relig_117)[1] = "state"  
+
+#remove the first row
+relig_117 <- relig_117[-c(1:1), ]
+
+#only want their name, relig, and party
+relig_117 <- relig_117 %>% 
+  select("name", "religion", "party")
+
+#having a look at the origional breakdowns
+relig_117 %>% 
+  group_by(religion) %>% 
+  summarize(n = n())
+
+#creating a new 117
+rel_117 <- relig_117 %>% 
+  drop_na(name)
+
+pp <- rel_117 %>% 
+  group_by(religion) %>% 
+  summarize(n = n())
+
+#fix all protestant:
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Adventist', 'Protestant', rel_117$religion)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Baptist', 'Protestant', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Congregationalist', 'Protestant', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Episcopalian', 'Protestant', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Lutheran', 'Protestant', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Methodist', 'Protestant', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Pentecostal', 'Protestant', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Pietist', 'Protestant', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Presbyterian', 'Protestant', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Protestant unspecified', 'Protestant', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Reformed', 'Protestant', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Restorationist', 'Protestant', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Unitarian Universalist', 'Protestant', rel_117$fix_relig)
+
+#fix all general catholic
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Orthodox', 'Catholic', rel_117$fix_relig)
+
+#fixing all other
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Unaftfiliated', 'Other', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Buddhist', 'Other', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Hindu', 'Other', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Mormon', 'Other', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Muslim', 'Other', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Nondenominational', 'Other', rel_117$fix_relig)
+
+#replacing all of the NAs with Unknown along with the dont know
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Don\'t know/refused', 'Unknown', rel_117$fix_relig)
+rel_117$fix_relig <- rel_117$fix_relig %>% replace_na('Unknown')
+
+
+rel_117 %>% 
+  group_by(fix_relig) %>% 
+  summarize(n = n())
+
+rel_117 <- rel_117 %>% 
+  select("name", "fix_relig") %>% 
+  drop_na("name")
+```
+
