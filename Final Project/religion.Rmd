@@ -211,7 +211,7 @@ ggplot(data = full, aes(x = fix_relig, fill = party)) +
   labs(title = "Religious Distribution of the 112th and 117th Congressional Sessions", fill = "Party") +
   xlab("Religion") +
   ylab("Count") + 
-  scale_fill_manual(values = c("#C61C1C", "#1A36B8")) + 
+  scale_fill_manual(values = c("#1A36B8", "#C61C1C")) + 
   theme_linedraw()
 ```
 
@@ -253,12 +253,12 @@ ggplot(data = full_perc, aes(x = fix_relig, y= perc, fill = party)) +
   labs(title = "Religious Distribution of the 112th and 117th Congressional Sessions", fill = "Party") +
   xlab("Religion") +
   ylab("Percent") + 
-  scale_fill_manual(values = c("#C61C1C", "#1A36B8")) + 
+  scale_fill_manual(values = c( "#1A36B8","#C61C1C")) + 
   theme_linedraw()
 ```
 
 # 112th Build SEPERATE RELIGIONS MATRICES
-#CATHOLICS
+#CATHOLICS 112
 ```{r}
 #make matrix of religions
 #making a number correlation for each lmao
@@ -298,30 +298,94 @@ combos_112 <- combos_rel %>%
          religion_i = religion_i.x)
 
 #create similarity score
-combos_112 <- combos_112 %>% 
-  mutate(similarity = ifelse(religion_i == 1 & religion_j == 1, 1, 0 )) %>% 
+combyos <- combos_112 %>% 
+  mutate(catholics = ifelse(religion_i == 1 & religion_j == 1, 1, 0 )) %>% 
   select(-religion_i, -religion_j)
 
-#now we only want to include the ones that include the same? 
-sim_combos <-combos_112[!combos_112$similarity==0 ,]
-
-
-#turn edge list into matrix
-el_112 =as.matrix(combos_112)
-
 #turn into graph object
-g_112=graph.data.frame(sim_combos)
+g_112=graph.data.frame(combyos)
 
 #get adjacency matrix
-d_112 = get.adjacency(g_112,sparse=FALSE) 
- 
-#changing it so all of them are zeros
-
+catholic_ties <- get.adjacency(g_112, sparse = FALSE, attr='catholics')
 
 #export it for easier work!
-write.csv(d_112, "religion_112.csv", row.names=FALSE)
+write.csv(catholic_ties, "catholic_112.csv", row.names=FALSE)
 ```
 
+# JEWS 112
+```{r}
+#create similarity score
+combyos <- combos_112 %>% 
+  mutate(jews = ifelse(religion_i == 2 & religion_j == 2, 1, 0 )) %>% 
+  select(-religion_i, -religion_j)
+
+#turn into graph object
+g_112= graph.data.frame(combyos)
+
+#get adjacency matrix
+jewish_ties <- get.adjacency(g_112, sparse = FALSE, attr='jews')
+
+#export it for easier work!
+write.csv(jewish_ties, "jewish_112.csv", row.names=FALSE)
+```
+
+
+# OTHER 112
+```{r}
+#create similarity score
+combyos <- combos_112 %>% 
+  mutate(other = ifelse(religion_i == 3 & religion_j == 3, 1, 0 )) %>% 
+  select(-religion_i, -religion_j)
+
+#turn into graph object
+g_112=graph.data.frame(combyos)
+
+#get adjacency matrix
+jewish_ties <- get.adjacency(g_112, sparse = FALSE, attr='other')
+
+#export it for easier work!
+write.csv(jewish_ties, "other_112.csv", row.names=FALSE)
+```
+
+
+# PROTESTANT 112
+```{r}
+#create similarity score
+combyos <- combos_112 %>% 
+  mutate(protestant = ifelse(religion_i == 4 & religion_j == 4, 1, 0 )) %>% 
+  select(-religion_i, -religion_j)
+
+#turn into graph object
+g_112=graph.data.frame(combyos)
+
+#get adjacency matrix
+protestant_ties <- get.adjacency(g_112, sparse = FALSE, attr='protestant')
+
+#export it for easier work!
+write.csv(protestant_ties, "protestant_112.csv", row.names=FALSE)
+```
+
+# UNKNOWN 112
+```{r}
+#create similarity score
+combyos <- combos_112 %>% 
+  mutate(unknown = ifelse(religion_i == 5 & religion_j == 5, 1, 0 )) %>% 
+  select(-religion_i, -religion_j)
+
+#turn into graph object
+g_112=graph.data.frame(combyos)
+
+#get adjacency matrix
+unknown_ties <- get.adjacency(g_112, sparse = FALSE, attr='unknown')
+
+#export it for easier work!
+write.csv(unknown_ties, "unknown_112.csv", row.names=FALSE)
+```
+
+
+
+
+# 117th!!!
 ```{r}
 #make matrix of religions
 #making a number correlation for each lmao
@@ -362,11 +426,12 @@ combos_117_part_two_electric_boogaloo <- combos_rel_117 %>%
 
 #create similarity score
 combos_117_part_two_electric_boogaloo <- combos_117_part_two_electric_boogaloo %>% 
-  mutate(similarity = ifelse(religion_i == 1 & religion_j == 1, 1, 0 )) %>% 
+  mutate(catholic = ifelse(religion_i == religion_j, 1, 0 )) %>% 
+  mutate(catholic = ifelse(religion_i == 1, catholic, 0)) %>% 
   select(-religion_i, -religion_j)
 
 #now we only want to include the ones that include the same? 
-sim_combos_117 <-combos_117_part_two_electric_boogaloo[!combos_117_part_two_electric_boogaloo$similarity==0 ,]
+sim_combos_117 <-combos_117_part_two_electric_boogaloo[!combos_117_part_two_electric_boogaloo$catholic==0 ,]
 
 #turn into graph object
 g_117=graph.data.frame(sim_combos_117)
