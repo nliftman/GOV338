@@ -425,27 +425,84 @@ combos_117_part_two_electric_boogaloo <- combos_rel_117 %>%
          religion_i = religion_i.x)
 
 #create similarity score
-combos_117_part_two_electric_boogaloo <- combos_117_part_two_electric_boogaloo %>% 
-  mutate(catholic = ifelse(religion_i == religion_j, 1, 0 )) %>% 
-  mutate(catholic = ifelse(religion_i == 1, catholic, 0)) %>% 
+pp <- combos_117_part_two_electric_boogaloo %>% 
+  mutate(catholic = ifelse(religion_i == 1 & religion_j == 1, 1, 0 )) %>% 
   select(-religion_i, -religion_j)
 
-#now we only want to include the ones that include the same? 
-sim_combos_117 <-combos_117_part_two_electric_boogaloo[!combos_117_part_two_electric_boogaloo$catholic==0 ,]
-
 #turn into graph object
-g_117=graph.data.frame(sim_combos_117)
+g_117=graph.data.frame(pp)
 
 #get adjacency matrix
-d_117 = get.adjacency(g_117,sparse=FALSE) 
+catholic_ties <- get.adjacency(g_117, sparse = FALSE, attr='catholic')
 
 #export it for easier work!
-write.csv(d_117, "matrix_religion_117.csv", row.names=FALSE)
+write.csv(catholic_ties, "catholic_117.csv", row.names=FALSE)
 ```
 
+#JEWS 117th
+```{r}
+#create similarity score
+pp <- combos_117_part_two_electric_boogaloo %>% 
+  mutate(jews = ifelse(religion_i == 2 & religion_j == 2, 1, 0 )) %>% 
+  select(-religion_i, -religion_j)
 
+#turn into graph object
+g_117=graph.data.frame(pp)
 
+#get adjacency matrix
+jewish_ties <- get.adjacency(g_117, sparse = FALSE, attr='jews')
 
+#export it for easier work!
+write.csv(jewish_ties, "jew_117.csv", row.names=FALSE)
+```
 
+# OTHER 117th
+```{r}
+#create similarity score
+pp <- combos_117_part_two_electric_boogaloo %>% 
+  mutate(other = ifelse(religion_i == 3 & religion_j == 3, 1, 0 )) %>% 
+  select(-religion_i, -religion_j)
 
+#turn into graph object
+g_117=graph.data.frame(pp)
 
+#get adjacency matrix
+other_ites <- get.adjacency(g_117, sparse = FALSE, attr='other')
+
+#export it for easier work!
+write.csv(other_ites, "other_117.csv", row.names=FALSE)
+```
+
+# PROTESTANT 117th
+```{r}
+#create similarity score
+pp <- combos_117_part_two_electric_boogaloo %>% 
+  mutate(protestant = ifelse(religion_i == 4 & religion_j == 4, 1, 0 )) %>% 
+  select(-religion_i, -religion_j)
+
+#turn into graph object
+g_117=graph.data.frame(pp)
+
+#get adjacency matrix
+protestant <- get.adjacency(g_117, sparse = FALSE, attr='protestant')
+
+#export it for easier work!
+write.csv(protestant, "protestant_117.csv", row.names=FALSE)
+```
+
+# unknwon 117th
+```{r}
+#create similarity score
+pp <- combos_117_part_two_electric_boogaloo %>% 
+  mutate(unknown = ifelse(religion_i == 5 & religion_j == 5, 1, 0 )) %>% 
+  select(-religion_i, -religion_j)
+
+#turn into graph object
+g_117=graph.data.frame(pp)
+
+#get adjacency matrix
+unknown <- get.adjacency(g_117, sparse = FALSE, attr='unknown')
+
+#export it for easier work!
+write.csv(unknown, "unknown_117.csv", row.names=FALSE)
+```
