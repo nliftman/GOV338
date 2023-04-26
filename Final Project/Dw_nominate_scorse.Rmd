@@ -438,6 +438,10 @@ d_117 <- get.adjacency(mygraph_117, sparse = FALSE, attr='similarity')
 write.csv(d_117, "matrix_DW_117.csv", row.names=FALSE)
 ```
 
+```{r}
+yay %>% 
+  summarize(m = mean(similarity))
+```
 
 
 
@@ -999,7 +1003,7 @@ hopes_112 <- pp %>%
   drop_na(fix_relig)
 
 #this checks which are duplicates
-duplicated(hopes_112$name)
+#duplicated(hopes_112$name)
 #so need to remove 
 # 246
 # there are two Donald M. Paynes 
@@ -1069,6 +1073,12 @@ yay <- yay_112 %>%
          similarity = ifelse(pn_i == "Negative" & pn_j == "Positive", abs(abs(dw_i) + dw_j), similarity))
 #YYYAYAYAYAY created it!! hot hot hot 
 ```
+
+```{r}
+yay %>% 
+  summarize(m = mean(similarity))
+```
+
 
 # Creating Similarity Score for 117th
 ```{r}
