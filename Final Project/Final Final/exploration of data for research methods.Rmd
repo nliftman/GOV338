@@ -13,11 +13,11 @@ library(tidyverse)
 # Exploration of cosponsorship
 ```{r}
 #import
-all_112 <- import("edge_listall_112.csv")
+all_112 <- import("edge_all_117.csv")
 
 #how many are cosponsoring multiple
 all_112 %>% 
-  group_by(member_j) %>% 
+  group_by(V3) %>% 
   summarize(n = n()) %>% 
   arrange(n)
 ```
