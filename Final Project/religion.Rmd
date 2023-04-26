@@ -8,6 +8,8 @@ output: pdf_document
 ```{r}
 library(rio)
 library(tidyverse)
+library(ggplot2)
+library(gdata)
 ```
 
 # 112th religion
@@ -97,13 +99,9 @@ rel_112 %>%
 
 #remove NAs
 rel_112 <- rel_112 %>% 
-  select("member_name", "fix_relig") %>%
+  select("member_name", "fix_relig", "party") %>%
   drop_na(member_name)
 ```
-
-
-
-
 
 
 # 117th religion
@@ -162,7 +160,7 @@ rel_117$fix_relig <- ifelse(rel_117$religion == 'Unitarian Universalist', 'Prote
 rel_117$fix_relig <- ifelse(rel_117$religion == 'Orthodox', 'Catholic', rel_117$fix_relig)
 
 #fixing all other
-rel_117$fix_relig <- ifelse(rel_117$religion == 'Unaftfiliated', 'Other', rel_117$fix_relig)
+rel_117$fix_relig <- ifelse(rel_117$religion == 'Unaffiliated', 'Other', rel_117$fix_relig)
 rel_117$fix_relig <- ifelse(rel_117$religion == 'Buddhist', 'Other', rel_117$fix_relig)
 rel_117$fix_relig <- ifelse(rel_117$religion == 'Hindu', 'Other', rel_117$fix_relig)
 rel_117$fix_relig <- ifelse(rel_117$religion == 'Mormon', 'Other', rel_117$fix_relig)
@@ -173,13 +171,88 @@ rel_117$fix_relig <- ifelse(rel_117$religion == 'Nondenominational', 'Other', re
 rel_117$fix_relig <- ifelse(rel_117$religion == 'Don\'t know/refused', 'Unknown', rel_117$fix_relig)
 rel_117$fix_relig <- rel_117$fix_relig %>% replace_na('Unknown')
 
-
 rel_117 %>% 
   group_by(fix_relig) %>% 
   summarize(n = n())
 
 rel_117 <- rel_117 %>% 
-  select("name", "fix_relig") %>% 
+  select("name", "fix_relig", "party") %>% 
   drop_na("name")
 ```
+
+# Building a grouped df for count
+```{r}
+#building a full dataset 
+rel_112 <- rel_112 %>% 
+  mutate(session = "112th") %>% 
+  rename(name = member_name)
+
+rel_117 <- rel_117 %>% 
+  mutate(session = "117th") 
+
+full <- rbind(rel_112, rel_117) %>% 
+  mutate(party = ifelse(party == "I", "D", party))
+  
+```
+
+```{r}
+library(nycflights13)
+data(flights)
+library(forcats)
+```
+
+```{r}
+ggplot(data = full, aes(x = fix_relig, fill = party)) + 
+  geom_bar(position = position_dodge(preserve = "single")) + 
+  facet_wrap(~session) + 
+  labs(title = "Religious Distribution of the 112th and 117th Congressional Sessions", fill = "Party") +
+  xlab("Religion") +
+  ylab("Count") + 
+  scale_fill_manual(values = c("#C61C1C", "#1A36B8")) + 
+  theme_linedraw()
+```
+
+# build grouped data frame for percents!
+```{r}
+#build easy dataset for 112
+r <- rel_112 %>% 
+  mutate(party = ifelse(party == 'I', "D", party)) %>% 
+  group_by(fix_relig, party) %>% 
+  summarize(count = n())
+
+#built easy dataset for 117
+d <- rel_117 %>% 
+  mutate(party = ifelse(party == 'I', "D", party)) %>% 
+  group_by(fix_relig, party) %>% 
+  summarize(count = n())
+
+
+r <- r %>% 
+  mutate(session = "112th") %>% 
+  mutate(percent = count/531)
+
+d <- d %>% 
+  mutate(session = "117th") %>% 
+  mutate(percent = count/535)
+
+full_perc <- rbind(r, d )
+
+full_perc <- full_perc %>% 
+  mutate(perc = percent*100)
+
+```
+
+# build percent graph!! she shall be sexy 
+```{r}
+ggplot(data = full_perc, aes(x = fix_relig, y= perc, fill = party)) + 
+  geom_col(position = position_dodge(preserve = "single")) + 
+  facet_wrap(~session) + 
+  labs(title = "Religious Distribution of the 112th and 117th Congressional Sessions", fill = "Party") +
+  xlab("Religion") +
+  ylab("Percent") + 
+  scale_fill_manual(values = c("#C61C1C", "#1A36B8")) + 
+  theme_linedraw()
+```
+
+
 
