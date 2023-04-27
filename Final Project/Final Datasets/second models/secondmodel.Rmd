@@ -19,6 +19,8 @@ jew <- as.matrix(import("jewish_112.csv"))
 other <- as.matrix(import("other_112.csv"))
 protestant <- as.matrix(import("protestant_112.csv"))
 unknown <- as.matrix(import("unknown_112.csv"))
+party <- as.matrix(import("/Users/naomiliftman/Desktop/GOV338/Final Project/Final Datasets/first models/matrix_party_112.csv"))
+dw <- as.matrix(import("/Users/naomiliftman/Desktop/GOV338/Final Project/Final Datasets/first models/matrix_DW_112.csv"))
 
 #load cosponsorship
 cosponsorship <- as.matrix(import("/Users/naomiliftman/Desktop/GOV338/Final Project/Final Datasets/first models/adjacency_cospons_112.csv")) 
@@ -27,7 +29,7 @@ cosponsorship <- as.matrix(import("/Users/naomiliftman/Desktop/GOV338/Final Proj
 # Three dimensional matrix 112th
 ```{r}
 #stack em baby
-state_matrices <- array(NA, c(5, length(catholic[1,]),length(catholic[1,]))) 
+state_matrices <- array(NA, c(7, length(catholic[1,]),length(catholic[1,]))) 
 
 #independent variables
 state_matrices[1,,] <- catholic
@@ -35,6 +37,8 @@ state_matrices[2,,] <- jew
 state_matrices[3,,] <- other
 state_matrices[4,,] <- protestant
 state_matrices[5,,] <- unknown
+state_matrices[6,,] <- party
+state_matrices[7,,] <- dw
 ```
 
 # Network regression 112th! 
@@ -46,7 +50,7 @@ religion_112 <- netlm(cosponsorship, state_matrices, reps=100)
 religions <- list()
 religions <- summary(religion_112)
 #need to make sure you label in the order you read them into R
-religion_112$names <- c("Intercept", "Catholic", "Jewish", "Other", "Protestant", "Unknown")
+religion_112$names <- c("Intercept", "Catholic", "Jewish", "Other", "Protestant", "Unknown", "Party", "Ideology")
 
 #round the coefficients so that they are not too bad 
 religion_112$coefficients = round(religion_112$coefficients, 2)
