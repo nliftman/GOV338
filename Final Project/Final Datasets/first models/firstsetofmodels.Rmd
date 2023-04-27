@@ -60,7 +60,7 @@ state_sim_lm<- netlm(cosponsorship, state_matrices, reps=100)
 state_model <- list()
 state_model <- summary(state_sim_lm)
 #need to make sure you label in the order you read them into R
-state_model$names <- c("Intercept", "Religion Ties", "Party", "DW Nominate Scores")
+state_model$names <- c("Intercept", "Religion", "Party", "DW Nominate Scores")
 
 #round the coefficients so that they are not too bad 
 state_model$coefficients = round(state_model$coefficients, 2)
