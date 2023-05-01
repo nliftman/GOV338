@@ -199,12 +199,6 @@ full <- rbind(rel_112, rel_117) %>%
 ```
 
 ```{r}
-library(nycflights13)
-data(flights)
-library(forcats)
-```
-
-```{r}
 ggplot(data = full, aes(x = fix_relig, fill = party)) + 
   geom_bar(position = position_dodge(preserve = "single")) + 
   facet_wrap(~session) + 
