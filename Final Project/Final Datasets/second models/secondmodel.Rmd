@@ -112,13 +112,13 @@ summary(religion_117)
 
 # Find SE?
 ```{r}
-td_coef <- function (religion_112) {
-  sigma2 <- sum(religion_112$residuals ^ 2) / religion_112$df.residual
-  Rinv <- backsolve(religion_112$qr$qr, diag(religion_112$rank))
+td_coef <- function (religion_117) {
+  sigma2 <- sum(religion_117$residuals ^ 2) / religion_117$df.residual
+  Rinv <- backsolve(religion_117$qr$qr, diag(religion_117$rank))
   sqrt(rowSums(Rinv ^ 2) * sigma2)
   }
 
-td_coef(religion_112)
+td_coef(religion_117)
 ```
 
 
