@@ -5,9 +5,33 @@ date: "2023-04-27"
 output: pdf_document
 ---
 # Load packages
-```{r}
+```{r message = FALSE, warning = FALSE, error = FALSE}
 library(tidyverse)
 library(igraph)
+library(stats)
 ```
 
-# 
+# Graphing religion
+```{r}
+religion <- as.matrix(import("/Users/naomiliftman/Desktop/GOV338/Final Project/Final Datasets/first models/matrix_religion_112.csv"))
+religion_pt_2 <- graph.adjacency(religion, mode=c("undirected"))
+plot(religion_pt_2)
+```
+# Graphing cosponsorship
+```{r}
+cosponsorship <- as.matrix(import("/Users/naomiliftman/Desktop/GOV338/Final Project/Final Datasets/first models/adjacency_cospons_112.csv"))
+cosponsorship_pt_2 <- graph.adjacency(cosponsorship, mode=c("undirected"))
+plot(cosponsorship_pt_2)
+```
+
+```{r}
+cor(c(cosponsorship), c(religion))
+```
+
+
+
+
+
+
+
+
