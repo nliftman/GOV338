@@ -399,7 +399,6 @@ member_i_and_j_117 <- member_i_and_j_117 %>%
 ```
 
 # YAY! Now we wanna turn it into a matrix that we can create a CSV for!!!
-
 # NOW THAT WE HAVE THE EDGE LISTS we need to make a MATRIX of 117
 
 ```{r}
@@ -411,6 +410,7 @@ a_117 <- member_i_and_j_117 %>%
 
 #the no duplicates of i there are only 517
 noDup_i <- a_117 %>% 
+  select(member_i) %>% 
   distinct(member_i, .keep_all = TRUE)
 
 #the no duplicates of j there are only 517
@@ -482,7 +482,7 @@ g_117=graph.data.frame(el_117)
 
 #get adjacency matrix
 d_117 = get.adjacency(g_117,sparse=FALSE)
-d_117 <- d[-c(532), -c(532)]
+d_117 <- d_117[-c(532), -c(532)]
 
 #export it for easier work!
 write.csv(d_117, "adjacency_cospons_117.csv", row.names=FALSE)
