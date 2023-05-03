@@ -28,10 +28,10 @@ df <- data.frame(variable, estimate, mean, standard_error, p_value, model_number
 # Adding the first model
 ```{r}
 #all first model of 117th
-df[1, ] <- list("Intercept", "-1.9432e-12", "0.0092", "2.5401e-14", "~0.00", 1, 117)
-df[nrow(df) + 1, ] <- list("Religion", 1, "-0.2031", "9.2796e-15", "~0.00", 1, 117)
-df[nrow(df) + 1, ] <- list("Party", "5.6863e-15", "-0.0055", "2.2054e-14", "0.78", 1, 117)
-df[nrow(df) + 1, ] <- list("Ideology", "2.0595e-14", "0.0989", "2.7677e-14", "0.49", 1, 117)
+df[1, ] <- list("Intercept", "0.1480", "2.2394", "0.0035", "0.53", 1, 117)
+df[nrow(df) + 1, ] <- list("Religion", "-0.0033", "-0.2045", "0.0012", "0.53", 1, 117)
+df[nrow(df) + 1, ] <- list("Party", "-0.0150", "-0.1447", "0.003", "0.23", 1, 117)
+df[nrow(df) + 1, ] <- list("Ideology", "-0.0229", "-0.2823", "0.003840998", ".19", 1, 117)
 
 #all first model of 112th
 df[nrow(df) + 1, ] <- list("Intercept", "0.0986", "1.4671", "0.0032", "~0.00", 1, 112)
