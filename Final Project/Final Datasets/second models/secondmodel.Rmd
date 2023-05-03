@@ -29,7 +29,7 @@ cosponsorship <- as.matrix(import("/Users/naomiliftman/Desktop/GOV338/Final Proj
 # Three dimensional matrix 112th
 ```{r}
 #stack em baby
-state_matrices <- array(NA, c(7, length(catholic[1,]),length(catholic[1,]))) 
+state_matrices <- array(NA, c(5, length(catholic[1,]),length(catholic[1,]))) 
 
 #independent variables
 state_matrices[1,,] <- catholic
@@ -37,8 +37,8 @@ state_matrices[2,,] <- jew
 state_matrices[3,,] <- other
 state_matrices[4,,] <- protestant
 state_matrices[5,,] <- unknown
-state_matrices[6,,] <- party
-state_matrices[7,,] <- dw
+#state_matrices[6,,] <- party
+#state_matrices[7,,] <- dw
 ```
 
 # Network regression 112th! 
@@ -50,12 +50,29 @@ religion_112 <- netlm(cosponsorship, state_matrices, reps=100)
 religions <- list()
 religions <- summary(religion_112)
 #need to make sure you label in the order you read them into R
-religion_112$names <- c("Intercept", "Catholic", "Jewish", "Other", "Protestant", "Unknown", "Party", "Ideology")
+religion_112$names <- c("Intercept", "Catholic", "Jewish", "Other", "Protestant", "Unknown")
 
 #round the coefficients so that they are not too bad 
-religion_112$coefficients = round(religion_112$coefficients, 2)
-religion_112
+summary(religion_112)
 ```
+
+
+
+# Find SE?
+```{r}
+td_coef <- function (religion_112) {
+  sigma2 <- sum(religion_112$residuals ^ 2) / religion_112$df.residual
+  Rinv <- backsolve(religion_112$qr$qr, diag(religion_112$rank))
+  sqrt(rowSums(Rinv ^ 2) * sigma2)
+  }
+
+td_coef(religion_112)
+```
+
+
+
+
+
 NOTHING IS STASITICALLY SIGNIFICATN WHICH IS SOOOOOO GOOOOOD
 
 ```{r}
@@ -72,7 +89,7 @@ dw <- as.matrix(import("/Users/naomiliftman/Desktop/GOV338/Final Project/Final D
 cosponsorship <- as.matrix(import("/Users/naomiliftman/Desktop/GOV338/Final Project/Final Datasets/first models/adjacency_cospons_117.csv"))
 
 #stack em baby
-state_matrices <- array(NA, c(7, length(catholic[1,]),length(catholic[1,]))) 
+state_matrices <- array(NA, c(5, length(catholic[1,]),length(catholic[1,]))) 
 
 #independent variables
 state_matrices[1,,] <- catholic
@@ -80,8 +97,6 @@ state_matrices[2,,] <- jew
 state_matrices[3,,] <- other
 state_matrices[4,,] <- protestant
 state_matrices[5,,] <- unknown
-state_matrices[6,,] <- party
-state_matrices[7,,] <- dw
 
 religion_117 <- netlm(cosponsorship, state_matrices, reps=100)
 
@@ -90,13 +105,20 @@ religion_117 <- netlm(cosponsorship, state_matrices, reps=100)
 religions <- list()
 religions <- summary(religion_117)
 #need to make sure you label in the order you read them into R
-religion_117$names <- c("Intercept", "Catholic", "Jewish", "Other", "Protestant", "Unknown", "Party", "DW")
+religion_117$names <- c("Intercept", "Catholic", "Jewish", "Other", "Protestant", "Unknown")
 
-#round the coefficients so that they are not too bad 
-religion_117$coefficients = round(religion_117$coefficients, 2)
-religion_117
+summary(religion_117)
 ```
 
+# Find SE?
+```{r}
+td_coef <- function (religion_112) {
+  sigma2 <- sum(religion_112$residuals ^ 2) / religion_112$df.residual
+  Rinv <- backsolve(religion_112$qr$qr, diag(religion_112$rank))
+  sqrt(rowSums(Rinv ^ 2) * sigma2)
+  }
 
+td_coef(religion_112)
+```
 
 
