@@ -1,0 +1,55 @@
+---
+title: "pretty tables"
+author: "Naomi Liftman"
+date: "2023-05-02"
+output: pdf_document
+---
+# Load Packages
+```{r}
+library(tidyverse)
+library(gt)
+```
+
+# Build Empty DF
+```{r}
+# making a df!
+variable <- NA
+estimate <- NA
+mean <- NA
+standard_error <- NA
+p_value <- NA
+model_number <- NA
+session <- NA
+
+#sexy sexy empty df
+df <- data.frame(variable, estimate, mean, standard_error, p_value, model_number, session)
+```
+
+# Adding the first model
+```{r}
+#all first model of 117th
+df[1, ] <- list("Intercept", "-1.9432e-12", "0.0092", "2.5401e-14", "~0.00", 1, 117)
+df[nrow(df) + 1, ] <- list("Religion", 1, "-0.2031", "9.2796e-15", "~0.00", 1, 117)
+df[nrow(df) + 1, ] <- list("Party", "5.6863e-15", "-0.0055", "2.2054e-14", "0.78", 1, 117)
+df[nrow(df) + 1, ] <- list("Ideology", "2.0595e-14", "0.0989", "2.7677e-14", "0.49", 1, 117)
+
+#all first model of 112th
+df[nrow(df) + 1, ] <- list("Intercept", "0.0986", "1.4671", "0.0032", "~0.00", 1, 112)
+df[nrow(df) + 1, ] <- list("Religion", "-0.0036", "0.4130", "0.0011", "0.53", 1, 112)
+df[nrow(df) + 1, ] <- list("Party", "0.0129", "0.2131", "0.0027", "0.38", 1, 112)
+df[nrow(df) + 1, ] <- list("Ideology", "0.0178", "-0.5254", "0.0036", "0.37", 1, 112)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
