@@ -12,7 +12,6 @@ editor: visual
 library(rio)
 library(igraph)
 library(sna)
-
 ```
 
 Reminder, sna and igraph do not play nicely, if you load both, you will likely get error messages for commands that previously worked. To remove a package, type `detach("package:PACKAGENAME", unload = TRUE)` to remove the package.
