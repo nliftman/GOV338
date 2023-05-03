@@ -9,17 +9,20 @@ output: pdf_document
 library(rio)
 library(statnet)
 library(tidyverse)
+library(stats)
 ```
 
 # Load Matrices for 117th
 ```{r}
 # Independent variables
-religion <- as.matrix(import("matrix_religion_117.csv"))  #religion matrix
+religion <- as.matrix(import("matrix_religion_117_hopefully_fixing.csv"))  #religion matrix
 party <- as.matrix(import("matrix_party_117.csv")) #party matrix
 dw <- as.matrix(import("matrix_DW_117.csv")) #DW nominate scores
 
 ### DV- cosponsorship
-cosponsorship <- as.matrix(import("adjacency_cospons_117.csv")) #cosponsorship
+cosponsorship <- as.matrix(import("adjacency_cospons_117_hopefully_fixing.csv")) #cosponsorship
+
+cor(c(religion), c(cosponsorship))
 ```
 
 # Scott Code

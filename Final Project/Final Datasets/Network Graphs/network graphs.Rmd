@@ -25,7 +25,14 @@ plot(cosponsorship_pt_2)
 ```
 
 ```{r}
-cor(c(cosponsorship), c(religion))
+catholic <- as.matrix(import("/Users/naomiliftman/Desktop/GOV338/Final Project/catholic_117.csv"))
+protestant <- as.matrix(import("/Users/naomiliftman/Desktop/GOV338/Final Project/protestant_117.csv"))
+```
+
+
+
+```{r}
+cor(c(catholic), c(protestant))
 ```
 
 
