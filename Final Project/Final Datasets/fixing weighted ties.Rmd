@@ -88,7 +88,32 @@ write.csv(d_112, "weighted_112.csv", row.names=FALSE)
 
 # 117th weighted ties
 ```{r}
+#trying to make weighted ties
+weighted_117 <- import("/Users/naomiliftman/Desktop/GOV338/Final Project/Final Datasets/edge_all_117.csv")
+#adding religion
+religion_117 <- import("/Users/naomiliftman/Desktop/GOV338/Final Project/Final Datasets/clean_117_religion.csv")
+```
 
+```{r}
+weighted_117 <- weighted_117 %>% 
+  select(V2, V3)
+
+#exploration
+explor <- weighted_117 %>% 
+  group_by(member_i, member_j) %>% 
+  summarise(n = n())
+
+#find the sum and mean
+explor %>% 
+  ungroup() %>% 
+  summarise(m = mean(n),
+            d = sum(n))
+
+#now we get the percent of the total cosponsorship that each member is doing for another specific member 
+explor <- explor %>% 
+  mutate(weighted = n/30.78252) %>% 
+  mutate(weighted_part_2 = n/31706) %>% 
+  mutate(percent = weighted_part_2 * 100)
 ```
 
 
