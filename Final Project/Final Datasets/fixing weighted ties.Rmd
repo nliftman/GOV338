@@ -1,10 +1,10 @@
 ---
-title: "trying to fix 117th"
+title: "trying to fix so not weighted ties"
 author: "Naomi Liftman"
 date: "2023-05-03"
 output: pdf_document
 ---
-#Load packages
+# Load packages
 ```{r}
 library(incidentally)
 library(backbone)
@@ -15,5 +15,10 @@ library(rio)
 library(tidyr)
 library(network)
 library(gdata)
+```
+
+# 112th weighted ties 
+```{r}
+
 ```
 
