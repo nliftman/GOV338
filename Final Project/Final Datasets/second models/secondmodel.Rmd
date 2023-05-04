@@ -23,7 +23,7 @@ party <- as.matrix(import("/Users/naomiliftman/Desktop/GOV338/Final Project/Fina
 dw <- as.matrix(import("/Users/naomiliftman/Desktop/GOV338/Final Project/Final Datasets/first models/matrix_DW_112.csv"))
 
 #load cosponsorship
-cosponsorship <- as.matrix(import("/Users/naomiliftman/Desktop/GOV338/Final Project/Final Datasets/first models/adjacency_cospons_112.csv")) 
+cosponsorship <- as.matrix(import("/Users/naomiliftman/Desktop/GOV338/Final Project/Final Datasets/first models/weighted_112.csv")) 
 ```
 
 # Three dimensional matrix 112th
