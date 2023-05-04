@@ -194,6 +194,8 @@ m2_2[nrow(m2_2) + 1, ] <- list("Protestant", "-0.0052", "-0.0708", "0.0014", "0.
 m2_2[nrow(m2_2) + 1, ] <- list("Unknown", "0.0217", "0.0774", "0.0190", "0.48")
 ```
 
+# MODEL 2 TABLE
+
 ```{r}
 m2_2 <- m2_2 %>% 
   select(estimate_117:p_value_117)
@@ -227,9 +229,79 @@ model_2 <- model_2 %>%
 model_2
 ```
 
+# MODEL 3 table
+```{r}
+# making a df for 112
+variable_112 <- NA
+estimate_112 <- NA
+mean_112 <- NA
+standard_error_112 <- NA
+p_value_112 <- NA
+
+# making a df for 112
+variable_117 <- NA
+estimate_117 <- NA
+mean_117 <- NA
+standard_error_117 <- NA
+p_value_117 <- NA
+
+m3_1 <- data.frame(variable_112, estimate_112, mean_112, standard_error_112, p_value_112)
+
+m3_2 <- data.frame(variable_117, estimate_117, mean_117, standard_error_117, p_value_117)
+
+m3_1[1, ] <- list("Intercept", "0.0987", "0.7933", "0.0032", "0.00")
+m3_1[nrow(m3_1) + 1, ] <- list("Catholic", "-0.0023", "-0.2000", "0.0021", "0.77")
+m3_1[nrow(m3_1) + 1, ] <- list("Jewish", "-0.0158",  "-0.0102", "0.0082", "0.54")
+m3_1[nrow(m3_1) + 1, ] <- list("Other", "0.0332", "-0.0384", "0.0134", "0.24")
+m3_1[nrow(m3_1) + 1, ] <- list("Protestant", "-0.0041", "0.0699", "0.0012", "0.58")
+m3_1[nrow(m3_1) + 1, ] <- list("Unknown", "0.0860",  "-0.0077", "0.0576", "0.24")
+m3_1[nrow(m3_1) + 1, ] <- list("Party", "0.0129", "0.6818", "0.0027", "0.35")
+m3_1[nrow(m3_1) + 1, ] <- list("Ideology", "0.0176", "-0.1893", "0.0036", "0.42")
+
+m3_2[1, ] <- list("Intercept", "0.1473", "1.7411", "0.0035", "0.00")
+m3_2[nrow(m3_2) + 1, ] <- list("Catholic", "0.0003", "0.0318", "0.0021", "0.97")
+m3_2[nrow(m3_2) + 1, ] <- list("Jewish", "-0.0125", "0.1719", "0.0102", "0.54")
+m3_2[nrow(m3_2) + 1, ] <- list("Other", "0.0178", "0.0520", "0.0113", "0.47")
+m3_2[nrow(m3_2) + 1, ] <- list("Protestant", "-0.0048", "-0.1273", "0.0014", "0.53")
+m3_2[nrow(m3_2) + 1, ] <- list("Unknown", "0.0209", "0.0875", "0.0190", "0.54")
+m3_2[nrow(m3_2) + 1, ] <- list("Party", "-0.0144", "0.1690", "0.0030", "0.26")
+m3_2[nrow(m3_2) + 1, ] <- list("Ideology", "-0.0222", "0.4686", "0.0038", "0.24")
+```
 
 
+```{r}
+m3_2 <- m3_2 %>% 
+  select(estimate_117:p_value_117)
 
+total_m1 <- cbind(m3_1, m3_2)
+
+model_3 <- gt(total_m1)
+
+model_3 <- model_3 %>% 
+  tab_spanner(
+    label = "112th Congress",
+    columns = c(variable_112, estimate_112, mean_112, standard_error_112, p_value_112)
+  ) |>
+  tab_spanner(
+    label = "117th Congress",
+    columns = c(estimate_117, mean_117, standard_error_117, p_value_117)
+  ) %>% 
+  cols_label(
+    variable_112 = "",
+    estimate_112 = "Estimate",
+    mean_112 = "Mean",
+    standard_error_112 = "St. Error",
+    p_value_112 = "p-value",
+    estimate_117 = "Estimate",
+    mean_117 = "Mean",
+    standard_error_117 = "St. Error",
+    p_value_117 = "p-value",
+  ) %>% 
+  gt_add_divider(columns = "p_value_112")
+
+  
+model_3
+```
 
 
 
