@@ -19,7 +19,7 @@ plot(religion_pt_2)
 ```
 # Graphing cosponsorship
 ```{r}
-cosponsorship <- as.matrix(import("/Users/naomiliftman/Desktop/GOV338/Final Project/Final Datasets/first models/adjacency_cospons_117.csv"))
+cosponsorship <- as.matrix(import("/Users/naomiliftman/Desktop/GOV338/Final Project/Final Datasets/first models/adjacency_cospons_117_hopefully_fixing.csv"))
 cosponsorship_pt_2 <- graph.adjacency(cosponsorship, mode=c("undirected"))
 plot(cosponsorship_pt_2)
 ```

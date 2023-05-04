@@ -130,6 +130,9 @@ total_m1 <- cbind(m1_2, m1_3)
 model_1_2 <- gt(total_m1)
 
 model_1_2 <- model_1_2 %>% 
+  tab_options(
+    footnotes.marks = "*"
+  ) %>% 
   cols_move_to_start(
     columns = c(variable_112, estimate_112, mean_112, standard_error_112, p_value_112)) %>% 
   tab_spanner(
@@ -151,7 +154,12 @@ model_1_2 <- model_1_2 %>%
     standard_error_117 = "St. Error",
     p_value_117 = "p-value",
   ) %>% 
-  gt_add_divider(columns = "p_value_112")
+  gt_add_divider(columns = "p_value_112") %>% 
+  tab_footnote(
+    footnote = "p < .05",
+    locations = cells_body(
+      columns = c(p_value_112, p_value_117), rows = 1) 
+  )
 
   
 model_1_2
@@ -204,6 +212,9 @@ total_m1 <- cbind(m2_1, m2_2)
 model_2 <- gt(total_m1)
 
 model_2 <- model_2 %>% 
+  tab_options(
+    footnotes.marks = "*"
+  ) %>% 
   tab_spanner(
     label = "112th Congress",
     columns = c(variable_112, estimate_112, mean_112, standard_error_112, p_value_112)
@@ -223,7 +234,12 @@ model_2 <- model_2 %>%
     standard_error_117 = "St. Error",
     p_value_117 = "p-value",
   ) %>% 
-  gt_add_divider(columns = "p_value_112")
+  gt_add_divider(columns = "p_value_112") %>% 
+  tab_footnote(
+    footnote = "p < .05",
+    locations = cells_body(
+      columns = c(p_value_112, p_value_117), rows = 1) 
+  )
 
   
 model_2
