@@ -8,6 +8,7 @@ output: pdf_document
 ```{r}
 library(tidyverse)
 library(gt)
+library(gtExtras)
 ```
 
 # Build Empty DF
@@ -22,19 +23,21 @@ model_number <- NA
 session <- NA
 
 #sexy sexy empty df
-df <- data.frame(variable, estimate, mean, standard_error, p_value, model_number, session)
+m1 <- data.frame(variable, estimate, mean, standard_error, p_value, model_number, session)
+m2 <- data.frame(variable, estimate, mean, standard_error, p_value, model_number, session)
+m3 <- data.frame(variable, estimate, mean, standard_error, p_value, model_number, session)
 ```
 
 # Adding the first model
 ```{r}
 #all first model of 117th
-m1[1, ] <- list("Intercept", "0.1480", "2.2394", "0.0035", "0.53", 1, 117)
+m1[1, ] <- list("Intercept", "0.1480", "2.2394", "0.0035", "0.00", 1, 117)
 m1[nrow(m1) + 1, ] <- list("Religion", "-0.0033", "-0.2045", "0.0012", "0.53", 1, 117)
-m1[nrow(m1) + 1, ] <- list("Party", "-0.0150", "-0.1447", "0.003", "0.23", 1, 117)
-m1[nrow(m1) + 1, ] <- list("Ideology", "-0.0229", "-0.2823", "0.003840998", ".19", 1, 117)
+m1[nrow(m1) + 1, ] <- list("Party", "-0.0150", "-0.1447", "0.0038", "0.23", 1, 117)
+m1[nrow(m1) + 1, ] <- list("Ideology", "-0.0229", "-0.2823", "0.0038", "0.19", 1, 117)
 
 #all first model of 112th
-m1[nrow(m1) + 1, ] <- list("Intercept", "0.0986", "1.4671", "0.0032", "~0.00", 1, 112)
+m1[nrow(m1) + 1, ] <- list("Intercept", "0.0986", "1.4671", "0.0032", "0.00", 1, 112)
 m1[nrow(m1) + 1, ] <- list("Religion", "-0.0036", "0.4130", "0.0011", "0.53", 1, 112)
 m1[nrow(m1) + 1, ] <- list("Party", "0.0129", "0.2131", "0.0027", "0.38", 1, 112)
 m1[nrow(m1) + 1, ] <- list("Ideology", "0.0178", "-0.5254", "0.0036", "0.37", 1, 112)
@@ -81,6 +84,108 @@ m3[nrow(m3) + 1, ] <- list("Party", "-0.0144", "0.1690", "0.0030", "0.26", 3, 11
 m3[nrow(m3) + 1, ] <- list("Ideology", "-0.0222", "0.4686", "0.0038", "0.24", 3, 117)
 ```
 
+# PRETTY TABLE TIME!! YAYYYAYYAYAY
+```{r}
+#turn model 1 into gt object
+m1_1 <- m1 %>% 
+  select(variable:p_value)
+
+model_1 <- gt(m1_1) 
+
+#add title
+model_1 <- model_1 %>% 
+  tab_row_group(
+    label = "117th Congress",
+    rows = 1:4
+  ) |>
+  tab_row_group(
+    label = "112th Congresss",
+    rows = 5:8
+  )  %>% 
+  cols_label(
+    variable = "",
+    estimate = "Estimate", 
+    mean = "Mean",
+    standard_error = "St. Error",
+    p_value = "p-value"
+  )
+
+
+model_1
+```
+
+```{r}
+# making a df!
+variable_117 <- NA
+estimate_117 <- NA
+mean_117 <- NA
+standard_error_117 <- NA
+p_value_117 <- NA
+model_number_117 <- NA
+session_117 <- NA
+
+# making a df!
+variable_112 <- NA
+estimate_112 <- NA
+mean_112 <- NA
+standard_error_112 <- NA
+p_value_112 <- NA
+model_number_112 <- NA
+session_112 <- NA
+
+m1_2 <- data.frame(variable_117, estimate_117, mean_117, standard_error_117, p_value_117, model_number_117, session_117)
+#all first model of 117th
+m1_2[1, ] <- list("Intercept", "0.1480", "2.2394", "0.0035", "0.00", 1, 117)
+m1_2[nrow(m1_2) + 1, ] <- list("Religion", "-0.0033", "-0.2045", "0.0012", "0.53", 1, 117)
+m1_2[nrow(m1_2) + 1, ] <- list("Party", "-0.0150", "-0.1447", "0.0038", "0.23", 1, 117)
+m1_2[nrow(m1_2) + 1, ] <- list("Ideology", "-0.0229", "-0.2823", "0.0038", "0.19", 1, 117)
+
+m1_3 <- data.frame(variable_112, estimate_112, mean_112, standard_error_112, p_value_112, model_number_112, session_112)
+#all first model of 112th
+m1_3[1, ] <- list("Intercept", "0.0986", "1.4671", "0.0032", "0.00", 1, 112)
+m1_3[nrow(m1_3) + 1, ] <- list("Religion", "-0.0036", "0.4130", "0.0011", "0.53", 1, 112)
+m1_3[nrow(m1_3) + 1, ] <- list("Party", "0.0129", "0.2131", "0.0027", "0.38", 1, 112)
+m1_3[nrow(m1_3) + 1, ] <- list("Ideology", "0.0178", "-0.5254", "0.0036", "0.37", 1, 112)
+
+m1_2 <- m1_2 %>% 
+  select(estimate_117:p_value_117)
+
+m1_3 <- m1_3 %>% 
+  select(variable_112:p_value_112)
+
+total_m1 <- cbind(m1_2, m1_3)
+
+
+model_1_2 <- gt(total_m1)
+
+model_1_2 <- model_1_2 %>% 
+  cols_move_to_start(
+    columns = c(variable_112, estimate_112, mean_112, standard_error_112, p_value_112)) %>% 
+  tab_spanner(
+    label = "112th Congress",
+    columns = c(variable_112, estimate_112, mean_112, standard_error_112, p_value_112)
+  ) |>
+  tab_spanner(
+    label = "117th Congress",
+    columns = c(estimate_117, mean_117, standard_error_117, p_value_117)
+  ) %>% 
+  cols_label(
+    variable_112 = "",
+    estimate_112 = "Estimate",
+    mean_112 = "Mean",
+    standard_error_112 = "St. Error",
+    p_value_112 = "p-value",
+    estimate_117 = "Estimate",
+    mean_117 = "Mean",
+    standard_error_117 = "St. Error",
+    p_value_117 = "p-value",
+  ) %>% 
+  gt_add_divider(columns = "p_value_112")
+
+  
+model_1_2
+
+```
 
 
 
