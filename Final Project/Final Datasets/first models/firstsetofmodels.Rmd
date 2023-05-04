@@ -107,7 +107,7 @@ party <- as.matrix(import("matrix_party_112.csv")) #party matrix
 dw <- as.matrix(import("matrix_DW_112.csv")) #DW nominate scores
 
 ### DV- cosponsorship
-cosponsorship <- as.matrix(import("adjacency_cospons_112.csv")) #cosponsorship
+cosponsorship <- as.matrix(import("weighted_112.csv")) #cosponsorship
 
 #all matrices should be the same dimensions
 state_matrices <- array(NA, c(3, length(religion[1,]),length(religion[1,]))) 
