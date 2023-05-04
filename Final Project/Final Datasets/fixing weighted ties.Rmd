@@ -19,6 +19,83 @@ library(gdata)
 
 # 112th weighted ties 
 ```{r}
+#trying to make weighted ties
+weighted_112 <- import("/Users/naomiliftman/Desktop/GOV338/Final Project/Final Datasets/edge_listall_112.csv")
+#adding religion
+religion_112 <- import("/Users/naomiliftman/Desktop/GOV338/Final Project/Final Datasets/clean_112_religion.csv")
+```
+
+```{r}
+#exploration
+explor <- weighted_112 %>% 
+  group_by(member_i, member_j) %>% 
+  summarise(n = n())
+
+#find the sum and mean
+explor %>% 
+  ungroup() %>% 
+  summarise(m = mean(n),
+            d = sum(n))
+
+#now we get the percent of the total cosponsorship that each member is doing for another specific member 
+explor <- explor %>% 
+  mutate(weighted = n/30.78252) %>% 
+  mutate(weighted_part_2 = n/31706) %>% 
+  mutate(percent = weighted_part_2 * 100)
+```
+
+# Monatic data vibes?
+```{r}
+#realizing that the last three pages didnt go through
+#fixed yay!
+explore <- religion_112 %>% 
+  select(member_name) 
+
+#making an i and j 
+explore <- explore %>% 
+  mutate(member_i=member_name) %>% 
+  rename(member_j = member_name) %>% 
+  mutate(cosponsorship_i_on_j = NA) 
+
+#creating all the possible combinations
+combos <- explore |>
+  expand(member_i, member_j) |>
+  filter(member_i != member_j) 
+
+#now want to merge back in the 
+total <- combos %>% 
+  full_join(explor, by = c('member_i', 'member_j'))
+
+total <- total %>% 
+  drop_na(member_i, member_j)
+
+#now we want all NAs to be zero
+total[is.na(total)] <- 0
+
+total <- total %>% 
+  select(member_i, member_j, weighted)
+
+#create graph object
+mygraph_112 <- graph.data.frame(total)
+
+#create adjacency matrix
+d_112 <- get.adjacency(mygraph_112, sparse = FALSE, attr='weighted')
+d_112 <- d_112[-c(536), -c(536)]
+
+#now make into a csv
+write.csv(d_112, "weighted_112.csv", row.names=FALSE)
+```
+
+# 117th weighted ties
+```{r}
 
 ```
+
+
+
+
+
+
+
+
 
