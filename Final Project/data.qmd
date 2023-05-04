@@ -1290,7 +1290,7 @@ g_12=graph.data.frame(el_12)
 #fuck we removed some and it fucked everything up now were down to 529?? what
 #get adjacency matrix
 d = get.adjacency(g_12,sparse=FALSE)
-d <- d[-c(532), -c(53)]
+d <- d[-c(532), -c(532)]
 
 #export it for easier work!
 write.csv(d, "adjacency_cospons_112.csv", row.names=FALSE)
