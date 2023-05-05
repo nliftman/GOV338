@@ -5,7 +5,7 @@ date: "2023-05-03"
 output: pdf_document
 ---
 # Load packages
-```{r}
+```{r message = FALSE, warning = FALSE, error = FALSE}
 library(incidentally)
 library(backbone)
 library(smnet)
@@ -26,6 +26,7 @@ religion_112 <- import("/Users/naomiliftman/Desktop/GOV338/Final Project/Final D
 ```
 
 ```{r}
+
 #exploration
 explor <- weighted_112 %>% 
   group_by(member_i, member_j) %>% 
@@ -96,7 +97,15 @@ religion_117 <- import("/Users/naomiliftman/Desktop/GOV338/Final Project/Final D
 
 ```{r}
 weighted_117 <- weighted_117 %>% 
-  select(V2, V3)
+  select(V2, V3) %>% 
+  rename("member_i" = V2,
+         "member_j" = V3)
+
+weighted_117 <- weighted_117[-c(1),]
+
+weighted_117 %>% 
+  distinct()
+
 
 #exploration
 explor <- weighted_117 %>% 

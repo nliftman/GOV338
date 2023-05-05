@@ -25,14 +25,246 @@ library(gdata)
 #pull the 117 senators connections 
 B_117_senate <- incidence.from.congress(session = 117, types = c("s", "sres", "sjres", "sconres"), areas = c("All"), format = "igraph")
 
-network_117_senate <- sdsm(B_117_senate, alpha = 0.01, narrative = TRUE)
+#degree(B_117_senate)
 
-## Creates matrix object (note adjacency matrix)
-el_mat_117_senate <- as_edgelist(network_117_senate)
+
+#network_117_senate <- sdsm(B_117_senate, alpha = .5, narrative = TRUE)
 
 ### creates data frame object
-el_117_senate <- as.data.frame(as_edgelist(network_117_senate))
+el_117_senate <- as.data.frame(as_edgelist(B_117_senate))
 ```
+
+# REWORKING 117th SENATE
+```{r}
+#remove all of ending initials
+el_117_senate$V1 <- gsub("(.*)\\s+[A-Z]\\.?$", "\\1", el_117_senate$V1)
+
+#remove the senator title
+el_117_senate$V1 <- sub("Sen. ", "", el_117_senate$V1)
+
+#remove everything after the [
+el_117_senate$V1 <- gsub("\\[.*","", el_117_senate$V1)
+
+#add new columns with the first and last names
+el_117_senate$v1_first <- gsub(".*\\, ", "", el_117_senate$V1)   
+el_117_senate$v1_last <- gsub("\\,.*","", el_117_senate$V1)
+
+#adding them together!
+edge_117_senate = el_117_senate %>% 
+  unite(v1_full, c(v1_first, v1_last), sep = "", remove = FALSE) %>% 
+  select(v1_full, V2) %>% 
+  rename(bill = V2)
+```
+
+# REWORKING 117th HOUSE
+```{r}
+### creates data frame object
+el_117_house <- as.data.frame(as_edgelist(B_117_house))
+
+#remove all of ending initials
+el_117_house$V1 <- gsub("(.*)\\s+[A-Z]\\.?$", "\\1", el_117_house$V1)
+
+#remove the senator title
+el_117_house$V1 <- sub("Sen. ", "", el_117_house$V1)
+
+#remove everything after the [
+el_117_house$V1 <- gsub("\\[.*","", el_117_house$V1)
+
+#add new columns with the first and last names
+el_117_house$v1_first <- gsub(".*\\, ", "", el_117_house$V1)   
+el_117_house$v1_last <- gsub("\\,.*","", el_117_house$V1)
+
+#adding them together!
+edge_117_house = el_117_house %>% 
+  unite(v1_full, c(v1_first, v1_last), sep = "", remove = FALSE) %>% 
+  select(v1_full, V2) %>% 
+  rename(bill = V2)
+```
+
+# FULL
+```{r}
+#full 117th dataframe
+full_117_edge <- rbind(edge_117_house, edge_117_senate)
+
+#removing Rep.
+#remove the senator title
+full_117_edge$v1_full <- sub("Rep. ", "", full_117_edge$v1_full)
+```
+
+# FIXING THE NAMES
+```{r}
+#god life is a nightmare
+full_117_edge[full_117_edge == "John W. Hickenlooper"] <- "John Hickenlooper"
+full_117_edge[full_117_edge == "Mark R. Warner"] <- "Mark Warner"
+full_117_edge[full_117_edge == "Chuck Grassley"] <- "Charles E. Grassley"
+full_117_edge[full_117_edge == "Richard Burr"] <- "Richard M. Burr"
+full_117_edge[full_117_edge == "Thomas Tillis"] <- "Thom Tillis"
+full_117_edge[full_117_edge == "Roger F. Wicker"] <- "Roger Wicker"
+full_117_edge[full_117_edge == "Jr. King"] <- "Angus King"
+full_117_edge[full_117_edge == "Mike Crapo"] <- "Michael D. Crapo"
+full_117_edge[full_117_edge == "Gary C. Peters"] <- "Gary Peters"
+full_117_edge[full_117_edge == "Michael F. Bennet"] <- "Michael Bennet"
+full_117_edge[full_117_edge == "Christopher Murphy"] <- "Christopher S. Murphy"
+full_117_edge[full_117_edge == "Robert Menendez"] <- "Bob Menendez"
+full_117_edge[full_117_edge == "James E. Risch"] <- "Jim Risch"
+full_117_edge[full_117_edge == "Kirsten E. Gillibrand"] <- "Kirsten Gillibrand"
+full_117_edge[full_117_edge == "Jr. Casey"] <- "Bob Casey"
+full_117_edge[full_117_edge == "Christopher A. Coons"] <- "Chris Coons"
+full_117_edge[full_117_edge == "Cory A. Booker"] <- "Cory Booker"
+full_117_edge[full_117_edge == "Cynthia M. Lummis"] <- "Cynthia Lummis"
+full_117_edge[full_117_edge == "Bernard Sanders"] <- "Bernie Sanders"
+full_117_edge[full_117_edge == "Susan M. Collins"] <- "Susan Collins"
+full_117_edge[full_117_edge == "Margaret Wood Hassan"] <- "Maggie Hassan"
+full_117_edge[full_117_edge == "John Sen. Barrasso"] <- "John Barrasso"
+full_117_edge[full_117_edge == "Deb Sen. Fischer"] <- "Deb Fischer"
+full_117_edge[full_117_edge == "Ted Sen. Cruz"] <- "Ted Cruz"
+full_117_edge[full_117_edge == "Roger Sen. Marshall"] <- "Roger Marshall"
+full_117_edge[full_117_edge == "Richard Burr"] <- "Richard M. Burr"
+full_117_edge[full_117_edge == "Patrick Toomey"] <- "Patrick J. Toomey"
+full_117_edge[full_117_edge == "Eric A. \"Rick\" Crawford"] <- "Rick Crawford"
+full_117_edge[full_117_edge == "Roger F. Wicker"] <- "Roger Wicker"
+full_117_edge[full_117_edge == "William R. Keating"] <- "William Keating"
+full_117_edge[full_117_edge == "William R. IV Timmons"] <- "William R. Timmons IV"
+full_117_edge[full_117_edge == "W. Gregory Steube"] <- "Greg Steube"
+full_117_edge[full_117_edge == "Val Butler Demings"] <- "Val B. Demings"
+full_117_edge[full_117_edge == "Troy E. Nehls"] <- "Troy Nehls"
+full_117_edge[full_117_edge == "Tony Cárdenas"] <- "Tony Cardenas"
+full_117_edge[full_117_edge == "Thomas R. Suozzi"] <- "Tom Suozzi"
+full_117_edge[full_117_edge == "Thomas P. Tiffany"] <- "Tom Tiffany"
+full_117_edge[full_117_edge == "Theodore E. Deutch"] <- "Ted Deutch"
+full_117_edge[full_117_edge == "Suzan K. DelBene"] <- "Suzan DelBene"
+full_117_edge[full_117_edge == "Stephanie N. Murphy"] <- "Stephanie Murphy"
+full_117_edge[full_117_edge == "Stephanie I. Bice"] <- "Stephanie Bice"
+full_117_edge[full_117_edge == "Sr. Weber"] <- "Randy Weber"
+full_117_edge[full_117_edge == "Scott H. Peters"] <- "Scott Peters"
+full_117_edge[full_117_edge == "Salud O. Carbajal"] <- "Salud Carbajal"
+full_117_edge[full_117_edge == "Rosa L. DeLauro"] <- "Rosa DeLauro"
+full_117_edge[full_117_edge == "Robin L. Kelly"] <- "Robin Kelly"
+full_117_edge[full_117_edge == "Robert J. Wittman"] <- "Rob Wittman"
+full_117_edge[full_117_edge == "Kathy E. Manning"] <- "Kathy Manning"
+full_117_edge[full_117_edge == "Lee M. Zeldin"] <- "Lee Zeldin"
+full_117_edge[full_117_edge == "Linda T. Sánchez"] <- "Linda T. Sanchez"
+full_117_edge[full_117_edge == "Lisa C. McClain"] <- "Lisa McClain"
+full_117_edge[full_117_edge == "Lloyd Smucker"] <- "Lloyd K. Smucker"
+full_117_edge[full_117_edge == "Marc A. Veasey"] <- "Marc Veasey"
+full_117_edge[full_117_edge == "Mark E. Amodei"] <- "Mark Amodei"
+full_117_edge[full_117_edge == "Mary E. Miller"] <- "Mary Miller"
+full_117_edge[full_117_edge == "Matthew M. Rosendale Sr."] <- "Matt Rosendale"
+full_117_edge[full_117_edge == "Michael F. Doyle"] <- "Mike Doyle"
+full_117_edge[full_117_edge == "Michael K. Simpson"] <- "Mike Simpson"
+full_117_edge[full_117_edge == "Michael T. McCaul"] <- "Michael McCaul"
+full_117_edge[full_117_edge == "Nanette Diaz Barragan"] <- "Nanette Barragan"
+full_117_edge[full_117_edge == "Neal P. Dunn"] <- "Neal Dunn"
+full_117_edge[full_117_edge == "Paul A. Gosar"] <- "Paul Gosar"
+full_117_edge[full_117_edge == "Raúl M. Grijalva"] <- "Raul M. Grijalva"
+full_117_edge[full_117_edge == "Robert C. \"Bobby\" Scott"] <- "Robert C. Scott"
+full_117_edge[full_117_edge == "Robert E. Latta"] <- "Robert E. Latta"
+full_117_edge[full_117_edge == "Jerry L. Carl"] <- "Jerry Carl"
+full_117_edge[full_117_edge == "Jesus G. \"Chuy\" Garcia"] <- "Jesus \"Chuy\" Garcia"
+full_117_edge[full_117_edge == "John A. Yarmuth"] <- "John Yarmuth"
+full_117_edge[full_117_edge == "John H. Rutherford"] <- "John Rutherford"
+full_117_edge[full_117_edge == "John P. Sarbanes"] <- "John Sarbanes"
+full_117_edge[full_117_edge == "John R. Carter"] <- "John Carter"
+full_117_edge[full_117_edge == "John R. Curtis"] <- "John Curtis"
+full_117_edge[full_117_edge == "John R. Moolenaar"] <- "John Moolenaar"
+full_117_edge[full_117_edge == "Jr. Beyer"] <- "Donald S. Beyer Jr."
+full_117_edge[full_117_edge == "Jr. Bishop"] <- "Sanford D. Bishop Jr."
+full_117_edge[full_117_edge == "Jr. Lawson"] <- "Al Lawson"
+full_117_edge[full_117_edge == "Jr. Pascrell"] <- "Bill Pascrell Jr."
+full_117_edge[full_117_edge == "Jr. Payne"] <- "Donald M. Payne Jr."
+full_117_edge[full_117_edge == "Juan Vargas"] <- "Juan C. Vargas"
+full_117_edge[full_117_edge == "Kaiali'i Kahele"] <- "Kai Kahele"
+full_117_edge[full_117_edge == "Kathleen M. Rice"] <- "Kathleen Rice"
+full_117_edge[full_117_edge == "Emanuel Cleaver"] <- "Emanuel Cleaver II"
+full_117_edge[full_117_edge == "G. K. Butterfield"] <- "G.K. Butterfield"
+full_117_edge[full_117_edge == "Gary J. Palmer"] <- "Gary Palmer"
+full_117_edge[full_117_edge == "Glenn Thompson"] <- "Glenn \"GT\" Thompson"
+full_117_edge[full_117_edge == "Gregory Murphy"] <- "Greg Murphy"
+full_117_edge[full_117_edge == "Gus M. Bilirakis"] <- "Gus Bilirakis"
+full_117_edge[full_117_edge == "H. Morgan Griffith"] <- "Morgan Griffith"
+full_117_edge[full_117_edge == "Hakeem S. Jeffries"] <- "Hakeem Jeffries"
+full_117_edge[full_117_edge == "Haley M. Stevens"] <- "Haley Stevens"
+full_117_edge[full_117_edge == "Henry C. \"Hank,\" Jr. Johnson"] <- "Hank Johnson"
+full_117_edge[full_117_edge == "IV Ferguson"] <- "Drew Ferguson"
+full_117_edge[full_117_edge == "J. French Hill"] <- "French Hill"
+full_117_edge[full_117_edge == "J. Luis Correa"] <- "Lou Correa"
+full_117_edge[full_117_edge == "James A. Himes"] <- "Jim Himes"
+full_117_edge[full_117_edge == "James Comer"] <- "James R. Comer"
+full_117_edge[full_117_edge == "James P. McGovern"] <- "Jim McGovern"
+full_117_edge[full_117_edge == "James R. Baird"] <- "Jim Baird"
+full_117_edge[full_117_edge == "James R. Langevin"] <- "Jim Langevin"
+full_117_edge[full_117_edge == "Janice D. Schakowsky"] <- "Jan Schakowsky"
+full_117_edge[full_117_edge == "Jared F. Golden"] <- "Jared Golden"
+full_117_edge[full_117_edge == "Jefferson Van Drew"] <- "Jeff Van Drew"
+full_117_edge[full_117_edge == "Carlos A. Gimenez"] <- "Carlos Gimenez"
+full_117_edge[full_117_edge == "Carol D. Miller"] <- "Carol Miller"
+full_117_edge[full_117_edge == "Charles J. \"Chuck\" Fleischmann"] <- "Chuck Fleischmann"
+full_117_edge[full_117_edge == "Chuck Grassley"] <- "Charles E. Grassley"
+full_117_edge[full_117_edge == "Colin Z. Allred"] <- "Colin Allred"
+full_117_edge[full_117_edge == "Cynthia Axne"] <- "Cindy Axne"
+full_117_edge[full_117_edge == "Dan Crenshaw"] <- "Daniel Crenshaw"
+full_117_edge[full_117_edge == "Daniel Meuser"] <- "Dan Meuser"
+full_117_edge[full_117_edge == "Daniel T. Kildee"] <- "Daniel Kildee"
+full_117_edge[full_117_edge == "Darrell E. Issa"] <- "Darrell Issa"
+full_117_edge[full_117_edge == "David G. Valadao"] <- "David Valadao"
+full_117_edge[full_117_edge == "David J. Trone"] <- "David Trone"
+full_117_edge[full_117_edge == "David N. Cicilline"] <- "David Cicilline"
+full_117_edge[full_117_edge == "David P. Joyce"] <- "David Joyce"
+full_117_edge[full_117_edge == "Debra A. Haaland"] <- "Debra Haaland"
+full_117_edge[full_117_edge == "Doris O. Matsui"] <- "Doris Matsui"
+full_117_edge[full_117_edge == "Elaine G. Luria"] <- "Elaine Luria"
+full_117_edge[full_117_edge == "Elise M. Stefanik"] <- "Elise Stefanik"
+full_117_edge[full_117_edge == "C. Scott Franklin"] <- "Scott Franklin"
+full_117_edge[full_117_edge == "C. A. Dutch Ruppersberger"] <- "C.A. Dutch Ruppersberger"
+full_117_edge[full_117_edge == "Brian K. Fitzpatrick"] <- "Brian Fitzpatrick"
+full_117_edge[full_117_edge == "Brian J. Mast"] <- "Brian Mast"
+full_117_edge[full_117_edge == "Brenda L. Lawrence"] <- "Brenda Lawrence"
+full_117_edge[full_117_edge == "Bradley Scott Schneider"] <- "Brad Schneider"
+full_117_edge[full_117_edge == "Brad R. Wenstrup"] <- "Brad Wenstrup"
+full_117_edge[full_117_edge == "Bennie G. Thompson"] <- "Bennie Thompson"
+full_117_edge[full_117_edge == "Ayanna Pressley"] <- "Ayanna S. Pressley"
+full_117_edge[full_117_edge == "Ann M. Kuster"] <- "Ann McLane Kuster"
+full_117_edge[full_117_edge == "Andrew S. Clyde"] <- "Andrew Clyde"
+full_117_edge[full_117_edge == "Andrew R. Garbarino"] <- "Andrew Garbarino"
+full_117_edge[full_117_edge == "Alma S. Adams"] <- "Alma Adams"
+full_117_edge[full_117_edge == "Alexander X. Mooney"] <- "Alex X. Mooney"
+full_117_edge[full_117_edge == "Alan S. Lowenthal"] <- "Alan Lowenthal"
+full_117_edge[full_117_edge == "Abigail Davis Spanberger"] <- "Abigail Spanberger"
+full_117_edge[full_117_edge == "John  Yarmuth"] <- "John Yarmuth"
+full_117_edge[full_117_edge == "Lisa Sen. Murkowski"] <- "Lisa Murkowski"
+full_117_edge[full_117_edge == "Richard C. Sen. Shelby"] <- "Richard C. Shelby"
+full_117_edge[full_117_edge == "Daniel Kildee"] <- "Dan Kildee"
+full_117_edge[full_117_edge == "Jr. Pallone"] <- "Frank Pallone Jr."
+full_117_edge[full_117_edge == "Debra Haaland"] <- "Deb Haaland"
+full_117_edge[full_117_edge == "Robert E. Latta"] <- "Bob Latta"
+full_117_edge[full_117_edge == "III Manchin"] <- "Joe Manchin III"
+full_117_edge[full_117_edge == "Jesus \"Chuy\" Garcia"] <- "Jesus Garcia"
+rel_117[rel_117 == "Jesus \"Chuy\" Garcia"] <- "Jesus Garcia"
+full_117_edge[full_117_edge == "Tommy Sen. Tuberville"] <- "Tommy Tuberville"
+full_117_edge[full_117_edge == "esus \"Chuy\" Garcia"] <- "Jesus Garcia"
+
+#export it so we can work in a different file
+write.csv(full_117_edge, "full_117list.csv", row.names=FALSE)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # Mutating Cosponsorship of 117th SENATE
 
@@ -71,12 +303,14 @@ B_117_house <- incidence.from.congress(session = 117, types = c("hr", "hres", "h
 #this is taking forever to run, not sure why, will check out later
 network_117_house <- sdsm(B_117_house, alpha = 0.01, narrative = TRUE)
 
-## Creates matrix object (note adjacency matrix)
-el_mat_117_house <- as_edgelist(network_117_house)
-
 ### creates data frame object
-el_117_house <- as.data.frame(as_edgelist(network_117_house))
+el_117_house <- as.data.frame(as_edgelist(B_117_house))
+
+#again they are all distinct?? and IDK WHY????
+el_117_house %>% 
+  distinct()
 ```
+
 
 # Mutating Cosponsorship of 117th HOUSE
 
@@ -118,7 +352,32 @@ full_117_edge <- rbind(edge_117_house, edge_117_senate)
 full_117_edge <- full_117_edge %>% 
   rename("member_i" = 1,
          "member_j" = 2) 
+
+explor <- full_117_edge %>% 
+  group_by(member_i, member_j) %>% 
+  summarise(n = n())
+
 ```
+
+# Exploring 117th total?
+```{r}
+full_117_edge %>% 
+  group_by(member_i) %>% 
+  summarize(n = n())
+
+full_117_edge %>% 
+  group_by(member_j) %>% 
+  summarize(n = n())
+
+ree <- full_117_edge %>% 
+  group_by(member_i, member_j) %>% 
+  summarize(n = n())
+
+pp <- full_117_edge %>% 
+  distinct(member_i, member_j, keep_all = TRUE)
+```
+
+
 
 # RELIGION FOR 117th
 
@@ -407,6 +666,9 @@ member_i_and_j_117 <- member_i_and_j_117 %>%
 a_117 <- member_i_and_j_117 %>% 
   select(member_i, member_j)
 
+a_117 %>% 
+  distinct()
+
 #now we need to add in isolates since our adjacency only includes 531 members and our religion includes 538
 
 #the no duplicates of i there are only 517
@@ -613,6 +875,18 @@ pd_117 = get.adjacency(p_g_117,sparse=FALSE)
 write.csv(pd_117, "matrix_party_117.csv", row.names=FALSE)
 ```
 
+
+
+
+
+
+
+
+
+
+
+
+
 # Scott Code for Cosponsorship of 112th SENATE
 
 ```{r warning = FALSE, message = FALSE, error = FALSE}
@@ -621,11 +895,15 @@ B_112_senate <- incidence.from.congress(session = 112, types = c("s", "sres", "s
 
 network_112_senate <- sdsm(B_112_senate, alpha = 0.01, narrative = TRUE)
 
-## Creates matrix object (note adjacency matrix)
+## Creates matrix object (not adjacency matrix)
 el_mat_112_senate <- as_edgelist(network_112_senate)
 
 ### creates data frame object
 el_112_senate <- as.data.frame(as_edgelist(network_112_senate))
+
+el_112_senate %>% 
+  distinct()
+
 ```
 
 # Mutating Cosponsorship of 112th SENATE
@@ -666,6 +944,9 @@ el_mat_112_house <- as_edgelist(network_112_house)
 
 ### creates data frame object
 el_112_house <- as.data.frame(as_edgelist(network_112_house))
+
+el_112_house %>% 
+  distinct()
 ```
 
 # Mutating Cosponsorship of 112th HOUSE
@@ -703,7 +984,11 @@ full_112_edge <- full_112_edge %>%
   rename("member_i" = 1,
          "member_j" = 2)
 
+full_112_edge %>% 
+  distinct()
+
 ```
+
 
 # Religion Data 112th
 
@@ -1180,6 +1465,10 @@ noDup_i <- t_112 %>%
 noDup_j <- t_112 %>% 
   select(member_j) %>% 
   distinct(member_j, .keep_all = TRUE)
+
+t_112 %>% 
+  distinct()
+
 ```
 
 # check my isos n stuff
