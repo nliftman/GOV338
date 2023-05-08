@@ -33,17 +33,17 @@ session_112 <- NA
 
 m1_2 <- data.frame(variable_117, estimate_117, mean_117, standard_error_117, p_value_117, model_number_117, session_117)
 #all first model of 117th
-m1_2[1, ] <- list("Intercept", "0.1480", "2.2394", "0.0035", "0.00", 1, 117)
-m1_2[nrow(m1_2) + 1, ] <- list("Religion", "-0.0033", "-0.2045", "0.0012", "0.53", 1, 117)
-m1_2[nrow(m1_2) + 1, ] <- list("Party", "-0.0150", "-0.1447", "0.0038", "0.23", 1, 117)
-m1_2[nrow(m1_2) + 1, ] <- list("Ideology", "-0.0229", "-0.2823", "0.0038", "0.19", 1, 117)
+m1_2[1, ] <- list("Intercept", "0.9773", "3.0531", "0.0088", "-", 1, 117)
+m1_2[nrow(m1_2) + 1, ] <- list("Religion", "-0.0942", "-0.2045", "0.0032", ">0.01", 1, 117)
+m1_2[nrow(m1_2) + 1, ] <- list("Party", "-2.2986", "-0.1447", "0.0076", ">0.01", 1, 117)
+m1_2[nrow(m1_2) + 1, ] <- list("Ideology", "0.5295", "-0.2823", "0.0096", ">0.01", 1, 117)
 
 m1_3 <- data.frame(variable_112, estimate_112, mean_112, standard_error_112, p_value_112, model_number_112, session_112)
 #all first model of 112th
-m1_3[1, ] <- list("Intercept", "0.0986", "1.4671", "0.0032", "0.00", 1, 112)
-m1_3[nrow(m1_3) + 1, ] <- list("Religion", "-0.0036", "0.4130", "0.0011", "0.53", 1, 112)
-m1_3[nrow(m1_3) + 1, ] <- list("Party", "0.0129", "0.2131", "0.0027", "0.38", 1, 112)
-m1_3[nrow(m1_3) + 1, ] <- list("Ideology", "0.0178", "-0.5254", "0.0036", "0.37", 1, 112)
+m1_3[1, ] <- list("Intercept", "0.0026", "0.1798", "0.0008", "-", 1, 112)
+m1_3[nrow(m1_3) + 1, ] <- list("Religion", "0.0262", "0.0003", "0.0011", "0.53", 1, 112)
+m1_3[nrow(m1_3) + 1, ] <- list("Party", "0.0012", "-0.0282", "0.0007", "0.38", 1, 112)
+m1_3[nrow(m1_3) + 1, ] <- list("Ideology", "0.0003", "0.1716", "0.0009", "0.37", 1, 112)
 
 m1_2 <- m1_2 %>% 
   select(estimate_117:p_value_117)
@@ -85,8 +85,12 @@ model_1_2 <- model_1_2 %>%
   tab_footnote(
     footnote = "p < .05",
     locations = cells_body(
-      columns = c(p_value_112, p_value_117), rows = 1) 
-  )
+      columns = c(p_value_117), rows = 2:4) 
+  ) %>% 
+  cols_align(
+  align = c("right"),
+  columns = everything()
+)
 
   
 model_1_2
@@ -192,7 +196,7 @@ m3_1 <- data.frame(variable_112, estimate_112, mean_112, standard_error_112, p_v
 
 m3_2 <- data.frame(variable_117, estimate_117, mean_117, standard_error_117, p_value_117)
 
-m3_1[1, ] <- list("Intercept", "0.0987", "0.7933", "0.0032", "0.00")
+m3_1[1, ] <- list("Intercept", "0.0987", "0.7933", "0.0032", "-")
 m3_1[nrow(m3_1) + 1, ] <- list("Catholic", "-0.0023", "-0.2000", "0.0021", "0.77")
 m3_1[nrow(m3_1) + 1, ] <- list("Jewish", "-0.0158",  "-0.0102", "0.0082", "0.54")
 m3_1[nrow(m3_1) + 1, ] <- list("Other", "0.0332", "-0.0384", "0.0134", "0.24")
@@ -201,7 +205,7 @@ m3_1[nrow(m3_1) + 1, ] <- list("Unknown", "0.0860",  "-0.0077", "0.0576", "0.24"
 m3_1[nrow(m3_1) + 1, ] <- list("Party", "0.0129", "0.6818", "0.0027", "0.35")
 m3_1[nrow(m3_1) + 1, ] <- list("Ideology", "0.0176", "-0.1893", "0.0036", "0.42")
 
-m3_2[1, ] <- list("Intercept", "0.1473", "1.7411", "0.0035", "0.00")
+m3_2[1, ] <- list("Intercept", "0.1473", "1.7411", "0.0035", "-")
 m3_2[nrow(m3_2) + 1, ] <- list("Catholic", "0.0003", "0.0318", "0.0021", "0.97")
 m3_2[nrow(m3_2) + 1, ] <- list("Jewish", "-0.0125", "0.1719", "0.0102", "0.54")
 m3_2[nrow(m3_2) + 1, ] <- list("Other", "0.0178", "0.0520", "0.0113", "0.47")
