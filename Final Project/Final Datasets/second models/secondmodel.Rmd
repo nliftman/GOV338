@@ -86,7 +86,7 @@ party <- as.matrix(import("/Users/naomiliftman/Desktop/GOV338/Final Project/Fina
 dw <- as.matrix(import("/Users/naomiliftman/Desktop/GOV338/Final Project/Final Datasets/first models/matrix_DW_117.csv"))
 
 #load cosponsorship
-cosponsorship <- as.matrix(import("/Users/naomiliftman/Desktop/GOV338/Final Project/Final Datasets/first models/adjacency_cospons_117_hopefully_fixing.csv"))
+cosponsorship <- as.matrix(import("/Users/naomiliftman/Desktop/GOV338/Final Project/Final Datasets/first models/weighted_117.csv"))
 
 #stack em baby
 state_matrices <- array(NA, c(7, length(catholic[1,]),length(catholic[1,]))) 
