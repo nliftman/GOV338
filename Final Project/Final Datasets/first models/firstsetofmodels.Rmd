@@ -20,9 +20,8 @@ party <- as.matrix(import("matrix_party_117.csv")) #party matrix
 dw <- as.matrix(import("matrix_DW_117.csv")) #DW nominate scores
 
 ### DV- cosponsorship
-cosponsorship <- as.matrix(import("adjacency_cospons_117_hopefully_fixing.csv")) #cosponsorship
+cosponsorship <- as.matrix(import("weighted_117.csv")) #cosponsorship
 
-cor(c(religion), c(cosponsorship))
 ```
 
 # Scott Code
@@ -65,18 +64,6 @@ state_model <- summary(state_sim_lm)
 #need to make sure you label in the order you read them into R
 state_model$names <- c("Intercept", "Religion", "Party", "Ideology")
 ```
-
-```{r}
-#fuck it we ball?
-
-#yee <- lm(cosponsorship~ state_matrices)
-#fuck it we dont ball :(
-```
-
-
-Catholic, Jewish, Protesetant, Unknown and Other 
-
-We could check other and other or Jewish and Jewish 
 
 
 ## Print results
