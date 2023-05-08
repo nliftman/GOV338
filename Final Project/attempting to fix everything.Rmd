@@ -1,0 +1,50 @@
+---
+title: "attempting to fix everything"
+author: "Naomi Liftman"
+date: "2023-05-05"
+output: pdf_document
+---
+# Packages
+
+```{r warning = FALSE, error = FALSE, message = FALSE}
+library(incidentally)
+library(backbone)
+library(smnet)
+library(igraph)
+library(tidyverse)
+library(rio)
+library(tidyr)
+library(network)
+library(gdata)
+```
+
+
+```{r warning = FALSE, message = FALSE, error = FALSE}
+#pull the 117 senators connections 
+B_117_senate <- incidence.from.congress(session = 117, types = c("s"), areas = c("All"), format = "igraph")
+
+#degree(B_117_senate)
+
+
+#network_117_senate <- sdsm(B_117_senate, alpha = .5, narrative = TRUE)
+
+### creates data frame object
+el_117_senate <- as.data.frame(as_edgelist(B_117_senate))
+```
+
+```{r warning = FALSE, message = FALSE, error = FALSE}
+#pull the 117 senators connections 
+B_117_house <- incidence.from.congress(session = 117, types = c("hr"), areas = c("All"), format = "igraph")
+
+#degree(B_117_senate)
+
+
+#network_117_senate <- sdsm(B_117_senate, alpha = .5, narrative = TRUE)
+
+### creates data frame object
+el_117_house <- as.data.frame(as_edgelist(B_117_house))
+```
+
+
+
+

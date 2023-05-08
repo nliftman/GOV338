@@ -15,6 +15,7 @@ library(rio)
 library(tidyr)
 library(network)
 library(gdata)
+library(fuzzyjoin)
 ```
 
 # 112th weighted ties 
@@ -87,29 +88,243 @@ d_112 <- d_112[-c(536), -c(536)]
 write.csv(d_112, "weighted_112.csv", row.names=FALSE)
 ```
 
-# 117th weighted ties
+
+
+
+
+# making a full edge list for 117th!!
 ```{r}
-#trying to make weighted ties
-weighted_117 <- import("/Users/naomiliftman/Desktop/GOV338/Final Project/Final Datasets/edge_all_117.csv")
-#adding religion
-religion_117 <- import("/Users/naomiliftman/Desktop/GOV338/Final Project/Final Datasets/clean_117_religion.csv")
+#import the fixed religion
+religion_117 <- import("clean_117_religion.csv")
+
+#import the full unfinished edgelist 
+yeehaw <- import("full_117list.csv")
+
+#renaming name_i and renaming so we can use the same functions from before
+full_117_edge <- yeehaw %>% 
+  rename("name_i" = v1_full)
+
+#now we just want the non duplicates
+non_dup <- full_117_edge %>% 
+  group_by(name_i) %>% 
+  summarize(n = n())
+```
+
+#NOOOO WE MAY HAVE TO HAND DO IT AGIAN
+```{r}
+attempts <- religion_117 %>% 
+  full_join(non_dup, by = c("name" = "name_i"))
+```
+
+#RENAMING
+```{r}
+#god life is a nightmare
+full_117_edge[full_117_edge == "John W. Hickenlooper"] <- "John Hickenlooper"
+full_117_edge[full_117_edge == "Mark R. Warner"] <- "Mark Warner"
+full_117_edge[full_117_edge == "Chuck Grassley"] <- "Charles E. Grassley"
+full_117_edge[full_117_edge == "Richard Burr"] <- "Richard M. Burr"
+full_117_edge[full_117_edge == "Thomas Tillis"] <- "Thom Tillis"
+full_117_edge[full_117_edge == "Roger F. Wicker"] <- "Roger Wicker"
+full_117_edge[full_117_edge == "Jr. King"] <- "Angus King"
+full_117_edge[full_117_edge == "Mike Crapo"] <- "Michael D. Crapo"
+full_117_edge[full_117_edge == "Gary C. Peters"] <- "Gary Peters"
+full_117_edge[full_117_edge == "Michael F. Bennet"] <- "Michael Bennet"
+full_117_edge[full_117_edge == "Christopher Murphy"] <- "Christopher S. Murphy"
+full_117_edge[full_117_edge == "Robert Menendez"] <- "Bob Menendez"
+full_117_edge[full_117_edge == "James E. Risch"] <- "Jim Risch"
+full_117_edge[full_117_edge == "Kirsten E. Gillibrand"] <- "Kirsten Gillibrand"
+full_117_edge[full_117_edge == "Jr. Casey"] <- "Bob Casey"
+full_117_edge[full_117_edge == "Christopher A. Coons"] <- "Chris Coons"
+full_117_edge[full_117_edge == "Cory A. Booker"] <- "Cory Booker"
+full_117_edge[full_117_edge == "Cynthia M. Lummis"] <- "Cynthia Lummis"
+full_117_edge[full_117_edge == "Bernard Sanders"] <- "Bernie Sanders"
+full_117_edge[full_117_edge == "Susan M. Collins"] <- "Susan Collins"
+full_117_edge[full_117_edge == "Margaret Wood Hassan"] <- "Maggie Hassan"
+full_117_edge[full_117_edge == "John Sen. Barrasso"] <- "John Barrasso"
+full_117_edge[full_117_edge == "Deb Sen. Fischer"] <- "Deb Fischer"
+full_117_edge[full_117_edge == "Ted Sen. Cruz"] <- "Ted Cruz"
+full_117_edge[full_117_edge == "Roger Sen. Marshall"] <- "Roger Marshall"
+full_117_edge[full_117_edge == "Richard Burr"] <- "Richard M. Burr"
+full_117_edge[full_117_edge == "Patrick Toomey"] <- "Patrick J. Toomey"
+full_117_edge[full_117_edge == "Eric A. \"Rick\" Crawford"] <- "Rick Crawford"
+full_117_edge[full_117_edge == "Roger F. Wicker"] <- "Roger Wicker"
+full_117_edge[full_117_edge == "William R. Keating"] <- "William Keating"
+full_117_edge[full_117_edge == "William R. IV Timmons"] <- "William R. Timmons IV"
+full_117_edge[full_117_edge == "W. Gregory Steube"] <- "Greg Steube"
+full_117_edge[full_117_edge == "Val Butler Demings"] <- "Val B. Demings"
+full_117_edge[full_117_edge == "Troy E. Nehls"] <- "Troy Nehls"
+full_117_edge[full_117_edge == "Tony Cárdenas"] <- "Tony Cardenas"
+full_117_edge[full_117_edge == "Thomas R. Suozzi"] <- "Tom Suozzi"
+full_117_edge[full_117_edge == "Thomas P. Tiffany"] <- "Tom Tiffany"
+full_117_edge[full_117_edge == "Theodore E. Deutch"] <- "Ted Deutch"
+full_117_edge[full_117_edge == "Suzan K. DelBene"] <- "Suzan DelBene"
+full_117_edge[full_117_edge == "Stephanie N. Murphy"] <- "Stephanie Murphy"
+full_117_edge[full_117_edge == "Stephanie I. Bice"] <- "Stephanie Bice"
+full_117_edge[full_117_edge == "Sr. Weber"] <- "Randy Weber"
+full_117_edge[full_117_edge == "Scott H. Peters"] <- "Scott Peters"
+full_117_edge[full_117_edge == "Salud O. Carbajal"] <- "Salud Carbajal"
+full_117_edge[full_117_edge == "Rosa L. DeLauro"] <- "Rosa DeLauro"
+full_117_edge[full_117_edge == "Robin L. Kelly"] <- "Robin Kelly"
+full_117_edge[full_117_edge == "Robert J. Wittman"] <- "Rob Wittman"
+full_117_edge[full_117_edge == "Kathy E. Manning"] <- "Kathy Manning"
+full_117_edge[full_117_edge == "Lee M. Zeldin"] <- "Lee Zeldin"
+full_117_edge[full_117_edge == "Linda T. Sánchez"] <- "Linda T. Sanchez"
+full_117_edge[full_117_edge == "Lisa C. McClain"] <- "Lisa McClain"
+full_117_edge[full_117_edge == "Lloyd Smucker"] <- "Lloyd K. Smucker"
+full_117_edge[full_117_edge == "Marc A. Veasey"] <- "Marc Veasey"
+full_117_edge[full_117_edge == "Mark E. Amodei"] <- "Mark Amodei"
+full_117_edge[full_117_edge == "Mary E. Miller"] <- "Mary Miller"
+full_117_edge[full_117_edge == "Matthew M. Rosendale Sr."] <- "Matt Rosendale"
+full_117_edge[full_117_edge == "Michael F. Doyle"] <- "Mike Doyle"
+full_117_edge[full_117_edge == "Michael K. Simpson"] <- "Mike Simpson"
+full_117_edge[full_117_edge == "Michael T. McCaul"] <- "Michael McCaul"
+full_117_edge[full_117_edge == "Nanette Diaz Barragan"] <- "Nanette Barragan"
+full_117_edge[full_117_edge == "Neal P. Dunn"] <- "Neal Dunn"
+full_117_edge[full_117_edge == "Paul A. Gosar"] <- "Paul Gosar"
+full_117_edge[full_117_edge == "Raúl M. Grijalva"] <- "Raul M. Grijalva"
+full_117_edge[full_117_edge == "Robert C. \"Bobby\" Scott"] <- "Robert C. Scott"
+full_117_edge[full_117_edge == "Robert E. Latta"] <- "Robert E. Latta"
+full_117_edge[full_117_edge == "Jerry L. Carl"] <- "Jerry Carl"
+full_117_edge[full_117_edge == "Jesus G. \"Chuy\" Garcia"] <- "Jesus \"Chuy\" Garcia"
+full_117_edge[full_117_edge == "John A. Yarmuth"] <- "John Yarmuth"
+full_117_edge[full_117_edge == "John H. Rutherford"] <- "John Rutherford"
+full_117_edge[full_117_edge == "John P. Sarbanes"] <- "John Sarbanes"
+full_117_edge[full_117_edge == "John R. Carter"] <- "John Carter"
+full_117_edge[full_117_edge == "John R. Curtis"] <- "John Curtis"
+full_117_edge[full_117_edge == "John R. Moolenaar"] <- "John Moolenaar"
+full_117_edge[full_117_edge == "Jr. Beyer"] <- "Donald S. Beyer Jr."
+full_117_edge[full_117_edge == "Jr. Bishop"] <- "Sanford D. Bishop Jr."
+full_117_edge[full_117_edge == "Jr. Lawson"] <- "Al Lawson"
+full_117_edge[full_117_edge == "Jr. Pascrell"] <- "Bill Pascrell Jr."
+full_117_edge[full_117_edge == "Jr. Payne"] <- "Donald M. Payne Jr."
+full_117_edge[full_117_edge == "Juan Vargas"] <- "Juan C. Vargas"
+full_117_edge[full_117_edge == "Kaiali'i Kahele"] <- "Kai Kahele"
+full_117_edge[full_117_edge == "Kathleen M. Rice"] <- "Kathleen Rice"
+full_117_edge[full_117_edge == "Emanuel Cleaver"] <- "Emanuel Cleaver II"
+full_117_edge[full_117_edge == "G. K. Butterfield"] <- "G.K. Butterfield"
+full_117_edge[full_117_edge == "Gary J. Palmer"] <- "Gary Palmer"
+full_117_edge[full_117_edge == "Glenn Thompson"] <- "Glenn \"GT\" Thompson"
+full_117_edge[full_117_edge == "Gregory Murphy"] <- "Greg Murphy"
+full_117_edge[full_117_edge == "Gus M. Bilirakis"] <- "Gus Bilirakis"
+full_117_edge[full_117_edge == "H. Morgan Griffith"] <- "Morgan Griffith"
+full_117_edge[full_117_edge == "Hakeem S. Jeffries"] <- "Hakeem Jeffries"
+full_117_edge[full_117_edge == "Haley M. Stevens"] <- "Haley Stevens"
+full_117_edge[full_117_edge == "Henry C. \"Hank,\" Jr. Johnson"] <- "Hank Johnson"
+full_117_edge[full_117_edge == "IV Ferguson"] <- "Drew Ferguson"
+full_117_edge[full_117_edge == "J. French Hill"] <- "French Hill"
+full_117_edge[full_117_edge == "J. Luis Correa"] <- "Lou Correa"
+full_117_edge[full_117_edge == "James A. Himes"] <- "Jim Himes"
+full_117_edge[full_117_edge == "James Comer"] <- "James R. Comer"
+full_117_edge[full_117_edge == "James P. McGovern"] <- "Jim McGovern"
+full_117_edge[full_117_edge == "James R. Baird"] <- "Jim Baird"
+full_117_edge[full_117_edge == "James R. Langevin"] <- "Jim Langevin"
+full_117_edge[full_117_edge == "Janice D. Schakowsky"] <- "Jan Schakowsky"
+full_117_edge[full_117_edge == "Jared F. Golden"] <- "Jared Golden"
+full_117_edge[full_117_edge == "Jefferson Van Drew"] <- "Jeff Van Drew"
+full_117_edge[full_117_edge == "Carlos A. Gimenez"] <- "Carlos Gimenez"
+full_117_edge[full_117_edge == "Carol D. Miller"] <- "Carol Miller"
+full_117_edge[full_117_edge == "Charles J. \"Chuck\" Fleischmann"] <- "Chuck Fleischmann"
+full_117_edge[full_117_edge == "Chuck Grassley"] <- "Charles E. Grassley"
+full_117_edge[full_117_edge == "Colin Z. Allred"] <- "Colin Allred"
+full_117_edge[full_117_edge == "Cynthia Axne"] <- "Cindy Axne"
+full_117_edge[full_117_edge == "Dan Crenshaw"] <- "Daniel Crenshaw"
+full_117_edge[full_117_edge == "Daniel Meuser"] <- "Dan Meuser"
+full_117_edge[full_117_edge == "Daniel T. Kildee"] <- "Daniel Kildee"
+full_117_edge[full_117_edge == "Darrell E. Issa"] <- "Darrell Issa"
+full_117_edge[full_117_edge == "David G. Valadao"] <- "David Valadao"
+full_117_edge[full_117_edge == "David J. Trone"] <- "David Trone"
+full_117_edge[full_117_edge == "David N. Cicilline"] <- "David Cicilline"
+full_117_edge[full_117_edge == "David P. Joyce"] <- "David Joyce"
+full_117_edge[full_117_edge == "Debra A. Haaland"] <- "Debra Haaland"
+full_117_edge[full_117_edge == "Doris O. Matsui"] <- "Doris Matsui"
+full_117_edge[full_117_edge == "Elaine G. Luria"] <- "Elaine Luria"
+full_117_edge[full_117_edge == "Elise M. Stefanik"] <- "Elise Stefanik"
+full_117_edge[full_117_edge == "C. Scott Franklin"] <- "Scott Franklin"
+full_117_edge[full_117_edge == "C. A. Dutch Ruppersberger"] <- "C.A. Dutch Ruppersberger"
+full_117_edge[full_117_edge == "Brian K. Fitzpatrick"] <- "Brian Fitzpatrick"
+full_117_edge[full_117_edge == "Brian J. Mast"] <- "Brian Mast"
+full_117_edge[full_117_edge == "Brenda L. Lawrence"] <- "Brenda Lawrence"
+full_117_edge[full_117_edge == "Bradley Scott Schneider"] <- "Brad Schneider"
+full_117_edge[full_117_edge == "Brad R. Wenstrup"] <- "Brad Wenstrup"
+full_117_edge[full_117_edge == "Bennie G. Thompson"] <- "Bennie Thompson"
+full_117_edge[full_117_edge == "Ayanna Pressley"] <- "Ayanna S. Pressley"
+full_117_edge[full_117_edge == "Ann M. Kuster"] <- "Ann McLane Kuster"
+full_117_edge[full_117_edge == "Andrew S. Clyde"] <- "Andrew Clyde"
+full_117_edge[full_117_edge == "Andrew R. Garbarino"] <- "Andrew Garbarino"
+full_117_edge[full_117_edge == "Alma S. Adams"] <- "Alma Adams"
+full_117_edge[full_117_edge == "Alexander X. Mooney"] <- "Alex X. Mooney"
+full_117_edge[full_117_edge == "Alan S. Lowenthal"] <- "Alan Lowenthal"
+full_117_edge[full_117_edge == "Abigail Davis Spanberger"] <- "Abigail Spanberger"
+full_117_edge[full_117_edge == "John  Yarmuth"] <- "John Yarmuth"
+full_117_edge[full_117_edge == "Lisa Sen. Murkowski"] <- "Lisa Murkowski"
+full_117_edge[full_117_edge == "Richard C. Sen. Shelby"] <- "Richard C. Shelby"
+full_117_edge[full_117_edge == "Daniel Kildee"] <- "Dan Kildee"
+full_117_edge[full_117_edge == "Jr. Pallone"] <- "Frank Pallone Jr."
+full_117_edge[full_117_edge == "Debra Haaland"] <- "Deb Haaland"
+full_117_edge[full_117_edge == "Robert E. Latta"] <- "Bob Latta"
+full_117_edge[full_117_edge == "III Manchin"] <- "Joe Manchin III"
+full_117_edge[full_117_edge == "Jesus \"Chuy\" Garcia"] <- "Jesus Garcia"
+full_117_edge[full_117_edge == "Tommy Sen. Tuberville"] <- "Tommy Tuberville"
+full_117_edge[full_117_edge == "esus \"Chuy\" Garcia"] <- "Jesus Garcia"
+#all the names we are fixing after the initial fix!
+full_117_edge[full_117_edge == "Henry C. \"\"Hank,\"\" Jr. Johnson"] <- "Hank Johnson"
+full_117_edge[full_117_edge == "Jesus G. \"\"Chuy\"\" Garcia"] <- "Jesus \"\"Chuy\"\" Garcia"
+full_117_edge[full_117_edge == "Eric A. \"\"Rick\"\" Crawford"] <- "Rick Crawford"
+full_117_edge[full_117_edge == "Robert C. \"\"Bobby\"\" Scott"] <- "Robert C. Scott"
+full_117_edge[full_117_edge == "Charles J. \"\"Chuck\"\" Fleischmann"] <- "Chuck Fleischmann"
+```
+
+#checking again which ones dont work, so we can fix
+```{r}
+#now we just want the non duplicates
+non_dup_2 <- full_117_edge %>% 
+  group_by(name_i) %>% 
+  summarize(n = n())
+
+#yay
+attempts_2 <- religion_117 %>% 
+  full_join(non_dup_2, by = c("name" = "name_i"))
+
+#all is fixed in the world!!!
+attempts_3 <- attempts_2 %>% 
+  drop_na(fix_relig)
 ```
 
 ```{r}
-weighted_117 <- weighted_117 %>% 
-  select(V2, V3) %>% 
-  rename("member_i" = V2,
-         "member_j" = V3)
-
-weighted_117 <- weighted_117[-c(1),]
-
-weighted_117 %>% 
-  distinct()
+#now want to make the full_117_edge list the best it can be 
+full_117_edge_reee <- full_117_edge %>% 
+  full_join(religion_117, by = c("name_i" = "name")) %>% 
+  drop_na(fix_relig)
+```
 
 
+
+```{r}
+yeehaw_1 <- full_117_edge_reee %>% 
+  select(-fix_relig)
+
+yeehaw_2 <- full_117_edge_reee %>% 
+  rename(name_j = name_i) %>% 
+  select(-fix_relig)
+
+#trying to make it dif idk
+yeehaw_3 <- yeehaw_1 %>% 
+  full_join(yeehaw_2, by = "bill") 
+
+#IM P FUCKIN SURE I FIXED IT BC IM A GOD?????
+yeehaw_6 <- yeehaw_3 %>% 
+  filter(name_i != name_j)
+```
+
+
+
+
+
+# 117th weighted ties!!
+```{r}
 #exploration
-explor <- weighted_117 %>% 
-  group_by(member_i, member_j) %>% 
+explor <- yeehaw_6 %>% 
+  group_by(name_i, name_j) %>% 
   summarise(n = n())
 
 #find the sum and mean
@@ -118,13 +333,23 @@ explor %>%
   summarise(m = mean(n),
             d = sum(n))
 
+#mean is 76.84604
+
 #now we get the percent of the total cosponsorship that each member is doing for another specific member 
 explor <- explor %>% 
-  mutate(weighted = n/30.78252) %>% 
-  mutate(weighted_part_2 = n/31706) %>% 
-  mutate(percent = weighted_part_2 * 100)
+  mutate(weighted = n/76.84604)
 ```
 
+```{r}
+#create graph object
+mygraph_117 <- graph.data.frame(explor)
+
+#create adjacency matrix
+d_117 <- get.adjacency(mygraph_117, sparse = FALSE, attr='weighted')
+
+#now make into a csv
+write.csv(d_117, "weighted_117.csv", row.names=FALSE)
+```
 
 
 
