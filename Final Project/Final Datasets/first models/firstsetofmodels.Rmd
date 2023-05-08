@@ -63,12 +63,6 @@ state_model <- list()
 state_model <- summary(state_sim_lm)
 #need to make sure you label in the order you read them into R
 state_model$names <- c("Intercept", "Religion", "Party", "Ideology")
-```
-
-
-## Print results
-
-```{r}
 summary(state_model)
 ```
 
