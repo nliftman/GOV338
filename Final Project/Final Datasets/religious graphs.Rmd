@@ -1,0 +1,13 @@
+---
+title: "pretty tables"
+author: "Naomi Liftman"
+date: "2023-05-02"
+output: pdf_document
+---
+# Load Packages
+```{r}
+library(tidyverse)
+library(ggplot2)
+library(gt)
+library(gtExtras)
+```
