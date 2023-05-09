@@ -1,0 +1,80 @@
+---
+title: "devins pretty tables"
+author: "Naomi Liftman"
+date: "2023-05-02"
+output: pdf_document
+---
+# Load Packages
+```{r}
+library(tidyverse)
+library(gt)
+library(gtExtras)
+```
+
+# making my stupid tables for my stupid girlfriend who i love very much 
+```{r}
+# making a df!
+variable <- NA
+estimate <- NA
+standard_error <- NA
+p_value <- NA
+
+#make the df
+model_1 <- data.frame(variable, estimate, standard_error, p_value)
+
+#adding them 
+model_1[1, ] <- list("Intercept", "-576.7051", "443.2350", "-")
+model_1[nrow(model_1) + 1, ] <- list("During", "799.1081", "162.1812", "<0.01")
+model_1[nrow(model_1) + 1, ] <- list("After", "298.9189", "162.1812", "0.07")
+model_1[nrow(model_1) + 1, ] <- list("Employment Rate", "262.3563", "356.1806", "0.46")
+model_1[nrow(model_1) + 1, ] <- list("Percent Male", "-2.2382", "3.7909", "0.56")
+model_1[nrow(model_1) + 1, ] <- list("Total Population", "0.3682", "0.1038", "<0.01")
+model_1[nrow(model_1) + 1, ] <- list("Housing Occupied", "-0.2460", "0.1659", "0.14")
+model_1[nrow(model_1) + 1, ] <- list("Percent Young", "16.8799", "1.9930", "<0.01")
+model_1[nrow(model_1) + 1, ] <- list("Percent White", "15.3984", "1.6278", "<0.01")
+model_1[nrow(model_1) + 1, ] <- list("Total Labor Force", "-0.4667", "0.1293", "<0.01")
+model_1[nrow(model_1) + 1, ] <- list("Disadvantaged", "33.4071", "141.9843", "0.81")
+model_1[nrow(model_1) + 1, ] <- list("During x Disadvantaged", "-456.1872", "193.1305", "0.02")
+model_1[nrow(model_1) + 1, ] <- list("After x Disadvantaged", "-293.5686", "193.1305", "0.13")
+
+model_1 <- gt(model_1) %>% 
+  tab_header(
+    title = "Total Trip Origins Output"
+  ) %>% 
+  tab_options(
+    footnotes.marks = "*"
+  ) %>% 
+  cols_label(
+    variable = "",
+    estimate = "Estimate",
+    standard_error = "St. Error",
+    p_value = "p-value"
+  ) %>% 
+  cols_align(
+  align = c("right"),
+  columns = everything()
+) %>% 
+   tab_footnote(
+    footnote = "p < .05",
+    locations = cells_body(
+      columns = c(p_value), rows = c(12)))%>% 
+   tab_footnote(
+    footnote = "p < .01") %>% 
+  tab_footnote(
+    footnote = "p < .001",
+    locations = cells_body(
+      columns = c(p_value), rows = c(2,6,8,9,10)))
+#.05 
+#.01
+#.001
+  
+model_1
+```
+
+
+
+
+
+
+
+
