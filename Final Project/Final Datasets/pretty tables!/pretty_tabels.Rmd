@@ -97,6 +97,14 @@ model_1_2
 
 ```
 
+
+
+
+
+
+
+
+
 ```{r}
 # making a df for 112
 variable_112 <- NA
@@ -179,6 +187,18 @@ model_2 <- model_2 %>%
   
 model_2
 ```
+
+
+
+
+
+
+
+
+
+
+
+
 
 # MODEL 3 table
 ```{r}

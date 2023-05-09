@@ -27,7 +27,6 @@ religion_112 <- import("/Users/naomiliftman/Desktop/GOV338/Final Project/Final D
 ```
 
 ```{r}
-
 #exploration
 explor <- weighted_112 %>% 
   group_by(member_i, member_j) %>% 
@@ -75,17 +74,17 @@ total <- total %>%
 total[is.na(total)] <- 0
 
 total <- total %>% 
-  select(member_i, member_j, weighted)
+  select(member_i, member_j, percent)
 
 #create graph object
 mygraph_112 <- graph.data.frame(total)
 
 #create adjacency matrix
-d_112 <- get.adjacency(mygraph_112, sparse = FALSE, attr='weighted')
+d_112 <- get.adjacency(mygraph_112, sparse = FALSE, attr='percent')
 d_112 <- d_112[-c(536), -c(536)]
 
 #now make into a csv
-write.csv(d_112, "weighted_112.csv", row.names=FALSE)
+write.csv(d_112, "weighted_112th_percent.csv", row.names=FALSE)
 ```
 
 
