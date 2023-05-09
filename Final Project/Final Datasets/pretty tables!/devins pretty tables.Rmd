@@ -54,15 +54,16 @@ model_1 <- gt(model_1) %>%
   align = c("right"),
   columns = everything()
 ) %>% 
-   # tab_footnote(
+   tab_footnote(
     footnote = "p < .05"
-    )%>% 
+    ) %>% 
    tab_footnote(
     footnote = "p < .01"
     ) %>% 
   tab_footnote(
     footnote = "p < .001"
-    )
+    ) %>% 
+  gt_highlight_rows(rows = c(2, 6, 8,9,10, 12), font_weight = "normal") 
 #.05 
 #.01
 #.001
@@ -120,7 +121,8 @@ model_2 <- gt(model_2) %>%
     ) %>% 
   tab_footnote(
     footnote = "p < .001"
-    )
+    ) %>% 
+  gt_highlight_rows(rows = c(8,10 ), font_weight = "normal") 
 #.05 
 #.01
 #.001
@@ -187,7 +189,8 @@ model_3 <- gt(model_3) %>%
     ) %>% 
   tab_footnote(
     footnote = "p < .001"
-    )
+    ) %>% 
+  gt_highlight_rows(rows = c(8,9,10), font_weight = "normal") 
 #.05 
 #.01
 #.001
