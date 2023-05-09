@@ -5,7 +5,7 @@ date: "2023-05-02"
 output: pdf_document
 ---
 # Load Packages
-```{r}
+```{r message = FALSE, warning = FALSE, error = FALSE}
 library(tidyverse)
 library(gt)
 library(gtExtras)
@@ -54,16 +54,15 @@ model_1 <- gt(model_1) %>%
   align = c("right"),
   columns = everything()
 ) %>% 
+   # tab_footnote(
+    footnote = "p < .05"
+    )%>% 
    tab_footnote(
-    footnote = "p < .05",
-    locations = cells_body(
-      columns = c(p_value), rows = c(12)))%>% 
-   tab_footnote(
-    footnote = "p < .01") %>% 
+    footnote = "p < .01"
+    ) %>% 
   tab_footnote(
-    footnote = "p < .001",
-    locations = cells_body(
-      columns = c(p_value), rows = c(2,6,8,9,10)))
+    footnote = "p < .001"
+    )
 #.05 
 #.01
 #.001
@@ -71,10 +70,129 @@ model_1 <- gt(model_1) %>%
 model_1
 ```
 
+# second stupid model for my second stupid girlfreind
+```{r}
+# making a df!
+variable <- NA
+estimate <- NA
+standard_error <- NA
+p_value <- NA
+
+#make the df
+model_2 <- data.frame(variable, estimate, standard_error, p_value)
+
+model_2[1, ] <- list("Intercept", "2528.9939", "234.1017", "-")
+model_2[nrow(model_2) + 1, ] <- list("During", "-37.7862", "85.6586", "0.66")
+model_2[nrow(model_2) + 1, ] <- list("After", "-27.7529", "85.6586", "0.75")
+model_2[nrow(model_2) + 1, ] <- list("Employment Rate", "-326.0188", "188.1226", "0.08")
+model_2[nrow(model_2) + 1, ] <- list("Percent Male", "-2.2494", "2.0022", "0.26")
+model_2[nrow(model_2) + 1, ] <- list("Total Population", "-0.1075", "0.0548", "0.05")
+model_2[nrow(model_2) + 1, ] <- list("Housing Occupation", "0.0657", "0.0876", "0.45")
+model_2[nrow(model_2) + 1, ] <- list("Percent Young", "-2.6518", "1.0526", "0.01")
+model_2[nrow(model_2) + 1, ] <- list("Percent White", "0.0166", "0.8597", "0.98")
+model_2[nrow(model_2) + 1, ] <- list("Total Labor Force", "0.2137", "0.0683", "<0.01")
+model_2[nrow(model_2) + 1, ] <- list("Disadvantaged", "-90.6814", "74.9913", "0.23")
+model_2[nrow(model_2) + 1, ] <- list("During x Disadvantaged", "-94.7363", "102.0050", "0.35")
+model_2[nrow(model_2) + 1, ] <- list("After x Disadvantaged", "-53.1139", "102.0050", "0.60")
+
+model_2 <- gt(model_2) %>% 
+  tab_header(
+    title = "Average Trip Distance"
+  ) %>% 
+  tab_options(
+    footnotes.marks = "*"
+  ) %>% 
+  cols_label(
+    variable = "",
+    estimate = "Estimate",
+    standard_error = "St. Error",
+    p_value = "p-value"
+  ) %>% 
+  cols_align(
+  align = c("right"),
+  columns = everything()
+) %>% 
+   tab_footnote(
+    footnote = "p < .05"
+    )%>% 
+   tab_footnote(
+    footnote = "p < .01"
+    ) %>% 
+  tab_footnote(
+    footnote = "p < .001"
+    )
+#.05 
+#.01
+#.001
+  
+model_2
+```
 
 
 
 
 
+
+
+
+
+
+```{r}
+# making a df!
+variable <- NA
+estimate <- NA
+standard_error <- NA
+p_value <- NA
+
+#make the df
+model_3 <- data.frame(variable, estimate, standard_error, p_value)
+
+
+model_3[1, ] <- list("Intercept", "1.096e+03", "7.473e+01", "-")
+model_3[nrow(model_3) + 1, ] <- list("During", "5.005e+01", "2.734e+01", "0.07")
+model_3[nrow(model_3) + 1, ] <- list("After", "-4.442e+01", "2.734e+01", "0.10")
+model_3[nrow(model_3) + 1, ] <- list("Employment Rate", "-9.764e+01", "6.005e+01", "0.10")
+model_3[nrow(model_3) + 1, ] <- list("Percent Male", "-5.984e-02", "6.391e-01", "0.93")
+model_3[nrow(model_3) + 1, ] <- list("Total Population", "-6.892e-03", "1.750e-02", "0.69")
+model_3[nrow(model_3) + 1, ] <- list("Housing Occupation", "-1.539e-02", "2.798e-02", "0.58")
+model_3[nrow(model_3) + 1, ] <- list("Percent Young", "-1.684e+00", "3.360e-01", "<0.01")
+model_3[nrow(model_3) + 1, ] <- list("Percent White", "-7.530e-01", "2.744e-01", "<0.01")
+model_3[nrow(model_3) + 1, ] <- list("Total Labor Force", "4.705e-02", "2.181e-02", "0.03")
+model_3[nrow(model_3) + 1, ] <- list("Disadvantaged", "-1.397e+00", "2.394e+01", "0.95")
+model_3[nrow(model_3) + 1, ] <- list("During x Disadvantaged", "-1.923e+01", "3.256e+01", "0.55")
+model_3[nrow(model_3) + 1, ] <- list("After x Disadvantaged", "-2.919e+01", "3.256e+01", "0.37")
+
+model_3 <- gt(model_3) %>% 
+  tab_header(
+    title = "Average Trip Duration"
+  ) %>% 
+  tab_options(
+    footnotes.marks = c("*", "**", "***")
+  ) %>% 
+  cols_label(
+    variable = "",
+    estimate = "Estimate",
+    standard_error = "St. Error",
+    p_value = "p-value"
+  ) %>% 
+  cols_align(
+  align = c("right"),
+  columns = everything()
+) %>% 
+   tab_footnote(
+    footnote = "p < .05"
+    )%>% 
+   tab_footnote(
+    footnote = "p < .01"
+    ) %>% 
+  tab_footnote(
+    footnote = "p < .001"
+    )
+#.05 
+#.01
+#.001
+  
+model_3
+```
 
 
