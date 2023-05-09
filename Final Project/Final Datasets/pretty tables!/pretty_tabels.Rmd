@@ -34,9 +34,9 @@ session_112 <- NA
 m1_2 <- data.frame(variable_117, estimate_117, mean_117, standard_error_117, p_value_117, model_number_117, session_117)
 #all first model of 117th
 m1_2[1, ] <- list("Intercept", "0.9773", "3.0531", "0.0088", "-", 1, 117)
-m1_2[nrow(m1_2) + 1, ] <- list("Religion", "-0.0942", "-0.2045", "0.0032", "~0.00", 1, 117)
-m1_2[nrow(m1_2) + 1, ] <- list("Party", "-2.2986", "-0.1447", "0.0076", "~0.00", 1, 117)
-m1_2[nrow(m1_2) + 1, ] <- list("Ideology", "0.5295", "-0.2823", "0.0096", "~0.00", 1, 117)
+m1_2[nrow(m1_2) + 1, ] <- list("Religion", "-0.0942", "-0.2045", "0.0032", "<0.01", 1, 117)
+m1_2[nrow(m1_2) + 1, ] <- list("Party", "-2.2986", "-0.1447", "0.0076", "<0.01", 1, 117)
+m1_2[nrow(m1_2) + 1, ] <- list("Ideology", "0.5295", "-0.2823", "0.0096", "<0.01", 1, 117)
 
 m1_3 <- data.frame(variable_112, estimate_112, mean_112, standard_error_112, p_value_112, model_number_112, session_112)
 #all first model of 112th
@@ -46,7 +46,7 @@ m1_3[nrow(m1_3) + 1, ] <- list("Party", "0.0012", "-0.0282", "0.0007", "0.38", 1
 m1_3[nrow(m1_3) + 1, ] <- list("Ideology", "0.0003", "0.1716", "0.0009", "0.37", 1, 112)
 
 m1_2 <- m1_2 %>% 
-  select(estimate_117:p_value_117)
+  select(variable_117:p_value_117)
 
 m1_3 <- m1_3 %>% 
   select(variable_112:p_value_112)
@@ -68,7 +68,7 @@ model_1_2 <- model_1_2 %>%
   ) |>
   tab_spanner(
     label = "117th Congress",
-    columns = c(estimate_117, mean_117, standard_error_117, p_value_117)
+    columns = c(variable_117, estimate_117, mean_117, standard_error_117, p_value_117)
   ) %>% 
   cols_label(
     variable_112 = "",
@@ -76,6 +76,7 @@ model_1_2 <- model_1_2 %>%
     mean_112 = "Mean",
     standard_error_112 = "St. Error",
     p_value_112 = "p-value",
+    variable_117 = "",
     estimate_117 = "Estimate",
     mean_117 = "Mean",
     standard_error_117 = "St. Error",
@@ -90,7 +91,11 @@ model_1_2 <- model_1_2 %>%
   cols_align(
   align = c("right"),
   columns = everything()
-)
+) %>% 
+  gt_highlight_rows(
+    columns = c(variable_117:p_value_117),
+    rows = c(2,3,4), 
+    font_weight = "normal") 
 
   
 model_1_2
@@ -98,6 +103,39 @@ model_1_2
 ```
 
 
+```{r}
+m1_3 <- data.frame(variable_112, estimate_112, mean_112, standard_error_112, p_value_112)
+#all first model of 112th
+m1_3[1, ] <- list("Intercept", "0.0026", "0.1798", "0.0008", "-")
+m1_3[nrow(m1_3) + 1, ] <- list("Religion", "0.0262", "0.0003", "0.0011", "0.53")
+m1_3[nrow(m1_3) + 1, ] <- list("Party", "0.0012", "-0.0282", "0.0007", "0.38")
+m1_3[nrow(m1_3) + 1, ] <- list("Ideology", "0.0003", "0.1716", "0.0009", "0.37")
+
+model_1 <- gt(m1_3)
+
+model_1 <- model_1  %>%
+  tab_header(
+    title = "112th Congress",
+    subtitle = "Model 1 Addressing Hypotheses 1 and 3") %>% 
+  tab_options(
+    footnotes.marks = "*") %>% 
+  cols_label(
+    variable_112 = "",
+    estimate_112 = "Estimate",
+    mean_112 = "Mean",
+    standard_error_112 = "St. Error",
+    p_value_112 = "p-value")  %>% 
+  tab_footnote(
+    footnote = "p < .05",
+    locations = cells_body(
+      columns = c(p_value_112), rows = 2:4)) %>% 
+  gt_highlight_rows(
+    columns = c(1,2,3,4,5),
+    rows = c(2,3,4), 
+    font_weight = "normal") 
+
+model_1
+```
 
 
 
@@ -233,18 +271,18 @@ m3_1[nrow(m3_1) + 1, ] <- list("Ideology", "0.0004", "-0.0077", "0.0036", "0.72"
 
 m3_2[1, ] <- list("Intercept", "0.9466", "2.4205", "0.0088", "-")
 m3_2[nrow(m3_2) + 1, ] <- list("Catholic", "0.0614", "-0.4138", "0.0054", "0.22")
-m3_2[nrow(m3_2) + 1, ] <- list("Jewish", "0.3901", "-0.9262", "0.0256", "~0.00")
+m3_2[nrow(m3_2) + 1, ] <- list("Jewish", "0.3901", "-0.9262", "0.0256", "<0.01")
 m3_2[nrow(m3_2) + 1, ] <- list("Other", "-0.0919", "0.6634", "0.0282", "0.54")
-m3_2[nrow(m3_2) + 1, ] <- list("Protestant", "-0.1501", "0.0105", "0.0035", "~0.00")
+m3_2[nrow(m3_2) + 1, ] <- list("Protestant", "-0.1501", "0.0105", "0.0035", "<0.01")
 m3_2[nrow(m3_2) + 1, ] <- list("Unknown", "0.3685", "-0.2788", "0.0475", "0.04")
-m3_2[nrow(m3_2) + 1, ] <- list("Party", "0.3074", "-0.8091", "0.0076", "~0.00")
-m3_2[nrow(m3_2) + 1, ] <- list("Ideology", "-0.7167", "-0.0624", "0.0096", "~0.00")
+m3_2[nrow(m3_2) + 1, ] <- list("Party", "0.3074", "-0.8091", "0.0076", "<0.01")
+m3_2[nrow(m3_2) + 1, ] <- list("Ideology", "-0.7167", "-0.0624", "0.0096", "<0.01")
 ```
 
 
 ```{r}
 m3_2 <- m3_2 %>% 
-  select(estimate_117:p_value_117)
+  select(variable_117:p_value_117)
 
 total_m1 <- cbind(m3_1, m3_2)
 
@@ -260,7 +298,7 @@ model_3 <- model_3 %>%
   ) |>
   tab_spanner(
     label = "117th Congress",
-    columns = c(estimate_117, mean_117, standard_error_117, p_value_117)
+    columns = c(variable_117, estimate_117, mean_117, standard_error_117, p_value_117)
   ) %>% 
   cols_label(
     variable_112 = "",
@@ -268,6 +306,7 @@ model_3 <- model_3 %>%
     mean_112 = "Mean",
     standard_error_112 = "St. Error",
     p_value_112 = "p-value",
+    variable_117 = "",
     estimate_117 = "Estimate",
     mean_117 = "Mean",
     standard_error_117 = "St. Error",
@@ -277,7 +316,7 @@ model_3 <- model_3 %>%
   tab_footnote(
     footnote = "p < .05",
     locations = cells_body(
-      columns = c(p_value_117), rows = c(3, 5, 7, 8)) 
+      columns = c(p_value_117), rows = c(3, 5, 6, 7, 8)) 
   ) %>% 
   tab_footnote(footnote = "p < .05",
     locations = cells_body(
@@ -285,7 +324,15 @@ model_3 <- model_3 %>%
   cols_align(
   align = c("right"),
   columns = everything()
-)
+) %>% 
+  gt_highlight_rows(
+    columns = c(variable_117:p_value_117),
+    rows = c(3,5,6,7,8), 
+    bold_target_only = TRUE) %>% 
+  gt_highlight_rows(
+    columns = c(variable_112:p_value_112),
+    rows = c(7), 
+    bold_target_only = TRUE)
 
   
 model_3
