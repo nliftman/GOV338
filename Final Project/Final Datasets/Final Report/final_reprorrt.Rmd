@@ -18,7 +18,7 @@ keywords: Cosponsorship, Networks, Religion, Polarization
 classoption:
   - Royal
   - times
-bibliography: bibfile
+bibliography: citations.bib
 bibliographystyle: sageh
 output:
   rticles::sage_article:
@@ -192,8 +192,10 @@ While this study is not the first to limit the scope of congressional terms [see
 
 Even despite this limitation, there are substantial practical implications for this paper. Firstly, it bridges the gap between existing literature on general cosponsorship and the effects of identity on congressional behavior. Our paper builds on both to say that religion influences the ways in which legislatures collaborate and therefore collectively build the legislative agenda. This provides a new avenue of research for future scholars. More notably, this paper points to the future of Congressional politics, eliciting more questions about the mechanisms that lead to polarization. How is the greater public impacted when legislatures are influenced by religion when deciding what issues receive government attention?
 
+# References
 
-# Tables, Figures, References
+
+# Tables, Figures
 
 ```{r table1, fig.cap = "Model for measuring religious effects of cosponsorship in the 112th session.\\label{table1}", echo=FALSE, out.width = "70%", fig.align = "center"}
 knitr::include_graphics("/Users/naomiliftman/Desktop/GOV338/Final Project/Final Datasets/Final Report/images/112th_religion_firstmodel.png")
