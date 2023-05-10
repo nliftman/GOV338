@@ -11,3 +11,216 @@ library(ggplot2)
 library(gt)
 library(gtExtras)
 ```
+
+# Load in religion for 117th
+```{r}
+#importing the df 
+religion_117 <- import("/Users/naomiliftman/Desktop/GOV338/Final Project/117congress.xlsx")
+
+#rename the last five names
+relig_117 <- religion_117 %>% 
+    rename_with(~ tolower(gsub(".", "", .x, fixed = TRUE))) %>%
+  rename("type" = 2) %>% 
+  rename("name" = 3) %>% 
+  rename("party" = 4 ) %>% 
+  rename("cont" = 5) %>% 
+  rename("religion" = 6)
+
+#rename the state
+names(relig_117)[1] = "state"  
+
+#remove the first row
+relig_117 <- relig_117[-c(1:1), ]
+
+#only want their name, relig, and party
+relig_117 <- relig_117 %>% 
+  select("name", "religion")
+```
+
+
+# fixing!
+```{r}
+#having a look at the original breakdowns
+relig_117 %>% 
+  group_by(religion) %>% 
+  summarize(n = n())
+
+#creating a new 117
+rel_117 <- relig_117 %>% 
+  drop_na(name)
+
+pp <- rel_117 %>% 
+  group_by(religion) %>% 
+  summarize(n = n())
+
+#fix all protestant:
+rel_117$new_relig <- ifelse(rel_117$religion == 'Adventist', 'Protestant', rel_117$religion)
+rel_117$new_relig <- ifelse(rel_117$religion == 'Baptist', 'Protestant', rel_117$new_relig)
+rel_117$new_relig <- ifelse(rel_117$religion == 'Congregationalist', 'Protestant', rel_117$new_relig)
+rel_117$new_relig <- ifelse(rel_117$religion == 'Episcopalian', 'Protestant', rel_117$new_relig)
+rel_117$new_relig <- ifelse(rel_117$religion == 'Lutheran', 'Protestant', rel_117$new_relig)
+rel_117$new_relig <- ifelse(rel_117$religion == 'Methodist', 'Protestant', rel_117$new_relig)
+rel_117$new_relig <- ifelse(rel_117$religion == 'Pentecostal', 'Protestant', rel_117$new_relig)
+rel_117$new_relig <- ifelse(rel_117$religion == 'Pietist', 'Protestant', rel_117$new_relig)
+rel_117$new_relig <- ifelse(rel_117$religion == 'Presbyterian', 'Protestant', rel_117$new_relig)
+rel_117$new_relig <- ifelse(rel_117$religion == 'Protestant unspecified', 'Protestant', rel_117$new_relig)
+rel_117$new_relig <- ifelse(rel_117$religion == 'Reformed', 'Protestant', rel_117$new_relig)
+rel_117$new_relig <- ifelse(rel_117$religion == 'Restorationist', 'Protestant', rel_117$new_relig)
+rel_117$new_relig <- ifelse(rel_117$religion == 'Unitarian Universalist', 'Protestant', rel_117$new_relig)
+
+#fix all general catholic
+rel_117$new_relig <- ifelse(rel_117$religion == 'Orthodox', 'Catholic', rel_117$new_relig)
+
+#fixing all other
+rel_117$new_relig <- ifelse(rel_117$religion == 'Unaffiliated', 'Other', rel_117$new_relig)
+rel_117$new_relig <- ifelse(rel_117$religion == 'Buddhist', 'Other', rel_117$new_relig)
+rel_117$new_relig <- ifelse(rel_117$religion == 'Hindu', 'Other', rel_117$new_relig)
+rel_117$new_relig <- ifelse(rel_117$religion == 'Mormon', 'Other', rel_117$new_relig)
+rel_117$new_relig <- ifelse(rel_117$religion == 'Muslim', 'Other', rel_117$new_relig)
+rel_117$new_relig <- ifelse(rel_117$religion == 'Nondenominational', 'Other', rel_117$new_relig)
+
+#replacing all of the NAs with Unknown along with the dont know
+rel_117$new_relig <- ifelse(rel_117$religion == 'Don\'t know/refused', 'Unknown', rel_117$new_relig)
+rel_117$new_relig <- rel_117$new_relig %>% replace_na('Unknown')
+
+#okay we now want to make certain things certain colors and well see how that goes
+rel_117$color <- ifelse(rel_117$new_relig == "Protestant", "#962fbf", "pp")
+rel_117$color <- ifelse(rel_117$new_relig == 'Catholic', '#feda75', rel_117$color)
+rel_117$color <- ifelse(rel_117$new_relig == 'Other', '#d62976', rel_117$color)
+rel_117$color <- ifelse(rel_117$new_relig == 'Jewish', '#fa7e1e', rel_117$color)
+rel_117$color <- ifelse(rel_117$new_relig == 'Unknown', '#4f5bd5', rel_117$color)
+
+```
+
+```{r}
+#so i want to have the bottom be bar graphs of the five main ones and then 
+#broken down into the different smaller ones
+ggplot(data = rel_117, aes(x = new_relig, fill = religion)) + 
+  geom_bar() + 
+  labs(title = "117th Congress", fill = "Origional Religious Reporting") +
+  xlab("Filtered Religion") +
+  ylab("Count") + 
+ scale_fill_manual(values = c("#962fbf", "#962fbf", "#d62976", "#feda75", "#962fbf", "#4f5bd5", "#962fbf", "#d62976","#fa7e1e", "#962fbf",
+                              "#962fbf", "#d62976", "#d62976", "#d62976", "#feda75", "#d62976", "#962fbf", "#962fbf", "#962fbf", "#962fbf",
+                              "#962fbf", "#962fbf", "#d62976", "#962fbf")) 
+
+
+```
+
+```{r}
+#importing the df 
+religion_112 <- import("/Users/naomiliftman/Desktop/GOV338/Final Project/112congress.xlsx") 
+
+#rename the last five names
+relig_112 <- religion_112 %>% 
+  rename_with(~ tolower(gsub(".", "", .x, fixed = TRUE))) %>% 
+  rename("member_name" = 2) %>% 
+  rename("religion" = 4 ) %>% 
+  select("member_name", "religion")
+
+#now need to add the senate! 
+religion_112_senate <- import("/Users/naomiliftman/Desktop/GOV338/Final Project/112congress_senators.xlsx")
+
+#rename the ones we are gonna use
+relig_112_sen <- religion_112_senate %>% 
+  rename("member_name" = 2) %>% 
+  rename("religion" = 3,
+         "party" = 4) %>% 
+  select("member_name", "religion")
+
+#now making just one religion 
+relig_112_all <- rbind(relig_112_sen, relig_112) %>% 
+  drop_na(religion)
+
+rel_112 <- relig_112_all
+
+#fix all other
+rel_112$fix_relig <- ifelse(rel_112$religion == 'Quaker', 'Other', rel_112$religion)
+rel_112$fix_relig <- ifelse(rel_112$religion == 'Nazarene', 'Other', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religion == 'Greek Orthodox', 'Other', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religion == 'Mormon', 'Other', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religion == 'Buddhist', 'Other', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religion == 'Muslim', 'Other', rel_112$fix_relig)
+
+#fixing all catholic
+rel_112$fix_relig <- ifelse(rel_112$religion == 'Anglican', 'Catholic', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religion == 'Anglican Catholic', 'Catholic', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religion == 'Roman Catholic', 'Catholic', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religion == 'Unitarian', 'Catholic', rel_112$fix_relig)
+
+#fixing all protestant
+rel_112$fix_relig <- ifelse(rel_112$religion == 'African Methodist Episcopal', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religion == 'Evangelical Methodist', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religion == 'United Methodist', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religion == 'Methodist', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religion == 'Christian', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religion == 'Christian non-denominational', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religion == 'Christian Reformed', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religion == 'Christian Scientist', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religion == 'Church of Christ', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religion == 'Antioch Orthodox Christian Church', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religion == 'Eastern Orthodox', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religion == 'Evangelical Christian', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religion == 'Southern Baptist', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religion == 'Baptist', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religion == 'Episcopalian', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religion == 'Presbyterian', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religion == 'Lutheran', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religion == 'Lutheran - Missouri Synod', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religion == 'Evangelical Lutheran', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religion == 'Seventh-day Adventist', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religion == 'Community of Christ', 'Protestant', rel_112$fix_relig)
+rel_112$fix_relig <- ifelse(rel_112$religion == 'Congregationalist Baptist', 'Protestant', rel_112$fix_relig)
+
+rel_112[rel_112 == "Christian Reformed Church"] <- "Protestant"
+rel_112[rel_112 == "Church of God"] <- "Protestant"
+rel_112[rel_112 == "Congregationalist"] <- "Protestant"
+
+
+#replace all NAs with unknown
+rel_112$fix_relig <- ifelse(rel_112$religion == 'Unspecified', 'Unknown', rel_112$fix_relig)
+rel_112$fix_relig <- rel_112$fix_relig %>% replace_na('Unknown')
+
+#how many different religions there are now!
+rel_112 %>% 
+  group_by(fix_relig) %>% 
+  summarize(n = n())
+
+#remove NAs
+rel_112 <- rel_112 %>% 
+  select("member_name", "fix_relig", "religion") %>%
+  drop_na(member_name)
+#okay we now want to make certain things certain colors and well see how that goes
+rel_117$color <- ifelse(rel_117$new_relig == "Protestant", "#962fbf", "pp")
+rel_117$color <- ifelse(rel_117$new_relig == 'Catholic', '#feda75', rel_117$color)
+rel_117$color <- ifelse(rel_117$new_relig == 'Other', '#d62976', rel_117$color)
+rel_117$color <- ifelse(rel_117$new_relig == 'Jewish', '#fa7e1e', rel_117$color)
+rel_117$color <- ifelse(rel_117$new_relig == 'Unknown', '#4f5bd5', rel_117$color)
+
+```
+
+```{r}
+#so i want to have the bottom be bar graphs of the five main ones and then 
+#broken down into the different smaller ones
+ggplot(data = rel_112, aes(x = fix_relig, fill = religion)) + 
+  geom_bar() + 
+  labs(title = "112th Congress", fill = "Origional Religious Reporting") +
+  xlab("Filtered Religion") +
+  ylab("Count") +
+  scale_fill_manual(values = c("#962fbf", "#feda75", "#feda75", "#962fbf", "#962fbf", "#d62976", "#962fbf", "#962fbf", "#962fbf", "#962fbf",
+                               "#962fbf", "#962fbf","#962fbf", "#962fbf", "#962fbf", "#962fbf", "#962fbf", "#962fbf", "#d62976", "#fa7e1e", "#962fbf",
+                               "#962fbf", "#962fbf","#d62976", "#d62976", "#d62976", "#962fbf", "#962fbf", "#d62976", "#feda75", "#962fbf",
+                               "#962fbf", "#feda75", "#962fbf","#4f5bd5"))
+
+
+```
+
+
+
+
+
+
+
+
+
+

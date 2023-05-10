@@ -35,6 +35,7 @@ el_117_senate <- as.data.frame(as_edgelist(B_117_senate))
 ```
 
 # REWORKING 117th SENATE
+
 ```{r}
 #remove all of ending initials
 el_117_senate$V1 <- gsub("(.*)\\s+[A-Z]\\.?$", "\\1", el_117_senate$V1)
@@ -57,6 +58,7 @@ edge_117_senate = el_117_senate %>%
 ```
 
 # REWORKING 117th HOUSE
+
 ```{r}
 ### creates data frame object
 el_117_house <- as.data.frame(as_edgelist(B_117_house))
@@ -82,6 +84,7 @@ edge_117_house = el_117_house %>%
 ```
 
 # FULL
+
 ```{r}
 #full 117th dataframe
 full_117_edge <- rbind(edge_117_house, edge_117_senate)
@@ -92,6 +95,7 @@ full_117_edge$v1_full <- sub("Rep. ", "", full_117_edge$v1_full)
 ```
 
 # FIXING THE NAMES
+
 ```{r}
 #god life is a nightmare
 full_117_edge[full_117_edge == "John W. Hickenlooper"] <- "John Hickenlooper"
@@ -247,25 +251,6 @@ full_117_edge[full_117_edge == "esus \"Chuy\" Garcia"] <- "Jesus Garcia"
 write.csv(full_117_edge, "full_117list.csv", row.names=FALSE)
 ```
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # Mutating Cosponsorship of 117th SENATE
 
 ```{r}
@@ -310,7 +295,6 @@ el_117_house <- as.data.frame(as_edgelist(B_117_house))
 el_117_house %>% 
   distinct()
 ```
-
 
 # Mutating Cosponsorship of 117th HOUSE
 
@@ -360,6 +344,7 @@ explor <- full_117_edge %>%
 ```
 
 # Exploring 117th total?
+
 ```{r}
 full_117_edge %>% 
   group_by(member_i) %>% 
@@ -376,8 +361,6 @@ ree <- full_117_edge %>%
 pp <- full_117_edge %>% 
   distinct(member_i, member_j, keep_all = TRUE)
 ```
-
-
 
 # RELIGION FOR 117th
 
@@ -875,18 +858,6 @@ pd_117 = get.adjacency(p_g_117,sparse=FALSE)
 write.csv(pd_117, "matrix_party_117.csv", row.names=FALSE)
 ```
 
-
-
-
-
-
-
-
-
-
-
-
-
 # Scott Code for Cosponsorship of 112th SENATE
 
 ```{r warning = FALSE, message = FALSE, error = FALSE}
@@ -988,7 +959,6 @@ full_112_edge %>%
   distinct()
 
 ```
-
 
 # Religion Data 112th
 
