@@ -97,12 +97,15 @@ rel_117$color <- ifelse(rel_117$new_relig == 'Unknown', '#4f5bd5', rel_117$color
 #broken down into the different smaller ones
 ggplot(data = rel_117, aes(x = new_relig, fill = religion)) + 
   geom_bar() + 
-  labs(title = "117th Congress", fill = "Origional Religious Reporting") +
+  labs(title = "117th Congress After Religious Methodology", fill = "Original Religious Reporting") +
   xlab("Filtered Religion") +
   ylab("Count") + 
- scale_fill_manual(values = c("#962fbf", "#962fbf", "#d62976", "#feda75", "#962fbf", "#4f5bd5", "#962fbf", "#d62976","#fa7e1e", "#962fbf",
-                              "#962fbf", "#d62976", "#d62976", "#d62976", "#feda75", "#d62976", "#962fbf", "#962fbf", "#962fbf", "#962fbf",
-                              "#962fbf", "#962fbf", "#d62976", "#962fbf")) 
+  scale_x_discrete(limits = c("Protestant", "Other", "Catholic", "Jewish", "Unknown")) +
+ scale_fill_manual(values = c("#fff7f3", "#fde0dd", "#fcc5c0", "#fbafa8",  "#fa9fb5", "#f768a1", "#dd3497", "#ae017e", "#943392", "#7a0177",
+                              "#5b1978", "#49006a", "#41005f",
+                              "#b2d6d6", "#7fbbbb", "#4c9f9f", "#007777", "#006666", "#005555", "#003333", "#6fa8dc",
+                              "#5886b0",  "#e06666", "#f5d46f"),
+                   breaks=c("Adventist","Baptist","Congregationalist", "Episcopalian", "Lutheran", "Methodist", "Pentecostal", "Pietist", "Presbyterian", "Protestant unspecified", "Reformed", "Restorationist", "Unitarian Universalist", "Buddhist", "Hindu", "Mormon", "Muslim", "Nondenominational", "Other", "Unaffiliated", "Catholic", "Orthodox", "Jewish", "Don't know/refused"))
 
 
 ```
@@ -190,12 +193,6 @@ rel_112 %>%
 rel_112 <- rel_112 %>% 
   select("member_name", "fix_relig", "religion") %>%
   drop_na(member_name)
-#okay we now want to make certain things certain colors and well see how that goes
-rel_117$color <- ifelse(rel_117$new_relig == "Protestant", "#962fbf", "pp")
-rel_117$color <- ifelse(rel_117$new_relig == 'Catholic', '#feda75', rel_117$color)
-rel_117$color <- ifelse(rel_117$new_relig == 'Other', '#d62976', rel_117$color)
-rel_117$color <- ifelse(rel_117$new_relig == 'Jewish', '#fa7e1e', rel_117$color)
-rel_117$color <- ifelse(rel_117$new_relig == 'Unknown', '#4f5bd5', rel_117$color)
 
 ```
 
@@ -204,13 +201,15 @@ rel_117$color <- ifelse(rel_117$new_relig == 'Unknown', '#4f5bd5', rel_117$color
 #broken down into the different smaller ones
 ggplot(data = rel_112, aes(x = fix_relig, fill = religion)) + 
   geom_bar() + 
-  labs(title = "112th Congress", fill = "Origional Religious Reporting") +
+  labs(title = "112th After Religious Methodology", fill = "Original Religious Reporting") +
   xlab("Filtered Religion") +
   ylab("Count") +
-  scale_fill_manual(values = c("#962fbf", "#feda75", "#feda75", "#962fbf", "#962fbf", "#d62976", "#962fbf", "#962fbf", "#962fbf", "#962fbf",
-                               "#962fbf", "#962fbf","#962fbf", "#962fbf", "#962fbf", "#962fbf", "#962fbf", "#962fbf", "#d62976", "#fa7e1e", "#962fbf",
-                               "#962fbf", "#962fbf","#d62976", "#d62976", "#d62976", "#962fbf", "#962fbf", "#d62976", "#feda75", "#962fbf",
-                               "#962fbf", "#feda75", "#962fbf","#4f5bd5"))
+  scale_x_discrete(limits = c("Protestant", "Other", "Catholic", "Jewish", "Unknown")) +
+  scale_fill_manual(values = c("#FFFFFF", "#F6F2F7", "#EDE6F0", "#E5DAE9", "#DCCEE2", "#D3C2DB", "#CBB6D4", "#C2AACD", "#B99DC6", "#B191BF",
+                               "#A885B8", "#9F79B0","#976DA9", "#8E61A2", "#85559B", "#7D4894", "#743C8D", "#6B3086", "#63247F", "#5A1878", "#510C71",
+                               "#49006A", "#33004a","#ffffcc", "#d9f0a3", "#addd8e", "#78c679", "#31a354", "#006837", "#ffffb2", "#fecc5c",
+                               "#fd8d3c", "#e31a1c", "#e06666", "#f5d46f"),
+                    breaks = c("African Methodist Episcopal", "Antioch Orthodox Christian Church", "Baptist", "Christian", "Christian non-denominational", "Christian Reformed", "Christian Scientist", "Church of Christ", "Community of Christ", "Congregationalist Baptist", "Eastern Orthodox", "Episcopalian", "Evangelical Christian", "Evangelical Lutheran", "Evnagelical Methodist", "Lutheran", "Lutheran - Missouri Synod", "Methodist", "Presbyterian", "Protestant", "Seventh-day Adventist", "Southern Baptist", "United Methodist", "Buddhist", "Greek Orthodox", "Mormon", "Muslim", "Nazarene", "Quaker", "Anglican", "Anglican Catholic", "Roman Catholic", "Unitarian", "Jewish", "Unspecified" ))
 
 
 ```
