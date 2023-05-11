@@ -19,6 +19,7 @@ classoption:
   - Royal
   - times
 bibliography: citations
+nocite: '@*'
 bibliographystyle: sageh
 output:
   rticles::sage_article:
