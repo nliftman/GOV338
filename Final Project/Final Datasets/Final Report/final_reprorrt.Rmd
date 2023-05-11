@@ -18,12 +18,13 @@ keywords: Cosponsorship, Networks, Religion, Polarization
 classoption:
   - Royal
   - times
-bibliography: citations
+bibliography: final_report
 nocite: '@*'
 bibliographystyle: sageh
 output:
-  rticles::sage_article:
-    keep_tex: yes
+  bookdown::pdf_document2:
+    base_format: rticles::sage_article
+      keep_tex: yes
 header-includes:
   - \usepackage{setspace}
 ---
@@ -193,222 +194,17 @@ While this study is not the first to limit the scope of congressional terms [see
 
 Even despite this limitation, there are substantial practical implications for this paper. Firstly, it bridges the gap between existing literature on general cosponsorship and the effects of identity on congressional behavior. Our paper builds on both to say that religion influences the ways in which legislatures collaborate and therefore collectively build the legislative agenda. This provides a new avenue of research for future scholars. More notably, this paper points to the future of Congressional politics, eliciting more questions about the mechanisms that lead to polarization. How is the greater public impacted when legislatures are influenced by religion when deciding what issues receive government attention?
 
-# Bibliography
 
+See Figure \@ref(fig:percentgraph)
 
-# Tables, Figures
-
-```{r table1, fig.cap = "Model for measuring religious effects of cosponsorship in the 112th session.\\label{table1}", echo=FALSE, out.width = "70%", fig.align = "center"}
-knitr::include_graphics("/Users/naomiliftman/Desktop/GOV338/Final Project/Final Datasets/Final Report/images/112th_religion_firstmodel.png")
+```{r fig:percentgraph, fic.cap = "The final distribution of our 5 overarching religious groups for both the 112th and 117th Congressional Sessions.\\label{fig:percentgraph}"}
+knitr::include_graphics("/Users/naomiliftman/Desktop/GOV338/Final Project/Final Datasets/Final Report/images/percent_graph.png")
 ```
 
-```{r table2, fig.cap = "Model for measuring religious effects of cosponsorship in the 113th session. \\label{table2}", echo=FALSE, out.width = "70%", fig.align = "center"}
-knitr::include_graphics("/Users/naomiliftman/Desktop/GOV338/Final Project/Final Datasets/Final Report/images/117th_religion_firstmodel.png")
+
+
+```{r 112th_religion, fig.cap= "Using the Pew Research Center's methodology for "}
+
 ```
 
-```{r table3, fig.cap = "Model for measuring effects of specific ingroup behaviors of 112th session. \\label{table3}", echo=FALSE, out.width = "70%", fig.align = "center"}
-knitr::include_graphics("/Users/naomiliftman/Desktop/GOV338/Final Project/Final Datasets/Final Report/images/112th_religion.png")
-```
 
-```{r table4, fig.cap = "Model for measuring effects of specific ingroup behaviors of 117th session.\\label{table4}", echo=FALSE, out.width = "70%", fig.align = "center"}
-knitr::include_graphics("/Users/naomiliftman/Desktop/GOV338/Final Project/Final Datasets/Final Report/images/117th_religion.png")
-```
-
-```{r message = FALSE, warning = FALSE, error = FALSE, echo=FALSE}
-library(rio)
-library(tidyverse)
-library(ggplot2)
-library(gdata)
-library(smnet)
-library(network)
-library(igraph)
-#importing the df 
-religion_112 <- import("/Users/naomiliftman/Desktop/GOV338/Final Project/112congress.xlsx") 
-
-#rename the last five names
-relig_112 <- religion_112 %>% 
-  rename_with(~ tolower(gsub(".", "", .x, fixed = TRUE))) %>% 
-  rename("member_name" = 2) %>% 
-  rename("religious_affiliation" = 4 ) %>% 
-  select("member_name", "religious_affiliation", "party")
-
-#now need to add the senate! 
-religion_112_senate <- import("/Users/naomiliftman/Desktop/GOV338/Final Project/112congress_senators.xlsx")
-
-#rename the ones we are gonna use
-relig_112_sen <- religion_112_senate %>% 
-  rename("member_name" = 2) %>% 
-  rename("religious_affiliation" = 3,
-         "party" = 4) %>% 
-  select("member_name", "religious_affiliation", "party")
-
-#now making just one religion 
-relig_112_all <- rbind(relig_112_sen, relig_112) %>% 
-  drop_na(religious_affiliation)
-
-rel_112 <- relig_112_all
-
-#fix all other
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Quaker', 'Other', rel_112$religious_affiliation)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Nazarene', 'Other', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Greek Orthodox', 'Other', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Mormon', 'Other', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Buddhist', 'Other', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Muslim', 'Other', rel_112$fix_relig)
-
-#fixing all catholic
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Anglican', 'Catholic', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Anglican Catholic', 'Catholic', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Roman Catholic', 'Catholic', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Unitarian', 'Catholic', rel_112$fix_relig)
-
-#fixing all protestant
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'African Methodist Episcopal', 'Protestant', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Evangelical Methodist', 'Protestant', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'United Methodist', 'Protestant', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Methodist', 'Protestant', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Christian', 'Protestant', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Christian non-denominational', 'Protestant', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Christian Reformed', 'Protestant', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Christian Scientist', 'Protestant', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Church of Christ', 'Protestant', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Antioch Orthodox Christian Church', 'Protestant', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Eastern Orthodox', 'Protestant', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Evangelical Christian', 'Protestant', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Southern Baptist', 'Protestant', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Baptist', 'Protestant', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Episcopalian', 'Protestant', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Presbyterian', 'Protestant', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Lutheran', 'Protestant', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Lutheran - Missouri Synod', 'Protestant', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Evangelical Lutheran', 'Protestant', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Seventh-day Adventist', 'Protestant', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Community of Christ', 'Protestant', rel_112$fix_relig)
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Congregationalist Baptist', 'Protestant', rel_112$fix_relig)
-
-rel_112[rel_112 == "Christian Reformed Church"] <- "Protestant"
-rel_112[rel_112 == "Church of God"] <- "Protestant"
-rel_112[rel_112 == "Congregationalist"] <- "Protestant"
-
-
-#replace all NAs with unknown
-rel_112$fix_relig <- ifelse(rel_112$religious_affiliation == 'Unspecified', 'Unknown', rel_112$fix_relig)
-rel_112$fix_relig <- rel_112$fix_relig %>% replace_na('Unknown')
-
-#remove NAs
-rel_112 <- rel_112 %>% 
-  select("member_name", "fix_relig", "party") %>%
-  drop_na(member_name)
-#importing the df 
-religion_117 <- import("/Users/naomiliftman/Desktop/GOV338/Final Project/117congress.xlsx")
-
-#rename the last five names
-relig_117 <- religion_117 %>% 
-    rename_with(~ tolower(gsub(".", "", .x, fixed = TRUE))) %>%
-  rename("type" = 2) %>% 
-  rename("name" = 3) %>% 
-  rename("party" = 4 ) %>% 
-  rename("cont" = 5) %>% 
-  rename("religion" = 6)
-
-#rename the state
-names(relig_117)[1] = "state"  
-
-#remove the first row
-relig_117 <- relig_117[-c(1:1), ]
-
-#only want their name, relig, and party
-relig_117 <- relig_117 %>% 
-  select("name", "religion", "party")
-
-#creating a new 117
-rel_117 <- relig_117 %>% 
-  drop_na(name)
-
-pp <- rel_117 %>% 
-  group_by(religion) %>% 
-  summarize(n = n())
-
-#fix all protestant:
-rel_117$fix_relig <- ifelse(rel_117$religion == 'Adventist', 'Protestant', rel_117$religion)
-rel_117$fix_relig <- ifelse(rel_117$religion == 'Baptist', 'Protestant', rel_117$fix_relig)
-rel_117$fix_relig <- ifelse(rel_117$religion == 'Congregationalist', 'Protestant', rel_117$fix_relig)
-rel_117$fix_relig <- ifelse(rel_117$religion == 'Episcopalian', 'Protestant', rel_117$fix_relig)
-rel_117$fix_relig <- ifelse(rel_117$religion == 'Lutheran', 'Protestant', rel_117$fix_relig)
-rel_117$fix_relig <- ifelse(rel_117$religion == 'Methodist', 'Protestant', rel_117$fix_relig)
-rel_117$fix_relig <- ifelse(rel_117$religion == 'Pentecostal', 'Protestant', rel_117$fix_relig)
-rel_117$fix_relig <- ifelse(rel_117$religion == 'Pietist', 'Protestant', rel_117$fix_relig)
-rel_117$fix_relig <- ifelse(rel_117$religion == 'Presbyterian', 'Protestant', rel_117$fix_relig)
-rel_117$fix_relig <- ifelse(rel_117$religion == 'Protestant unspecified', 'Protestant', rel_117$fix_relig)
-rel_117$fix_relig <- ifelse(rel_117$religion == 'Reformed', 'Protestant', rel_117$fix_relig)
-rel_117$fix_relig <- ifelse(rel_117$religion == 'Restorationist', 'Protestant', rel_117$fix_relig)
-rel_117$fix_relig <- ifelse(rel_117$religion == 'Unitarian Universalist', 'Protestant', rel_117$fix_relig)
-
-#fix all general catholic
-rel_117$fix_relig <- ifelse(rel_117$religion == 'Orthodox', 'Catholic', rel_117$fix_relig)
-
-#fixing all other
-rel_117$fix_relig <- ifelse(rel_117$religion == 'Unaffiliated', 'Other', rel_117$fix_relig)
-rel_117$fix_relig <- ifelse(rel_117$religion == 'Buddhist', 'Other', rel_117$fix_relig)
-rel_117$fix_relig <- ifelse(rel_117$religion == 'Hindu', 'Other', rel_117$fix_relig)
-rel_117$fix_relig <- ifelse(rel_117$religion == 'Mormon', 'Other', rel_117$fix_relig)
-rel_117$fix_relig <- ifelse(rel_117$religion == 'Muslim', 'Other', rel_117$fix_relig)
-rel_117$fix_relig <- ifelse(rel_117$religion == 'Nondenominational', 'Other', rel_117$fix_relig)
-
-#replacing all of the NAs with Unknown along with the dont know
-rel_117$fix_relig <- ifelse(rel_117$religion == 'Don\'t know/refused', 'Unknown', rel_117$fix_relig)
-rel_117$fix_relig <- rel_117$fix_relig %>% replace_na('Unknown')
-
-rel_117 <- rel_117 %>% 
-  select("name", "fix_relig", "party") %>% 
-  drop_na("name")
-#building a full dataset 
-rel_112 <- rel_112 %>% 
-  mutate(session = "112th") %>% 
-  rename(name = member_name)
-
-rel_117 <- rel_117 %>% 
-  mutate(session = "117th") 
-
-full <- rbind(rel_112, rel_117) %>% 
-  mutate(party = ifelse(party == "I", "D", party))
-#build easy dataset for 112
-r <- rel_112 %>% 
-  mutate(party = ifelse(party == 'I', "D", party)) %>% 
-  group_by(fix_relig, party) %>% 
-  summarize(count = n())
-
-#built easy dataset for 117
-d <- rel_117 %>% 
-  mutate(party = ifelse(party == 'I', "D", party)) %>% 
-  group_by(fix_relig, party) %>% 
-  summarize(count = n())
-
-
-r <- r %>% 
-  mutate(session = "112th") %>% 
-  mutate(percent = count/531)
-
-d <- d %>% 
-  mutate(session = "117th") %>% 
-  mutate(percent = count/535)
-
-full_perc <- rbind(r, d )
-
-full_perc <- full_perc %>% 
-  mutate(perc = percent*100)
-x <- ggplot(data = full_perc, aes(x = fix_relig, y= perc, fill = party)) + 
-  geom_col(position = position_dodge(preserve = "single")) + 
-  facet_wrap(~session) + 
-  labs(title = "Religious Distribution of the 112th and 117th Congressional Sessions", fill = "Party") +
-  xlab("Religion") +
-  ylab("Percent") + 
-  scale_fill_manual(values = c( "#1A36B8","#C61C1C")) + 
-  theme_linedraw()
-```
-
-```{r echo = FALSE, plot-ref, fig.cap = "\\label{fig:plot}", out.width='100%'}
-print(x)
-```
-
-# Bibliography 
