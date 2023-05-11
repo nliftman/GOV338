@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.4.27)  11 MAY 2023 14:28
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.4.27)  11 MAY 2023 14:41
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -386,59 +386,37 @@ Package: uniquecounter 2019/12/15 v1.4 Provide unlimited unique counter (HO)
 Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 285.
 )
 \Hy@SectionHShift=\skip67
-) (/Users/naomiliftman/Library/TinyTeX/texmf-dist/tex/latex/tools/longtable.sty
-Package: longtable 2021-09-01 v4.17 Multi-page Table package (DPC)
-\LTleft=\skip68
-\LTright=\skip69
-\LTpre=\skip70
-\LTpost=\skip71
-\LTchunksize=\count304
-\LTcapwidth=\dimen197
-\LT@head=\box57
-\LT@firsthead=\box58
-\LT@foot=\box59
-\LT@lastfoot=\box60
-\LT@gbox=\box61
-\LT@cols=\count305
-\LT@rows=\count306
-\c@LT@tables=\count307
-\c@LT@chunks=\count308
-\LT@p@ftn=\toks35
-) (/Users/naomiliftman/Library/TinyTeX/texmf-dist/tex/latex/mdwtools/footnote.sty
-Package: footnote 1997/01/28 1.13 Save footnotes around boxes
-\fn@notes=\box62
-\fn@width=\dimen198
 ) (/Users/naomiliftman/Library/TinyTeX/texmf-dist/tex/latex/setspace/setspace.sty
 Package: setspace 2022/12/04 v6.7b set line spacing
 )
-LaTeX Font Info:    Trying to load font information for OT1+ptm on input line 28.
+LaTeX Font Info:    Trying to load font information for OT1+ptm on input line 17.
 (/Users/naomiliftman/Library/TinyTeX/texmf-dist/tex/latex/psnfss/ot1ptm.fd
 File: ot1ptm.fd 2001/06/04 font definitions for OT1/ptm.
 ) (/Users/naomiliftman/Library/TinyTeX/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 File: l3backend-pdftex.def 2023-04-19 L3 backend support: PDF output (pdfTeX)
-\l__color_backend_stack_int=\count309
-\l__pdf_internal_box=\box63
+\l__color_backend_stack_int=\count304
+\l__pdf_internal_box=\box57
 ) (./final_reprorrt.aux)
 \openout1 = `final_reprorrt.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 28.
-LaTeX Font Info:    ... okay on input line 28.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 28.
-LaTeX Font Info:    ... okay on input line 28.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 28.
-LaTeX Font Info:    ... okay on input line 28.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 28.
-LaTeX Font Info:    ... okay on input line 28.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 28.
-LaTeX Font Info:    ... okay on input line 28.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 28.
-LaTeX Font Info:    ... okay on input line 28.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 28.
-LaTeX Font Info:    ... okay on input line 28.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 28.
-LaTeX Font Info:    ... okay on input line 28.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 28.
-LaTeX Font Info:    ... okay on input line 28.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
 (/Users/naomiliftman/Library/TinyTeX/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
 Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 485.
@@ -483,84 +461,80 @@ File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Live
 
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: hyperref package is loaded.
-Package caption Info: longtable package is loaded.
-(/Users/naomiliftman/Library/TinyTeX/texmf-dist/tex/latex/caption/ltcaption.sty
-Package: ltcaption 2021/01/08 v1.4c longtable captions (AR)
-)
 Package caption Info: End \AtBeginDocument code.
-Package hyperref Info: Link coloring ON on input line 28.
+Package hyperref Info: Link coloring ON on input line 17.
 (./final_reprorrt.out) (./final_reprorrt.out)
 \@outlinefile=\write4
 \openout4 = `final_reprorrt.out'.
 
-LaTeX Font Info:    Trying to load font information for OT1+phv on input line 45.
+LaTeX Font Info:    Trying to load font information for OT1+phv on input line 37.
 (/Users/naomiliftman/Library/TinyTeX/texmf-dist/tex/latex/psnfss/ot1phv.fd
 File: ot1phv.fd 2020/03/25 scalable font definitions for OT1/phv.
 )
 LaTeX Font Info:    Font shape `OT1/phv/m/n' will be
-(Font)              scaled to size 9.49997pt on input line 45.
+(Font)              scaled to size 9.49997pt on input line 37.
 LaTeX Font Info:    Font shape `OT1/phv/m/n' will be
-(Font)              scaled to size 11.39996pt on input line 45.
+(Font)              scaled to size 11.39996pt on input line 37.
 LaTeX Font Info:    Font shape `OT1/phv/b/n' will be
-(Font)              scaled to size 11.39996pt on input line 45.
+(Font)              scaled to size 11.39996pt on input line 37.
 LaTeX Font Info:    Font shape `OT1/phv/b/n' will be
-(Font)              scaled to size 9.49997pt on input line 45.
-LaTeX Font Info:    Trying to load font information for U+lasy on input line 47.
+(Font)              scaled to size 9.49997pt on input line 37.
+LaTeX Font Info:    Trying to load font information for U+lasy on input line 48.
 (/Users/naomiliftman/Library/TinyTeX/texmf-dist/tex/latex/base/ulasy.fd
 File: ulasy.fd 1998/08/17 v2.2e LaTeX symbol font definitions
 )
-LaTeX Font Info:    Trying to load font information for U+msa on input line 47.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 48.
 (/Users/naomiliftman/Library/TinyTeX/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 47.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 48.
 (/Users/naomiliftman/Library/TinyTeX/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
 LaTeX Font Info:    Font shape `OT1/phv/m/n' will be
-(Font)              scaled to size 17.09995pt on input line 52.
+(Font)              scaled to size 17.09995pt on input line 53.
 LaTeX Font Info:    Font shape `OT1/phv/b/n' will be
-(Font)              scaled to size 17.09995pt on input line 52.
+(Font)              scaled to size 17.09995pt on input line 53.
 LaTeX Font Info:    Font shape `OT1/phv/m/n' will be
-(Font)              scaled to size 6.64998pt on input line 52.
-LaTeX Font Info:    Trying to load font information for TS1+phv on input line 52.
+(Font)              scaled to size 6.64998pt on input line 53.
+LaTeX Font Info:    Trying to load font information for TS1+phv on input line 53.
 (/Users/naomiliftman/Library/TinyTeX/texmf-dist/tex/latex/psnfss/ts1phv.fd
 File: ts1phv.fd 2020/03/25 scalable font definitions for TS1/phv.
 )
 LaTeX Font Info:    Font shape `TS1/phv/m/n' will be
-(Font)              scaled to size 6.64998pt on input line 52.
+(Font)              scaled to size 6.64998pt on input line 53.
 LaTeX Font Info:    Font shape `OT1/phv/b/n' will be
-(Font)              scaled to size 7.59998pt on input line 52.
+(Font)              scaled to size 7.59998pt on input line 53.
 LaTeX Font Info:    Font shape `OT1/phv/b/n' will be
-(Font)              scaled to size 5.69998pt on input line 52.
+(Font)              scaled to size 5.69998pt on input line 53.
 LaTeX Font Info:    Font shape `OT1/phv/m/n' will be
-(Font)              scaled to size 7.59998pt on input line 52.
+(Font)              scaled to size 7.59998pt on input line 53.
 LaTeX Font Info:    Font shape `OT1/phv/m/n' will be
-(Font)              scaled to size 5.69998pt on input line 52.
+(Font)              scaled to size 5.69998pt on input line 53.
 LaTeX Font Info:    Font shape `OT1/phv/m/n' will be
-(Font)              scaled to size 4.74998pt on input line 52.
-LaTeX Font Info:    Trying to load font information for OT1+pcr on input line 52.
+(Font)              scaled to size 4.74998pt on input line 53.
+LaTeX Font Info:    Trying to load font information for OT1+pcr on input line 53.
 (/Users/naomiliftman/Library/TinyTeX/texmf-dist/tex/latex/psnfss/ot1pcr.fd
 File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
 )
 LaTeX Font Info:    Font shape `OT1/phv/m/it' in size <7> not available
-(Font)              Font shape `OT1/phv/m/sl' tried instead on input line 61.
+(Font)              Font shape `OT1/phv/m/sl' tried instead on input line 73.
 LaTeX Font Info:    Font shape `OT1/phv/m/sl' will be
-(Font)              scaled to size 6.64998pt on input line 61.
+(Font)              scaled to size 6.64998pt on input line 73.
 [1
 
 {/Users/naomiliftman/Library/TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/Users/naomiliftman/Library/TinyTeX/texmf-dist/fonts/enc/dvips/base/8r.enc}]
 LaTeX Font Info:    Font shape `OT1/phv/m/it' in size <12> not available
-(Font)              Font shape `OT1/phv/m/sl' tried instead on input line 72.
+(Font)              Font shape `OT1/phv/m/sl' tried instead on input line 108.
 LaTeX Font Info:    Font shape `OT1/phv/m/sl' will be
-(Font)              scaled to size 11.39996pt on input line 72.
+(Font)              scaled to size 11.39996pt on input line 108.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
 LaTeX Font Info:    Font shape `OT1/phv/m/it' in size <10> not available
-(Font)              Font shape `OT1/phv/m/sl' tried instead on input line 75.
+(Font)              Font shape `OT1/phv/m/sl' tried instead on input line 123.
 LaTeX Font Info:    Font shape `OT1/phv/m/sl' will be
-(Font)              scaled to size 9.49997pt on input line 75.
+(Font)              scaled to size 9.49997pt on input line 123.
 
 Overfull \vbox (0.97188pt too high) has occurred while \output is active []
 
@@ -595,10 +569,6 @@ Overfull \vbox (0.97188pt too high) has occurred while \output is active []
 Overfull \vbox (0.97188pt too high) has occurred while \output is active []
 
 [10]
-
-LaTeX Warning: Reference `fig:plot' on page 11 undefined on input line 181.
-
-
 Overfull \vbox (0.97188pt too high) has occurred while \output is active []
 
 [11]
@@ -608,80 +578,72 @@ Overfull \vbox (0.97188pt too high) has occurred while \output is active []
 Overfull \vbox (0.97188pt too high) has occurred while \output is active []
 
 [13]
-
-LaTeX Warning: Reference `table1' on page 14 undefined on input line 222.
-
-
-LaTeX Warning: Reference `table2' on page 14 undefined on input line 222.
-
-
-LaTeX Warning: Reference `table1' on page 14 undefined on input line 222.
-
-
-LaTeX Warning: Reference `table3' on page 14 undefined on input line 224.
-
-
 Overfull \vbox (0.97188pt too high) has occurred while \output is active []
 
 [14]
-
-LaTeX Warning: Reference `table4' on page 15 undefined on input line 226.
-
-
 Overfull \vbox (0.97188pt too high) has occurred while \output is active []
 
 [15]
-
-LaTeX Warning: Reference `fig:percentgraph' on page 16 undefined on input line 241.
-
-
-Overfull \hbox (415.18584pt too wide) in paragraph at lines 244--244
-[]\OT1/pcr/m/n/10 knitr::include_graphics("/Users/naomiliftman/Desktop/GOV338/Final Project/Final Datasets/Final Report/images/percent_graph.png") 
- []
-
-<images/percent_graph.png, id=162, 1445.4pt x 903.375pt>
-File: images/percent_graph.png Graphic file (type png)
-<use images/percent_graph.png>
-Package pdftex.def Info: images/percent_graph.png  used on input line 247.
-(pdftex.def)             Requested size: 2890.79999pt x 1806.92479pt.
-
-Overfull \hbox (2547.98584pt too wide) in paragraph at lines 247--248
-[][] 
- []
-
+<images/112th_religious.png, id=180, 1445.4pt x 903.375pt>
+File: images/112th_religious.png Graphic file (type png)
+<use images/112th_religious.png>
+Package pdftex.def Info: images/112th_religious.png  used on input line 635.
+(pdftex.def)             Requested size: 246.96883pt x 154.34364pt.
+LaTeX Font Info:    Font shape `OT1/phv/m/n' will be
+(Font)              scaled to size 8.54997pt on input line 639.
+LaTeX Font Info:    Font shape `OT1/phv/b/n' will be
+(Font)              scaled to size 8.54997pt on input line 639.
+<images/117th religious.png, id=182, 1445.4pt x 903.375pt>
+File: images/117th religious.png Graphic file (type png)
+<use images/117th religious.png>
+Package pdftex.def Info: images/117th religious.png  used on input line 644.
+(pdftex.def)             Requested size: 246.96883pt x 154.34364pt.
+<images/final_model1.png, id=183, 834.11626pt x 314.17375pt>
+File: images/final_model1.png Graphic file (type png)
+<use images/final_model1.png>
+Package pdftex.def Info: images/final_model1.png  used on input line 653.
+(pdftex.def)             Requested size: 246.96883pt x 93.02081pt.
+<images/final_model2.png, id=184, 880.28876pt x 390.45876pt>
+File: images/final_model2.png Graphic file (type png)
+<use images/final_model2.png>
+Package pdftex.def Info: images/final_model2.png  used on input line 662.
+(pdftex.def)             Requested size: 246.96883pt x 109.54219pt.
+<images/final_model3.png, id=185, 851.18pt x 478.78876pt>
+File: images/final_model3.png Graphic file (type png)
+<use images/final_model3.png>
+Package pdftex.def Info: images/final_model3.png  used on input line 670.
+(pdftex.def)             Requested size: 352.81416pt x 198.45984pt.
 No file final_reprorrt.bbl.
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
 
 Overfull \vbox (0.97188pt too high) has occurred while \output is active []
 
 [16]
-Overfull \vbox (1280.54881pt too high) has occurred while \output is active []
+
+LaTeX Warning: Text page 17 contains only floats.
 
 
 Overfull \vbox (0.97188pt too high) has occurred while \output is active []
 
-[17 <./images/percent_graph.png>] (./final_reprorrt.aux)
+[17 <./images/112th_religious.png> <./images/117th religious.png> <./images/final_model1.png>]
+Overfull \vbox (0.97188pt too high) has occurred while \output is active []
 
-LaTeX Warning: There were undefined references.
-
+[18 <./images/final_model2.png> <./images/final_model3.png>] (./final_reprorrt.aux)
 Package rerunfilecheck Info: File `final_reprorrt.out' has not changed.
-(rerunfilecheck)             Checksum: 156653826AF380F2A9A4A2BE97F1A844;2621.
+(rerunfilecheck)             Checksum: A3EEB3F78FA42EBDEFF73A7539F67794;2849.
  ) 
 Here is how much of TeX's memory you used:
- 13097 strings out of 477961
- 213525 string characters out of 5837168
+ 12957 strings out of 477961
+ 211196 string characters out of 5837168
  1863074 words of memory out of 5000000
- 33025 multiletter control sequences out of 15000+600000
- 550941 words of font info for 106 fonts, out of 8000000 for 9000
+ 32880 multiletter control sequences out of 15000+600000
+ 553215 words of font info for 109 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 75i,9n,77p,1155b,445s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</Users/naomiliftman/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></Users/naomiliftman/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></Users/naomiliftman/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></Users/naomiliftman/Library/TinyTeX/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></Users/naomiliftman/Library/TinyTeX/texmf-dist/fonts/type1/urw/helvetic/uhvb8a.pfb></Users/naomiliftman/Library/TinyTeX/texmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb></Users/naomiliftman/Library/TinyTeX/texmf-dist/fonts/type1/urw/helvetic/uhvro8a.pfb></Users/naomiliftman/Library/TinyTeX/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></Users/naomiliftman/Library/TinyTeX/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></Users/naomiliftman/Library/TinyTeX/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on final_reprorrt.pdf (17 pages, 426521 bytes).
+ 75i,9n,77p,551b,445s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</Users/naomiliftman/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></Users/naomiliftman/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></Users/naomiliftman/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></Users/naomiliftman/Library/TinyTeX/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></Users/naomiliftman/Library/TinyTeX/texmf-dist/fonts/type1/urw/helvetic/uhvb8a.pfb></Users/naomiliftman/Library/TinyTeX/texmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb></Users/naomiliftman/Library/TinyTeX/texmf-dist/fonts/type1/urw/helvetic/uhvro8a.pfb></Users/naomiliftman/Library/TinyTeX/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></Users/naomiliftman/Library/TinyTeX/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
+Output written on final_reprorrt.pdf (18 pages, 1593291 bytes).
 PDF statistics:
- 231 PDF objects out of 1000 (max. 8388607)
- 188 compressed objects within 2 object streams
- 49 named destinations out of 1000 (max. 500000)
- 126 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 261 PDF objects out of 1000 (max. 8388607)
+ 210 compressed objects within 3 object streams
+ 59 named destinations out of 1000 (max. 500000)
+ 162 words of extra memory for PDF output out of 10000 (max. 10000000)
 
