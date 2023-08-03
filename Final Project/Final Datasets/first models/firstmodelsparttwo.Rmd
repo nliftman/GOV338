@@ -17,7 +17,7 @@ library(stats)
 
 ```{r}
 # Independent variables
-religion <- as.matrix(import("new_matrix_religion.csv"))  #religion matrix
+religion <- as.matrix(import("religion_117_but_like_ithinkitworksnow.csv"))  #religion matrix
 party <- as.matrix(import("matrix_party_117.csv")) #party matrix
 dw <- as.matrix(import("matrix_DW_117.csv")) #DW nominate scores
 
@@ -59,8 +59,11 @@ state_matrices[3,,] <- dw
 #similarity is the dependent and the array is the independent variables
 #state_sim_lm<- netlm(cosponsorship, state_matrices, reps=100)
 
+options(digits=10)
 #lets try a logit model #cant bc i set it up a specific way :( 
-state_sim_lm <- netlogit(cosponsorship, state_matrices, reps = 100)
+state_sim_lm <- netlm(cosponsorship, state_matrices, reps = 100)
+
+
 
 #lets label the variables! 
 #create a new list thats a summary of the model and label each of the variables
