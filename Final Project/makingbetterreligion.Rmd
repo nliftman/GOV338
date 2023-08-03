@@ -115,4 +115,62 @@ d_117 = get.adjacency(g_117,sparse=FALSE)
 write.csv(d_117, "new_matrix_religion.csv", row.names=FALSE)
 ```
 
+# im actually the stupidest man alive
+```{r}
+#making an i and j 
+relig_117_fixed <- relig_117_fixed %>% 
+  mutate(member_i=name) %>% 
+  rename(member_j = name) %>% 
+  mutate(religion_i = religion) %>% 
+  rename(religion_j = religion)
+
+#creating all the possible combinations
+combos <- relig_117_fixed |>
+  expand(member_i, member_j) |>
+  filter(member_i != member_j) 
+
+#merge back in religion
+combos_rel <- combos %>% 
+  right_join(relig_117_fixed, by = c("member_i" = "member_i")) %>% 
+  select(member_i, member_j.x, religion_i)
+
+#merge religion of j
+combos_rel <- combos_rel %>% 
+  right_join(relig_117_fixed, by = c("member_j.x" = "member_j")) 
+
+#select the correct ones
+combos_112 <- combos_rel %>% 
+  select(member_i.x, member_j.x, religion_i.x, religion_j) %>% 
+  rename(member_i =member_i.x,
+         member_j = member_j.x,
+         religion_i = religion_i.x)
+
+#create similarity score
+combos_112 <- combos_112 %>% 
+  mutate(similarity = ifelse(religion_i == religion_j, 1, 0 )) %>% 
+  select(-religion_i, -religion_j)
+
+#now we only want to include the ones that include the same? 
+sim_combos <-combos_112[!combos_112$similarity==0 ,]
+
+
+#turn edge list into matrix
+el_112 =as.matrix(combos_112)
+
+#turn into graph object
+g_112=graph.data.frame(sim_combos)
+
+#get adjacency matrix
+d_112 = get.adjacency(g_112,sparse=FALSE) 
+ 
+#changing it so all of them are zeros
+
+
+#export it for easier work!
+write.csv(d_112, "religion_117_but_like_ithinkitworksnow.csv", row.names=FALSE)
+```
+
+
+
+
 
