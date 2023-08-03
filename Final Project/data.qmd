@@ -1,11 +1,11 @@
 ---
-title: "data!"
+title: "Collection, Cleaning, and Creation of Final Datasets"
 author: "Naomi Liftman"
 format: pdf
 editor: visual
 ---
 
-# Packages
+# Load Packages Packages
 
 ```{r warning = FALSE, error = FALSE, message = FALSE}
 library(incidentally)
@@ -19,22 +19,23 @@ library(network)
 library(gdata)
 ```
 
-# Scott Code for Cosponsorship of 117th SENATE
+# Collection of Cosponsorship of 117th Senate and House
 
 ```{r warning = FALSE, message = FALSE, error = FALSE}
 #pull the 117 senators connections 
 B_117_senate <- incidence.from.congress(session = 117, types = c("s", "sres", "sjres", "sconres"), areas = c("All"), format = "igraph")
 
-#degree(B_117_senate)
-
-
-#network_117_senate <- sdsm(B_117_senate, alpha = .5, narrative = TRUE)
-
 ### creates data frame object
 el_117_senate <- as.data.frame(as_edgelist(B_117_senate))
+
+#pull the 117 senators connections 
+B_117_house <- incidence.from.congress(session = 117, types = c("h", "hres", "hjres", "jconres"), areas = c("All"), format = "igraph")
+
+### creates data frame object
+el_117_house <- as.data.frame(as_edgelist(B_117_house))
 ```
 
-# REWORKING 117th SENATE
+# Mutation of 117th Senate
 
 ```{r}
 #remove all of ending initials
@@ -57,7 +58,7 @@ edge_117_senate = el_117_senate %>%
   rename(bill = V2)
 ```
 
-# REWORKING 117th HOUSE
+# Mutation of 117th HOUSE
 
 ```{r}
 ### creates data frame object
@@ -83,7 +84,7 @@ edge_117_house = el_117_house %>%
   rename(bill = V2)
 ```
 
-# FULL
+# Creating a Full Dataframe
 
 ```{r}
 #full 117th dataframe
@@ -94,7 +95,7 @@ full_117_edge <- rbind(edge_117_house, edge_117_senate)
 full_117_edge$v1_full <- sub("Rep. ", "", full_117_edge$v1_full)
 ```
 
-# FIXING THE NAMES
+# Fixing all Names of 117th Cosponsorship
 
 ```{r}
 #god life is a nightmare
