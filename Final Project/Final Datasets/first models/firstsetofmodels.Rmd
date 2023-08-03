@@ -1,9 +1,10 @@
 ---
-title: "Final 112th"
+title: "First Set of Models for GOV338"
 author: "Naomi Liftman"
 date: "2023-04-18"
 output: pdf_document
 ---
+
 # Load Packages
 ```{r, warning=F, message=F, echo=F}
 library(rio)
@@ -13,6 +14,7 @@ library(stats)
 ```
 
 # Load Matrices for 117th
+
 ```{r}
 # Independent variables
 religion <- as.matrix(import("matrix_religion_117_hopefully_fixing.csv"))  #religion matrix
