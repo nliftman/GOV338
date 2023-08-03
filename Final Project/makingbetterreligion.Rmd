@@ -1,0 +1,118 @@
+---
+title: "Making Better Datasets"
+author: "Naomi Liftman"
+format: pdf
+editor: visual
+---
+
+# Load Packages Packages
+
+```{r warning = FALSE, error = FALSE, message = FALSE}
+library(incidentally)
+library(backbone)
+library(smnet)
+library(igraph)
+library(tidyverse)
+library(rio)
+library(tidyr)
+library(network)
+library(gdata)
+```
+
+# Importing the Correct Datasets but not cleaned religion, yetttt
+```{r}
+all_117 <- import("all_117.csv")
+```
+
+# Religion Time baby
+```{r}
+#importing the df 
+religion_117 <- import("/Users/naomiliftman/Desktop/GOV338/Final Project/117congress.xlsx")
+
+#rename the last five names
+relig_117 <- religion_117 %>% 
+    rename_with(~ tolower(gsub(".", "", .x, fixed = TRUE))) %>%
+  rename("type" = 2) %>% 
+  rename("name" = 3) %>% 
+  rename("party" = 4 ) %>% 
+  rename("cont" = 5) %>% 
+  rename("religion" = 6)
+
+#rename the state
+names(relig_117)[1] = "state"  
+
+#remove the first row
+relig_117 <- relig_117[-c(1:1), ]
+
+#only want their name, relig, and party
+relig_117 <- relig_117 %>% 
+  select("name", "religion", "party")
+
+#having a look at the origional breakdowns
+relig_117 %>% 
+  group_by(religion) %>% 
+  summarize(n = n())
+
+# we need to remove all of the 1s, since they are unable to form the connections we are looking for
+relig_117_fixed <- relig_117 %>% 
+  drop_na() %>% 
+  select(name, religion)
+
+#god life is a nightmare
+relig_117_fixed[relig_117_fixed == "Pietist"] <- "Lutheran"
+relig_117_fixed[relig_117_fixed == "Reformed"] <- "Protestant"
+relig_117_fixed[relig_117_fixed == "Protestant unspecified"] <- "Protestant"
+relig_117_fixed[relig_117_fixed == "Don't know/refused"] <- "Unaffiliated"
+relig_117_fixed[relig_117_fixed == "Other"] <- "Unaffiliated"
+
+relig_117_fixed %>% 
+  group_by(religion) %>% 
+  summarize(n = n())
+```
+
+# 117th Stuff more!
+```{r}
+full_117_edge <- import("/Users/naomiliftman/Desktop/GOV338/Final Project/Final Datasets/edge_all_117.csv") %>% 
+  drop_na() %>% 
+  select(V2, V3) %>% 
+  rename(first_member = V2,
+         second_member = V3)
+```
+
+# Start the mutation!!!
+
+```{r}
+#first make a join so we have the first members religion and rename
+member_i_117 <- full_join(relig_117_fixed, full_117_edge, by = c("name" = "first_member")) %>% 
+  rename("member_i" = "name",
+         "religion_i" = "religion")
+
+#now get the second members religion, rename, and remove nas
+member_i_and_j_117 <- full_join(relig_117_fixed, member_i_117, by = c("name" = "second_member")) %>% 
+  rename("member_j" = "name",
+         "religion_j" = "religion") %>% 
+   drop_na(religion_j, religion_i)
+```
+
+# Make the matrix!!!
+
+```{r}
+#create similarity score
+member_i_and_j_117 <- member_i_and_j_117 %>% 
+  mutate(similarity = ifelse(religion_i == religion_j, 1, 0 )) %>% 
+  select(-religion_i, -religion_j)
+
+#now we only want to include the ones that include the same? 
+sim_combos_117 <-member_i_and_j_117[!member_i_and_j_117$similarity==0 ,]
+
+#turn into graph object
+g_117=graph.data.frame(sim_combos_117)
+
+#get adjacency matrix
+d_117 = get.adjacency(g_117,sparse=FALSE) 
+
+#export it for easier work!
+write.csv(d_117, "new_matrix_religion.csv", row.names=FALSE)
+```
+
+
