@@ -1,5 +1,5 @@
 ---
-title: Congre(ss)gation\: A Social Network Analysis of Religion and Cosponsorship in the United States Congress
+title: Congre(ss)gation--A Social Network Analysis of Religion and Cosponsorship in the United States Congress
 runninghead: Dionne & Liftman.
 author:
 - name: Natalie Dionne
@@ -13,13 +13,12 @@ address:
   org: Department of Statistical and Data Science, Smith College
 corrauth: "Naomi Liftman"
 email: nliftman@smith.edu
-abstract: "Given the recent surge in identity politics, we explore the effects religion has on the legislative agenda. In mapping all 70,000 pieces of legislation from the 112th (2011-2013) and the 117th (2021-2023) Congress, we infer a series of political relationships among legislators, which we then use to test; (1) If religion influences cosponsorship in the congressional network? (2) If that influence has changed in the last 10 years? We find evidence that in recent years, religious identity affects legislature's cosponsorship behavior. This analysis suggests a positive trend in religion-based polarization in the United States Congress."
-keywords: Cosponsorship, Networks, Religion, Polarization
+abstract: "Given religion’s recent influence on political decisions, we explore its effect on legislative behavior in the United States Congress. We apply a network analysis to all 70,000 pieces of cosponsored legislation from both the 112th and the 117th Congresses to infer a series of political relationships among legislators. From this network we test (1) if religion influences cosponsorship in the congressional network, and (2) if that influence has changed in the last ten years. We find evidence that religious identity has affected legislators’ cosponsorship behavior in recent years, but not in the past. This analysis suggests an increase in religion-based polarization in the United States Congress."
+keywords: Cosponsorship, Congressional Networks, Religion, Religious Identity, Polarization
 classoption:
   - Royal
   - times
 bibliography: final_report
-nocite: '@*'
 bibliographystyle: sageh
 output:
   rticles::sage_article:
@@ -31,13 +30,16 @@ header-includes:
 
 # Introduction
 \doublespacing
-|   Extensive literature supports the importance of cosponsorship as the core activity in building the legislative agenda. As Schiller (1995) outlines, sponsorship is one of the few legislative activities which legislators have almost total control. Legislatures can decide to introduce and support legislation that appeases their constituents, progresses their political career, and initiates institutional change on a variety of policies. While legislators can be thought of as individual sponsoring and cosponsoring bills, when combined the collaborative process of agenda setting reflects shared interests and communal values. The agenda setting stage is believed to be critical in the legislative process due to its ability to control or manage what issues gain government attention. 
+|   The very first words of the United States Bill of Rights attempt to draw a line between religion and politics. At that time most Americans agreed with the statement that Congress should make “no law respecting an establishment of religion or prohibiting its free exercise (@pp)”. However, the recent threat to the domination of Christian ideology has prompted a Republican push to factor religion into political decisions. In the last year, the conservative Supreme Court, on multiple occasions, has ruled in favor of Christians and Christians organizations (). As we enter a post-roe America, we must understand the depths of religious influence in our politics. Is church still separate from state? Has our congress become a congregation? 
 
-As cosponsorship is the most used tie in the legislative network, there is a growing body of literature that explores a variety of identity based characteristics on cosponsorship networks. This research has focused primarily on political identities (i.e. partisanship and political ideology) [should i cite who?] and visible identity characteristics (i.e. age, race, gender, and ethnicity). Both have provided extensive support of Huckfeldt’s (1984) claim that one’s community and one’s individual characteristics influence their political actions.
+We look to study the relationship between religious identity and cosponsorship networks in the United States Congress. Extensive literature supports the importance of cosponsorship as the core activity in building the legislative agenda. As Schiller () demonstrates, sponsorship and cosponsorship are two of the few legislative activities members of Congress have almost total control over. Member’s can decide to introduce and support legislation that appeases their constituents, progresses their political career, and initiates institutional change on a variety of policies. While legislators, as individuals, sponsor and cosponsoring bills, scholarship argues a cosponsorship approach is the best method to infer which legislators support which legislatures (Fowler). With that, cosponsorship has become the most used tie when modeling the social network of congress.
 
-However, existing scholarship falls short on researching the effects of religious affiliation on the congressional cosponsorship network. Given its intrinsic function as a core component of an individual's identity and its known effect on political ideology (Mctague & Pearson-Merowitz 2013), there is a theoretical framework that religion influences legislators actions. This paper provides empirical evidence on how the congressional cosponsorship network is affected by legislators' religious identity. 
+A growing body of literature explores the effects of a variety of identity-based characteristics on cosponsorship networks in the legislative body. This research has focused primarily on basic political identities (i.e., partisanship, political ideology, and district representation) and visible identity characteristics (i.e., race, gender, and ethnicity). Both have provided extensive support for Huckfeldt’s (1984) claim that one’s community and individual characteristics influence their political actions. Existing research has also found evidence for the psychological theory of Social Identity (Tajfel 1978), which argues that individuals, especially minority groups,  favor those within their own identity-based communities. 
 
-In this paper, we examine the United States 112th Congress (2011-2013) and the 117th Congress (2021-2023). Data on sponsorship and cosponsorship (roughly 30,000 bills each session) is used in conjunction with network analysis to model the influence of religion in each respective session. We then cross compare the resulting networks to understand how the effect of religious affiliation on congressional ties has changed over the past ten years. With this, we also contribute to the existing body of literature on recent trends in polarization, specifically the growing political division created by religion.
+However, existing scholarship on identity does not contain research on the effect of religious affiliation in the congressional cosponsorship network. Given religion’s intrinsic function as a core component of an individual's identity and its known effect on political ideology (Mctague & Pearson-Merowitz 2013), there is a skeleton framework that religion influences legislators’ actions. Thus this paper provides empirical evidence for the legislators’ religious identity affects the congressional cosponsorship network.
+
+In this paper, we examine religious identity among two Congresses: the United States 112th and the 117th . Data on sponsorship and cosponsorship is used in conjunction with network analysis to model the influence of religion in each session. We then compare the resulting networks to understand how the effect of religious affiliation on congressional ties has changed over the ten years studied. With this, we find evidence that religious identities' effects cosponsorship in the 117th Congress, but not the 112th, both in general and also when in-group homophily is explored. This directly contributes to the existing body of literature on recent trends in polarization, specifically the growing political division created by religious differences.
+
 
 
 # Literature Review
